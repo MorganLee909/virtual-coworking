@@ -16,13 +16,13 @@ module.exports = {
      * redirect = /dashboard
     */
     create: (req, res)=>{
-        if(!req.body.email){
+        let email = req.body.email.toLowerCase();
+        if(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email) === false){
             return res.json({
                 error: true,
                 message: "Invalid email address"
             });
         }
-        let email = req.body.email.toLowerCase();
 
         if(req.body.password.length < 10){
             return res.json({
