@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const compression = require("compression");
+const bodyParser = require("body-parser");
 const https = require("https");
 const fs = require("fs");
 
@@ -28,6 +29,7 @@ mongoose.connect(mongoString);
 
 app.use(compression());
 app.use(express.json());
+app.use(bodyParser.urlencoded({extended: false}));
 
 require("./routes.js")(app);
 
