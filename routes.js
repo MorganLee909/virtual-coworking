@@ -1,3 +1,5 @@
 module.exports = (app)=>{
-    app.get("/", (req, res)=>{res.send("Server working")});
+    const views = `${__dirname}/views`;
+
+    app.get("/", (req, res)=>res.sendFile(`${views}/landing.html`));
 }
