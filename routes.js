@@ -3,4 +3,7 @@ module.exports = (app)=>{
 
     app.get("/", (req, res)=>res.sendFile(`${views}/landing.html`));
     app.get("/signup", (req, res)=>{res.sendFile(`${views}/signup.html`)});
+
+    //USERS
+    app.post("/dd")
 }
