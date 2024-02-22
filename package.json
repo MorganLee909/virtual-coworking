@@ -1,0 +1,19 @@
+{
+  "name": "virtual-coworking",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MorganLee909/virtual-coworking.git"
+  },
+  "author": "Lee Morgan, Ivan Kordonets",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MorganLee909/virtual-coworking/issues"
+  },
+  "homepage": "https://github.com/MorganLee909/virtual-coworking#readme"
+}
