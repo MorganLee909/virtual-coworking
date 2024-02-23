@@ -18,7 +18,7 @@ module.exports = {
      * }
      * redirect = /dashboard
     */
-    create: (req, res)=>{
+    create: function(req, res){
         let email = req.body.email.toLowerCase();
         if(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email) === false){
             return res.json({
@@ -91,6 +91,28 @@ module.exports = {
             .catch((err)=>{
                 console.error(err);
                 res.redirect("/dashboard");
+            });
+    },
+
+    confirmEmail: function(req, res){
+        User.findOne({email: req.params.email.toLowerCase()})
+            .then((user)=>{
+                if(!user) throw "code";
+                let code = user.status.split("-");
+                if(req.params.code !== code[1]) throw "code";
+
+                user.status = "payment";
+
+                return user.save();
+            })
+            .then((user)=>{
+                res.redirect("/email/confirmed");
+            })
+            .catch((err)=>{
+                if(err === "code") return res.redirect("/email/unconfirmed");
+
+                console.error(err);
+                return res.redirect("/email/unconfirmed");
             });
     }
 }
