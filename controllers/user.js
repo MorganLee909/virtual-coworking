@@ -2,6 +2,9 @@ const User = require("../models/user.js");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const axios = require("axios");
+const queryString = require("querystring");
+const confirmationEmail = require("../email/confirmationEmail.js");
 
 module.exports = {
     /*
@@ -45,6 +48,8 @@ module.exports = {
                         message: "User with this email already exists"
                     });
                 }
+                let confirmationCode = Math.floor(Math.random() * 1000000).toString();
+                confirmationCode = confirmationCode.padStart(6, "0");
 
                 let salt = bcrypt.genSaltSync(10);
                 let hash = bcrypt.hashSync(req.body.password, salt);
@@ -53,20 +58,35 @@ module.exports = {
                     email: email,
                     password: hash,
                     firstName: req.body.firstName,
-                    lastName: req.body.lastName
+                    lastName: req.body.lastName,
+                    status: `email-${confirmationCode}`
+                });
+
+                axios({
+                    method: "post",
+                    url: "https://api.mailgun.net/v3/mg.leemorgan.dev/messages",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MAILGUN_KEY
+                    },
+                    data: queryString.stringify({
+                        from: "Lee Morgan <lee@leemorgan.dev>",
+                        to: email,
+                        subject: "Virtual Coworking email confirmation",
+                        html: confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`)
+                    })
                 });
 
                 return newUser.save();
             })
             .then((user)=>{
-                let token = jwt.sign({
-                    _id: user._id,
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName
-                }, process.env.JWT_SECRET);
-
-                res.json(token);
+                return res.json({
+                    error: false,
+                    message: "Please check your inbox to confirm your email"
+                });
             })
             .catch((err)=>{
                 console.error(err);

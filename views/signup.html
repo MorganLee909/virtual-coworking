@@ -68,8 +68,7 @@
                         if(response.error){
                             notify("error", response.message);
                         }else{
-                            localStorage.setItem("coworkToken", response);
-                            window.location.replace("/dashboard");
+                            notify("success", response.message);
                         }
                     })
                     .catch((err)=>{
