@@ -112,7 +112,7 @@ module.exports = {
                 return user.save();
             })
             .then((user)=>{
-                res.redirect("/email/confirmed");
+                res.redirect("/stripe/checkout");
             })
             .catch((err)=>{
                 if(err === "code") return res.redirect("/email/unconfirmed");

@@ -8,7 +8,6 @@ module.exports = (app)=>{
     app.get("/user/signup", (req, res)=>{res.sendFile(`${views}/signup.html`)});
     app.get("/dashboard", (req, res)=>{res.sendFile(`${views}/dashboard.html`)});
     app.get("/email/confirmation", (req, res)=>{res.sendFile(`${views}/emailConfirmation.html`)});
-    app.get("/email/confirmed", (req, res)=>{res.sendFile(`${views}/confirmedEmail.html`)});
     app.get("/email/unconfirmed", (req, res)=>{res.sendFile(`${views}/unconfirmedEmail.html`)});
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeSubscription.html`)});
     app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
