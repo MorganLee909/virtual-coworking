@@ -104,6 +104,8 @@ module.exports = {
         User.findOne({email: req.params.email.toLowerCase()})
             .then((user)=>{
                 if(!user) throw "code";
+                if(user.status === "payment") throw "payment";
+                if(user.status === "active") throw "active";
                 let code = user.status.split("-");
                 if(req.params.code !== code[1]) throw "code";
 
@@ -115,10 +117,14 @@ module.exports = {
                 res.redirect("/stripe/checkout");
             })
             .catch((err)=>{
-                if(err === "code") return res.redirect("/email/unconfirmed");
-
-                console.error(err);
-                return res.redirect("/email/unconfirmed");
+                switch(err){
+                    case "code": return res.redirect("/email/unconfirmed");
+                    case "payment": return res.redirect("/stripe/checkout");
+                    case "active": return res.redirect("/dashboard");
+                    default:
+                        console.error(err);
+                        return res.redirect("/email/unconfirmed");
+                }
             });
     }
 }
