@@ -9,7 +9,7 @@ module.exports = (app)=>{
     app.get("/dashboard", (req, res)=>{res.sendFile(`${views}/dashboard.html`)});
     app.get("/email/confirmation", (req, res)=>{res.sendFile(`${views}/emailConfirmation.html`)});
     app.get("/email/unconfirmed", (req, res)=>{res.sendFile(`${views}/unconfirmedEmail.html`)});
-    app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeSubscription.html`)});
+    app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
     app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
 
     //app.get("/stripe/finished", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
