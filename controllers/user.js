@@ -83,9 +83,15 @@ module.exports = {
                 return newUser.save();
             })
             .then((user)=>{
+                let token = jwt.sign({
+                    _id: user._id,
+                    email: user.email
+                }, process.env.JWT_SECRET);
+
                 return res.json({
                     error: false,
-                    message: "Please check your inbox to confirm your email"
+                    message: "Please check your inbox to confirm your email",
+                    token: token
                 });
             })
             .catch((err)=>{

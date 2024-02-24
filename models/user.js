@@ -20,6 +20,21 @@ const UserSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true
+    },
+    expiration: {
+        type: Date,
+        required: false
+    },
+    createdDate: {
+        type: Date,
+        required: true,
+        default: new Date()
+    },
+    stripe: {
+        customerId: String,
+        productId: String,
+        subscriptionId: String,
+        subscriptionStatus: String
     }
 });
 

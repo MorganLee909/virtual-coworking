@@ -6,6 +6,33 @@
         <title>Checkout succeeded | CoSphere</title>
     </head>
     <body>
-        <h1>Checkout succeeded</h1>
+        <h2>Something</h2>
+        <h1 id="status"></h1>
+        <p id="link" style="display:none"><a href="/dashboard">Click here</a> to continue to CoSphere</p>
+
+        <script>
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            const sessionId = urlParams.get("session_id");
+
+            fetch(`/stripe/payment-status?session_id=${sessionId}`, {
+                method: "get",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                }
+            })
+                .then(r=>r.json())
+                .then((session)=>{
+                    if(session.status === "open"){
+                        window.location.replace("/stripe/checkout");
+                    }else if(session.status === "complete"){
+                        document.getElementById("status").textContent = `The account for ${session.customerEmail} is now active`;
+                        document.getElementById("link").style.display = "block";
+                    }
+                })
+                .catch((err)=>{
+                    console.error(err);
+                });
+        </script>
     </body>
 </html>
