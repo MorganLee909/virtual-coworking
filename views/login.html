@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
+    <title>Login | CoSphere</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <form id="form">
+        <label>Email
+            <input id="email" type="email" placeholder="Email" required/>
+        </label>
+
+        <label>Password
+            <input id="password" type="password" placeholder="Password" required/>
+        </label>
+
+        <input type="Submit" value="Log in"/>
+    </form>
+
+
+    <script>
+        if(localStorage.getItem("coworkToken")) window.location.href = "/dashboard";
+
+        document.getElementById("form").addEventListener("submit", ()=>{
+            event.preventDefault();
+
+            let data = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value
+            };
+
+            fetch("/user/login", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(r=>r.json())
+                .then((response)=>{
+                    if(response.error){
+                        console.log(response);
+                    }else{
+                        localStorage.setItem("coworkToken", response);
+                        window.location.href = "/dashboard";
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                });
+        });
+    </script>
+</body>
+</html>

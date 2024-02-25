@@ -126,5 +126,51 @@ module.exports = {
                         return res.redirect("/email/unconfirmed");
                 }
             });
+    },
+
+    /*
+     * POST: Login the user
+     * req.body = {
+     *      email: String
+     *      password: String
+     *      jwt: String (if already logged in)
+     * }
+     * response: JWT
+     */
+    login: function(req, res){
+        let email = req.body.email.toLowerCase();
+        User.findOne({email: email})
+            .then((user)=>{
+                if(!user) throw "user";
+                
+                if(bcrypt.compareSync(req.body.password, user.password)){
+                    let token = jwt.sign({
+                        _id: user._id,
+                        email: user.email
+                    }, process.env.JWT_SECRET);
+                    return res.json(token);
+                }else{
+                    console.log("pass bad");
+                    throw "pass";
+                }
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "user": return res.json({
+                        error: true,
+                        message: "User with this email address does not exist"
+                    });
+                    case "pass": return res.json({
+                        error: true,
+                        message: "Email and password do not match"
+                    });
+                    default:
+                        console.error(err);
+                        return res.json({
+                            error: true,
+                            message: "Internal server error"
+                        });
+                }
+            })
     }
 }
