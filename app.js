@@ -1,12 +1,23 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const compression = require("compression");
-const bodyParser = require("body-parser");
+const esbuild = require("esbuild");
 const https = require("https");
 const fs = require("fs");
 
 const app = express();
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
+
+let esbuildOptions = {
+    entryPoints: [
+        `${__dirname}/views/coworking/js/dashboard.js`,
+        `${__dirname}/views/coworking/css/dashboard.css`
+    ],
+    bundle: true,
+    minify: false,
+    keepNames: true,
+    outdir: `${__dirname}/views/build/`
+};
 
 if(process.env.NODE_ENV === "production"){
     httpsServer = https.createServer({
@@ -23,13 +34,16 @@ if(process.env.NODE_ENV === "production"){
     });
 
     mongoString = `mongodb://website:${process.env.MONGODB_PASS}@127.0.0.1:27017/coworking?authSource=admin`;
+
+    esbuildOptions.minify = true;
+    esbuildOptions.keepNames = false;
 }
 
 mongoose.connect(mongoString);
+esbuild.buildSync(esbuildOptions);
 
 app.use(compression());
 app.use(express.json());
-app.use(bodyParser.urlencoded({extended: false}));
 
 require("./routes.js")(app);
 
