@@ -29,7 +29,7 @@ if(process.env.NODE_ENV === "production"){
     httpsServer = https.createServer({
         key: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/privkey.pem", "utf8"),
         cert: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/fullchain.pem", "utf8")
-    });
+    }, app);
 
     app.use((req, res, next)=>{
         if(req.secure === true){
