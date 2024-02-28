@@ -1,5 +1,7 @@
 const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
+const table = require("./controllers/table.js")
+const auth = require("./auth.js").auth;
 
 module.exports = (app)=>{
     const views = `${__dirname}/views`;
@@ -8,7 +10,7 @@ module.exports = (app)=>{
     app.get("/user/signup", (req, res)=>{res.sendFile(`${views}/signup.html`)});
     app.get("/user/login", (req, res)=>{res.sendFile(`${views}/login.html`)});
     app.get("/dashboard", (req, res)=>{res.sendFile(`${views}/coworking/index.html`)});
-    app.get("/email/confirmation", (req, res)=>{res.sendFile(`${views}/emailConfirmation.html`)});
+    app.get("/email/confirmation", (req, res)=>{res.sendFile(`${views}/emailConfirmation.html`)}); // Remove this, go straight to checkout
     app.get("/email/unconfirmed", (req, res)=>{res.sendFile(`${views}/unconfirmedEmail.html`)});
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
     app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
@@ -19,6 +21,9 @@ module.exports = (app)=>{
     app.post("/user", user.create);
     app.get("/email/code/:email/:code", user.confirmEmail);
     app.post("/user/login", user.login);
+
+    //TABLES
+    app.post("/table/join", auth, table.joinTable);
 
     //STRIPE
     app.get("/stripe/checkout-session", stripe.checkoutSession);

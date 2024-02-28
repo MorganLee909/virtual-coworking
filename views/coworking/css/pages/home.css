@@ -18,3 +18,11 @@
     background: white;
     border: 1px solid black;
 }
+
+#meeting{
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 50%;
+}

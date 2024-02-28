@@ -8,6 +8,12 @@ const fs = require("fs");
 const app = express();
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
+//global.privateKey = fs.readFileSync("./cosphere.key.pub", "utf8");
+global.privateKey = fs.readFileSync("./private.pem", "utf8");
+//privateKey = privateKey.replaceAll("\n", "");
+//privateKey = privateKey.replace("-----END RSA PRIVATE KEY-----", "");
+//privateKey = privateKey.replace("-----BEGIN RSA PRIVATE KEY-----", "");
+
 let esbuildOptions = {
     entryPoints: [
         `${__dirname}/views/coworking/js/dashboard.js`,
