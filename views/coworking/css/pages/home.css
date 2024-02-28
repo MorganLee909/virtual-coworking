@@ -3,7 +3,6 @@
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
-    background: pink;
     height: 100%;
     width: 100%;
 }
@@ -17,6 +16,8 @@
     width: 700px;
     background: white;
     border: 1px solid black;
+    background: #7e4e3c;
+    color: white;
 }
 
 #meeting{
@@ -24,5 +25,5 @@
     top: 0;
     right: 0;
     height: 100%;
-    width: 50%;
+    width: 100%;
 }

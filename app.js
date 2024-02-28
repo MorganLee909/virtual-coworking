@@ -8,11 +8,7 @@ const fs = require("fs");
 const app = express();
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
-//global.privateKey = fs.readFileSync("./cosphere.key.pub", "utf8");
 global.privateKey = fs.readFileSync("./private.pem", "utf8");
-//privateKey = privateKey.replaceAll("\n", "");
-//privateKey = privateKey.replace("-----END RSA PRIVATE KEY-----", "");
-//privateKey = privateKey.replace("-----BEGIN RSA PRIVATE KEY-----", "");
 
 let esbuildOptions = {
     entryPoints: [
@@ -54,7 +50,6 @@ app.use(express.json());
 require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
-    console.log(`Serving on port ${process.env.HTTPS_PORT}`);
     httpsServer.listen(process.env.HTTPS_PORT);
 }
 app.listen(process.env.PORT);

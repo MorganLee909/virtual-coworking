@@ -28,5 +28,7 @@ module.exports = (app)=>{
     //STRIPE
     app.get("/stripe/checkout-session", stripe.checkoutSession);
     app.get("/stripe/payment-status*", stripe.finished);
-    //app.get("/stripe/checkout", stripe.checkoutPage);
+
+    //IMAGES
+    app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
 }
