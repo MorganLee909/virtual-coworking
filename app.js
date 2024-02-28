@@ -31,7 +31,7 @@ if(process.env.NODE_ENV === "production"){
         cert: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/fullchain.pem", "utf8")
     });
 
-    app.user((req, res, nex)=>{
+    app.use((req, res, nex)=>{
         if(req.secure === true){
             next();
         }else{
