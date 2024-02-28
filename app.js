@@ -27,8 +27,8 @@ let esbuildOptions = {
 
 if(process.env.NODE_ENV === "production"){
     httpsServer = https.createServer({
-        key: fs.readFileSync("", "utf8"),
-        cert: fs.readFileSync("", "utf8")
+        key: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/privkey.pem", "utf8"),
+        cert: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/fullchain.pem", "utf8")
     });
 
     app.user((req, res, nex)=>{
