@@ -31,7 +31,7 @@ if(process.env.NODE_ENV === "production"){
         cert: fs.readFileSync("/etc/letsencrypt/live/cosphere.work/fullchain.pem", "utf8")
     });
 
-    app.use((req, res, nex)=>{
+    app.use((req, res, next)=>{
         if(req.secure === true){
             next();
         }else{
@@ -54,6 +54,7 @@ app.use(express.json());
 require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
+    console.log(`Serving on port ${process.env.HTTPS_PORT}`);
     httpsServer.listen(process.env.HTTPS_PORT);
 }
 app.listen(process.env.PORT);
