@@ -5,35 +5,149 @@
         <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
         <link rel="icon" type="img/svg" href="/image/logo.svg"/>
         <title>Register | CoSphere</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+
+            body{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 75px;
+                width: 100%;
+                margin: 13px 0;
+                padding: 26px;
+            }
+
+            #signIn{
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+            }
+
+            #signIn img{
+                margin-right: 6px;
+            }
+
+            #signIn p{
+                font-size: 14px;
+                font-weight: 600;
+                color: #7a7a7a;
+            }
+
+            #topLogo{
+                height: 75px;
+            }
+
+            #background{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: #fafafa;
+                height: calc(100vh - 127px);
+                width: calc(100vw - 52px);
+            }
+
+            h1{
+                font-size: 25px;
+                margin-bottom: 26px;
+            }
+
+            form{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                height: 100%;
+                width: 420px;
+            }
+
+            #formName{
+                display: flex;
+            }
+
+            #formName label{
+                width: 196px;
+            }
+
+            label{
+                display: flex;
+                flex-direction: column;
+                font-size: 14px;
+                color: #7a7a7a;
+                width: 100%;
+                margin: 13px;
+            }
+
+            label input{
+                height: 50px;
+                padding: 14px;
+                font-size: 16px;
+            }
+
+            #submitBtn{
+                box-sizing: content-box;
+                display: block;
+                border-radius: 3px;
+                background: linear-gradient(300deg, #3581C1 33.58%, #50A2E7 54.2%, #3581C1 75.24%);
+                padding: 13px 0;
+                margin-top: 47px;
+                width: 100%;
+                font-size: 16px;
+                color: white;
+                border: none;
+                font-weight: 600;
+            }
+        </style>
     </head>
     <body>
         <div id="notifier" style="display:none"></div>
 
-        <h1>Register</h1>
+        <header>
+            <img id="topLogo" src="/image/text-logo.svg" alt="CoSphere Logo"/>
 
-        <form>
-            <label>Email
-                <input type="email" id="email" placeholder="Email" required/>
-            </label>
+            <a id="signIn" href="/user/login">
+                <img src="/image/signInIcon.svg" alt="Sign In"/>
 
-            <label>Password
-                <input type="password" id="password" placeholder="Password" minlength="10" required/>
-            </label>
+                <p>Log In</p>
+            </a>
+        </header>
 
-            <label>Confirm Password
-                <input type="password" id="confirmPassword" placeholder="Confirm Password" minlength="12" required/>
-            </label>
+        <div id="background">
+            <form>
+                <h1>Register</h1>
 
-            <label>First Name
-                <input type="text" id="firstName" placeholder="First Name" required/>
-            </label>
+                <div id="formName">
+                    <label>First Name
+                        <input type="text" id="firstName" placeholder="First Name" required/>
+                    </label>
 
-            <label>Last Name
-                <input type="text" id="lastName" placeholder="Last Name" required/>
-            </label>
+                    <label>Last Name
+                        <input type="text" id="lastName" placeholder="Last Name" required/>
+                    </label>
+                </div>
 
-            <input type="submit" value="Sign Up"/>
-        </form>
+                <label>Email
+                    <input type="email" id="email" placeholder="Email" required/>
+                </label>
+
+                <label>Password
+                    <input type="password" id="password" placeholder="Password" minlength="10" required/>
+                </label>
+
+                <label>Confirm Password
+                    <input type="password" id="confirmPassword" placeholder="Confirm Password" minlength="12" required/>
+                </label>
+
+                <input id="submitBtn" type="submit" value="Sign Up"/>
+            </form>
+        </div>
 
         <script>
             const notify = (type, message)=>{
