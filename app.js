@@ -1,11 +1,14 @@
 const express = require("express");
+const app = express();
+const server = require("http").createServer(app);
+const Websocket = require("ws");
 const mongoose = require("mongoose");
 const compression = require("compression");
 const esbuild = require("esbuild");
 const https = require("https");
 const fs = require("fs");
+const wss = new Websocket.Server({server: server});
 
-const app = express();
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
 global.privateKey = fs.readFileSync("./private.pem", "utf8");
@@ -47,9 +50,29 @@ esbuild.buildSync(esbuildOptions);
 app.use(compression());
 app.use(express.json());
 
-require("./routes.js")(app);
+let connections = {};
+wss.on("connection", (ws)=>{
+    console.log("client connected");
+    connections = ws;
+
+    ws.location = "Some place";
+
+    ws.on("message", (message)=>{
+        console.log("message recieved");
+        console.log(message.toString());
+    });
+
+    let thing = JSON.stringify({
+        one: "First message from server",
+        two: "Second message from server"
+    });
+
+    ws.send(thing);
+});
+
+require("./routes.js")(app, wss);
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT);
 }
-app.listen(process.env.PORT);
+server.listen(process.env.PORT);

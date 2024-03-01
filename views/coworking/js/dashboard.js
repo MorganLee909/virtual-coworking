@@ -51,3 +51,13 @@ for(let i = 0; i < tables.length; i++){
     });
 }
 
+const socket = new WebSocket('ws://localhost:8000');
+socket.addEventListener("open", ()=>{
+    console.log("open");
+    socket.send("Hello from client 1");
+    console.log("message sent");
+});
+
+socket.addEventListener("message", (event)=>{
+    console.log(event.data);
+});

@@ -3,7 +3,7 @@ const stripe = require("./controllers/stripe.js");
 const table = require("./controllers/table.js")
 const auth = require("./auth.js").auth;
 
-module.exports = (app)=>{
+module.exports = (app, ws)=>{
     const views = `${__dirname}/views`;
 
     app.get("/", (req, res)=>res.sendFile(`${views}/landing.html`));
@@ -31,4 +31,12 @@ module.exports = (app)=>{
 
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
+
+
+    app.get("/sendmessage", (req, res)=>{
+        ws.clients.forEach((client)=>{
+            console.log(client.location);
+            client.send("A message to each client");
+        })
+    });
 }
