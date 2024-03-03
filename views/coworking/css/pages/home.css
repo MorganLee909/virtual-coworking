@@ -5,6 +5,7 @@
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 #homePage .table{
@@ -14,16 +15,21 @@
     align-items: center;
     height: 350px;
     width: 700px;
-    background: white;
     border: 1px solid black;
     background: #7e4e3c;
     color: white;
+    resize: both;
+    overflow: auto;
 }
 
 #meeting{
     position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
+    top: 25%;
+    left: 25%;
+    height: 50%;
+    width: 50%;
+    resize: both;
+    overflow: auto;
+    background: black;
+    border: 25px solid gray;
 }
