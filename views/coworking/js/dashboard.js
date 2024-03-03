@@ -14,4 +14,16 @@ changePage = (page)=>{
     }
 }
 
+createBanner = (color, message)=>{
+    let banner = document.getElementById("banner");
+
+    banner.style.background = color;
+    banner.style.display = "flex";
+    banner.querySelector("p").textContent = message;
+
+    setTimeout(()=>{
+        banner.style.display = "none";
+    }, 5000);
+}
+
 homePage.render();
