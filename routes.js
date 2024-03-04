@@ -32,7 +32,6 @@ module.exports = (app, ws)=>{
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
 
-
     app.get("/sendmessage", (req, res)=>{
         ws.clients.forEach((client)=>{
             console.log(client.location);
