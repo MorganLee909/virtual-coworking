@@ -16,7 +16,7 @@ const LocationSchema = new mongoose.Schema({
     },
     tables: [{
         name: String,
-        id: String,
+        tableNumber: String,
         occupants: [{
             userId: {
                 type: mongoose.Schema.Types.ObjectId,
