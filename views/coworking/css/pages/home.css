@@ -8,6 +8,15 @@
     position: relative;
 }
 
+#tables{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+}
+
 #homePage .table{
     display: flex;
     flex-direction: column;

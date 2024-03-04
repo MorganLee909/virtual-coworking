@@ -13,22 +13,14 @@
         </div>
 
         <div id="homePage" class="page">
-            <div class="table" data-table="ny001-001">
-                <p>Table 1</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-002"> 
-                <p>Table 2</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-003">
-                <p>Table 3</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-004">
-                <p>Table 4</p>
-                <button>Join</button>
-            </div>
+            <div id="tables"></div>
+
+            <template id="tablesTemplate">
+                <div class="table">
+                    <p></p>
+                    <button>Join</button>
+                </div>
+            </template>
 
             <div id="meeting" style="display:none" data-fs="false"></div>
         </div>

@@ -3,7 +3,6 @@ module.exports = {
         this.rendered = false;
 
         if(this.rendered === false){
-            console.log("rendering again");
             this.rendered = true;
             this.meetingDiv = document.getElementById("meeting");
             
@@ -18,11 +17,18 @@ module.exports = {
             //Create websocket
             const socket = new WebSocket(`ws://localhost:8000`);
             socket.addEventListener("open", ()=>{
-                console.log("Web socket open");
+                let data = {
+                    token: localStorage.getItem("coworkToken"),
+                    location: "NY-001",
+                    action: "getTables"
+                };
+
+                socket.send(JSON.stringify(data));
             });
 
             socket.addEventListener("message", (event)=>{
-                console.log(`Socket message: ${event}`);
+                let data = JSON.parse(event.data);
+                this.buildTables(data.tables, data.identifier);
             });
 
             //Set video player frame controls
@@ -125,6 +131,20 @@ module.exports = {
             event.target.style.top = "25%";
             event.target.style.left = "25%";
             event.target.setAttribute("data-fs", "false");
+        }
+    },
+
+    buildTables: function(tables, location){
+        let template = document.getElementById("tablesTemplate").content.children[0];
+        let tablesDiv = document.getElementById("tables");
+        for(let i = 0; i < tables.length; i++){
+            let table = template.cloneNode(true);
+            table.setAttribute("data-table", `${location}-${tables[i].id}`);
+            table.querySelector("p").textContent = tables[i].name;
+            table.querySelector("button").addEventListener("click", ()=>{
+                this.joinTable(table.getAttribute("data-table"));
+            });
+            tablesDiv.appendChild(table);
         }
     }
 }

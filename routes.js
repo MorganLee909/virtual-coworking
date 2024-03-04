@@ -1,9 +1,9 @@
 const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
-const table = require("./controllers/table.js")
+const location = require("./controllers/location.js")
 const auth = require("./auth.js").auth;
 
-module.exports = (app, ws)=>{
+module.exports = (app)=>{
     const views = `${__dirname}/views`;
 
     app.get("/", (req, res)=>res.sendFile(`${views}/landing.html`));
@@ -23,7 +23,7 @@ module.exports = (app, ws)=>{
     app.post("/user/login", user.login);
 
     //TABLES
-    app.post("/table/join", auth, table.joinTable);
+    app.post("/table/join", auth, location.joinTable);
 
     //STRIPE
     app.get("/stripe/checkout-session", stripe.checkoutSession);
@@ -31,11 +31,4 @@ module.exports = (app, ws)=>{
 
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
-
-    app.get("/sendmessage", (req, res)=>{
-        ws.clients.forEach((client)=>{
-            console.log(client.location);
-            client.send("A message to each client");
-        })
-    });
 }

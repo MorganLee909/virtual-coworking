@@ -50,27 +50,8 @@ esbuild.buildSync(esbuildOptions);
 app.use(compression());
 app.use(express.json());
 
-let connections = {};
-wss.on("connection", (ws)=>{
-    console.log("client connected");
-    connections = ws;
-
-    ws.location = "Some place";
-
-    ws.on("message", (message)=>{
-        console.log("message recieved");
-        console.log(message.toString());
-    });
-
-    let thing = JSON.stringify({
-        one: "First message from server",
-        two: "Second message from server"
-    });
-
-    ws.send(thing);
-});
-
-require("./routes.js")(app, wss);
+require("./controllers/websockets.js")(wss);
+require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT);
