@@ -1,6 +1,7 @@
 const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
 const location = require("./controllers/location.js")
+const webhooks = require("./controllers/webhooks.js");
 const auth = require("./auth.js").auth;
 
 module.exports = (app)=>{
@@ -25,6 +26,9 @@ module.exports = (app)=>{
     //TABLES
     app.post("/location/table/join", auth, location.joinTable);
     app.get("/location/:location", auth, location.getTables);
+
+    //WEBHOOKS
+    app.post("/jitsi/webhook", webhooks.handle);
 
     //STRIPE
     app.get("/stripe/checkout-session", stripe.checkoutSession);

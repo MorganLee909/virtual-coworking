@@ -19,9 +19,23 @@ module.exports = {
 
             //Create websocket
             const socket = new WebSocket(`ws://localhost:8000`);
-            socket.addEventListener("open", ()=>{});
+            socket.addEventListener("open", ()=>{
+                let data = {
+                    token: localStorage.getItem("coworkToken"),
+                    location: "NY-001",
+                    action: "setLocation"
+                };
 
-            socket.addEventListener("message", (event)=>{});
+                socket.send(JSON.stringify(data));
+            });
+
+            socket.addEventListener("message", (event)=>{
+                let data = JSON.parse(event.data);
+
+                switch(data.action){
+                    case "participantJoined": this.addToTable(data); break;
+                }
+            });
 
             //Set video player frame controls
             document.getElementById("meeting").addEventListener("dblclick", this.fullScreen);
@@ -127,7 +141,7 @@ module.exports = {
     },
 
     buildTables: function(){
-        fetch(`/location/65e5edf1e66c75c547c1597a`, {
+        fetch(`/location/65e625ade66c75c547c1597b`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -152,5 +166,10 @@ module.exports = {
             .catch((err)=>{
                 console.log(err);
             });
-        }
+    },
+
+    addToTable: function(data){
+        console.log(data);
+        console.log("adding user to table");
+    }
 }

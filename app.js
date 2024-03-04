@@ -50,7 +50,7 @@ esbuild.buildSync(esbuildOptions);
 app.use(compression());
 app.use(express.json());
 
-require("./controllers/websockets.js")(wss);
+require("./controllers/websockets.js").incoming(wss);
 require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
