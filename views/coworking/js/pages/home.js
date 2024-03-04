@@ -14,22 +14,14 @@ module.exports = {
                 });
             }
 
+            //Retrieve and build tables
+            this.buildTables();
+
             //Create websocket
             const socket = new WebSocket(`ws://localhost:8000`);
-            socket.addEventListener("open", ()=>{
-                let data = {
-                    token: localStorage.getItem("coworkToken"),
-                    location: "NY-001",
-                    action: "getTables"
-                };
+            socket.addEventListener("open", ()=>{});
 
-                socket.send(JSON.stringify(data));
-            });
-
-            socket.addEventListener("message", (event)=>{
-                let data = JSON.parse(event.data);
-                this.buildTables(data.tables, data.identifier);
-            });
+            socket.addEventListener("message", (event)=>{});
 
             //Set video player frame controls
             document.getElementById("meeting").addEventListener("dblclick", this.fullScreen);
@@ -60,7 +52,7 @@ module.exports = {
 
         let api = {};
 
-        fetch("/table/join", {
+        fetch("/location/table/join", {
             method: "post",
             headers: {
                 "Content-Type": "application/json",
@@ -134,17 +126,31 @@ module.exports = {
         }
     },
 
-    buildTables: function(tables, location){
-        let template = document.getElementById("tablesTemplate").content.children[0];
-        let tablesDiv = document.getElementById("tables");
-        for(let i = 0; i < tables.length; i++){
-            let table = template.cloneNode(true);
-            table.setAttribute("data-table", `${location}-${tables[i].id}`);
-            table.querySelector("p").textContent = tables[i].name;
-            table.querySelector("button").addEventListener("click", ()=>{
-                this.joinTable(table.getAttribute("data-table"));
-            });
-            tablesDiv.appendChild(table);
+    buildTables: function(){
+        fetch(`/location/65e5edf1e66c75c547c1597a`, {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((location)=>{
+                let tablesDiv = document.getElementById("tables");
+                let template = document.getElementById("tablesTemplate").content.children[0];
+
+                for(let i = 0; i < location.tables.length; i++){
+                    let table = template.cloneNode(true);
+                    table.setAttribute("data-table", `${location.identifier}-${location.tables[i].id}`);
+                    table.querySelector("p").textContent = location.tables[i].name;
+                    table.querySelector("button").addEventListener("click", ()=>{
+                        this.joinTable(table.getAttribute("data-table"));
+                    });
+                    tablesDiv.appendChild(table);
+                }
+            })
+            .catch((err)=>{
+                console.log(err);
+            })
         }
-    }
 }

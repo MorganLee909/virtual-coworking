@@ -1,3 +1,5 @@
+const Location = require("../models/location.js");
+
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const crypto = require("crypto");
@@ -55,5 +57,19 @@ module.exports = {
         }, privateKey, options);
 
         return res.json(token);
+    },
+
+    /*
+    GET: retrieve table information for a single location
+    req.params.location
+     */
+    getTables: function(req, res){
+        Location.findOne({_id: req.params.location})
+            .then((location)=>{
+                res.json(location);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
     }
 }
