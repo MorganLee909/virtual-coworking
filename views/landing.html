@@ -5,7 +5,186 @@
     <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
     <link rel="stylesheet" href="/css/main.css"/>
     <link rel="icon" type="img/svg" href="/image/logo.svg"/>
-    <title>CoSphere</title>
+
+    <title>Connect, Collaborate, CoCreate: CoSphere's Virtual Workspace</title>
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+
+        body {
+            background-color: var(--lightGray);
+            border: 26px solid white;
+            margin: 0;
+        }
+
+        .mainTitle {
+            color: var(--darkGray);
+            text-align: center;
+            font-family: "Open Sans";
+            font-size: 23px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: normal;
+        }
+
+        .mainText{
+            color: var(--darkGray);
+            text-align: center;
+            font-family: "Open Sans";
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 27px;
+            width: 600px;
+            padding-bottom: 30px;
+        }
+
+        .imageContainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .logo{
+            padding-top: 14px;
+            padding-left: 14px;
+        }
+
+        .loginSignUpTitle{
+            padding-right: 30px;
+            align-items: center;
+            justify-content: space-between;
+            display: flex;
+            flex-wrap: nowrap;
+            color: var(--grey);
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            width: 140px;
+        }
+
+        .headerContainer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        #signIn{
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        #signIn img{
+            margin-right: 6px;
+        }
+
+        #signIn p{
+            font-size: 14px;
+            font-weight: 600;
+            color: #7a7a7a;
+        }
+
+        #background{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fafafa;
+            height: calc(100vh - 127px);
+            width: calc(100vw - 52px);
+        }
+
+        footer{
+            color: #585866;
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 29px;
+            padding-bottom: 20px;
+        }
+
+        h1{
+            font-size: 25px;
+            margin-bottom: 26px;
+        }
+
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 420px;
+        }
+
+        #formName{
+            display: flex;
+        }
+
+        #formName label{
+            width: 196px;
+        }
+
+        label{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            font-size: 14px;
+            color: #7a7a7a;
+            margin: 13px;
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        label input{
+            height: 50px;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 2px;
+            border: 1px solid #D4D4D4;
+            background: #FFF;
+            box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25) inset;
+            margin-top: 15px;
+        }
+
+        #submitBtn{
+            box-sizing: content-box;
+            display: block;
+            border-radius: 3px;
+            background: linear-gradient(300deg, #3581C1 33.58%, #50A2E7 54.2%, #3581C1 75.24%);
+            padding: 13px 0;
+            margin-top: 47px;
+            width: 100%;
+            font-size: 16px;
+            color: white;
+            border: none;
+            font-weight: 600;
+            box-shadow: 0px 20px 18px 0px rgba(25, 115, 197, 0.15);
+            cursor: pointer;
+        }
+
+        .heroImg{
+             padding-bottom: 40px;
+        }
+
+        .contactUs{
+            color: #2F2F33;
+            text-align: center;
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 29px;
+            padding-top: 40px;
+        }
+    </style>
 
 </head>
 <body>
@@ -22,8 +201,92 @@
     <p class="mainText" style="width: 686px; margin: 0 auto;">CoSphere is a virtual coworking community that allows you to connect with other remote workers and freelancers. Our platform provides a space for you to work, network, and collaborate with others in your field. Join us today and take your remote work experience to the next level!</p>
     
     <div class="imageContainer">
-        <img src="/image/heroimage.jpg" alt="Hero image" />
+        <img class="heroImg" src="/image/heroimage.jpg" alt="Hero image" />
+
+        <form>
+            <h1 class="mainTitle">Coming Soon!<br>
+                Sign Up for Exclusive Updates!
+            </h1>
+
+            <p class="mainText">Stay in the Loop and Get Ready for the Launch of Our Exciting New Platform</p>
+    
+            <div id="formName">
+                <label>First Name
+                    <input type="text" id="firstName" placeholder="First Name" required/>
+                </label>
+    
+                <label>Last Name
+                    <input type="text" id="lastName" placeholder="Last Name" required/>
+                </label>
+            </div>
+    
+            <label>Email
+                <input type="email" id="email" placeholder="Email" required/>
+            </label>
+    
+            <label>Password
+                <input type="password" id="password" placeholder="Password" minlength="10" required/>
+            </label>
+    
+            <label>Confirm Password
+                <input type="password" id="confirmPassword" placeholder="Confirm Password" minlength="12" required/>
+            </label>
+    
+            <input id="submitBtn" type="submit" value="Sign Up"/>
+        </form>
+        
+        <footer>
+            <p class="contactUs">
+                <a href="mailto:info@cosphere.work">Contact Us</a>
+            </p>
+            © Copyright 2024 CoSphere – All rights reserved. 
+        </footer>
     </div>
+
+    <script>
+        const notify = (type, message)=>{
+            let notifier = document.getElementById("notifier");
+            notifier.textContent = message;
+            notifier.style.display = "flex";
+
+            setTimeout(()=>{
+                notifier.style.display = "none";
+            }, 5000);
+        }
+
+        document.querySelector("form").addEventListener("submit", ()=>{
+            event.preventDefault();
+
+            let data = {
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                confirmPassword: document.getElementById("confirmPassword").value,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value
+            };
+
+            fetch("/user", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+                .then(r=>r.json())
+                .then((response)=>{
+                    if(response.error){
+                        notify("error", response.message);
+                    }else{
+                        localStorage.setItem("coworkToken", response.token);
+                        notify("success", response.message);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                    notify("error", "Internal server error");
+                });
+        });
+    </script>
 </body>
 </html>
 
