@@ -21,7 +21,7 @@ module.exports = {
             this.getLocation();
 
             //Create websocket
-            const socket = new WebSocket(`ws://localhost:8000`);
+            const socket = new WebSocket(`ws://cosphere.work`);
             socket.addEventListener("open", ()=>{
                 let data = {
                     token: localStorage.getItem("coworkToken"),
