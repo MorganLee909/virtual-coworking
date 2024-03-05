@@ -29,14 +29,9 @@ const participantJoined = (body)=>{
             return response[1].save();
         })
         .then((location)=>{
-            let data = {
-                action: "participantJoined",
-                table: table,
-                user: user._id,
-                avatar: "/image/profileIcon.png",
-                name: user.firstName
-            };
-            websocketSend(location.identifier, data);
+            location = {...location};
+            location._doc.action = "participantJoined";
+            websocketSend(location._doc.identifier, location._doc);
         })
         .catch((err)=>{
             console.error(err);

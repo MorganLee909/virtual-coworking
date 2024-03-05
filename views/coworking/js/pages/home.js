@@ -1,6 +1,9 @@
 module.exports = {
     render: function(){
         this.rendered = false;
+        this.tableTemplate = document.getElementById("tablesTemplate").content.children[0];
+        this.occupantTemplate = document.getElementById("occupantTemplate").content.children[0];
+        this.location = "";
 
         if(this.rendered === false){
             this.rendered = true;
@@ -15,7 +18,7 @@ module.exports = {
             }
 
             //Retrieve and build tables
-            this.buildTables();
+            this.getLocation();
 
             //Create websocket
             const socket = new WebSocket(`ws://localhost:8000`);
@@ -33,7 +36,7 @@ module.exports = {
                 let data = JSON.parse(event.data);
 
                 switch(data.action){
-                    case "participantJoined": this.addToTable(data); break;
+                    case "participantJoined": this.updateTables(data.tables); break;
                 }
             });
 
@@ -140,7 +143,7 @@ module.exports = {
         }
     },
 
-    buildTables: function(){
+    getLocation: function(){
         fetch(`/location/65e625ade66c75c547c1597b`, {
             method: "get",
             headers: {
@@ -150,26 +153,57 @@ module.exports = {
         })
             .then(r=>r.json())
             .then((location)=>{
-                let tablesDiv = document.getElementById("tables");
-                let template = document.getElementById("tablesTemplate").content.children[0];
+                this.location = location.identifier;
 
-                for(let i = 0; i < location.tables.length; i++){
-                    let table = template.cloneNode(true);
-                    table.setAttribute("data-table", `${location.identifier}-${location.tables[i].id}`);
-                    table.querySelector("p").textContent = location.tables[i].name;
-                    table.querySelector("button").addEventListener("click", ()=>{
-                        this.joinTable(table.getAttribute("data-table"));
-                    });
-                    tablesDiv.appendChild(table);
-                }
+                this.updateTables(location.tables);
             })
             .catch((err)=>{
                 console.log(err);
             });
     },
 
-    addToTable: function(data){
-        console.log(data);
-        console.log("adding user to table");
+    updateTables: function(tables){
+        let existingTables = document.querySelectorAll(".table");
+        for(let i = 0; i < tables.length; i++){
+            let table = null;
+            for(let j = 0; j < existingTables.length; j++){
+                if(existingTables[j].getAttribute("data-table") === tables[i].tableNumber) table = existingTables[j];
+            }
+            if(!table) table = this.createTable(tables[i].tableNumber, tables[i].name);
+            this.setTableOccupants(table, tables[i].occupants);
+        }
+    },
+
+    createTable: function(tableNumber, tableName){
+        let table = this.tableTemplate.cloneNode(true);
+        table.setAttribute("data-table", tableNumber);
+        table.querySelector("p").textContent = tableName;
+        table.querySelector("button").addEventListener("click", ()=>{
+            this.joinTable(`${this.location}-${tableNumber}`);
+        });
+        document.getElementById("tables").appendChild(table);
+
+        return table;
+     },
+
+    setTableOccupants: function(table, occupants){
+        let occupantDivs = table.querySelectorAll(".occupant");
+        
+        for(let i = 0; i < occupants.length; i++){
+            let occupant = Array.from(occupantDivs).find(a => a.getAttribute("data-user") === occupants[i].userId);
+            if(!occupant){
+                occupant = this.occupantTemplate.cloneNode(true);
+                occupant.setAttribute("data-user", occupants[i].userId);
+                occupant.querySelector(".name").textContent = occupants[i].name;
+                table.appendChild(occupant);
+            }
+        }
+
+        for(let i = 0; i < occupantDivs.length; i++){
+            let occupant = occupants.find(a => a.userId === occupantDivs[i].getAttribute("data-user"));
+            if(!occupant) occupantDivs[i].parentElement.removeChild(occupantDivs[i]);
+        }
+
+        return table;
     }
 }
