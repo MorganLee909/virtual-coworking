@@ -22,6 +22,18 @@
             margin: 0;
         }
 
+        #notifier{
+            justify-content: center;
+            align-items: center;
+            height: 75px;
+            width: 750px;
+            position: fixed;
+            top: 35px;
+            left: calc(50% - 375px);
+            color: white;
+            z-index: 100;
+        }
+
         .mainTitle {
             color: var(--darkGray);
             text-align: center;
@@ -206,6 +218,8 @@
 
 </head>
 <body>
+    <div id="notifier"><p></p></div>
+
     <div class="headerContainer">
         <img src="/image/text-logo.svg" class="logo" alt="CoSphere Logo"/>
 
@@ -254,13 +268,24 @@
     </div>
 
     <script>
+        const notify = (color, message)=>{
+            let notifier = document.getElementById("notifier");
+            notifier.style.background = color;
+            notifier.querySelector("p").textContent = message;
+            notifier.style.display = "flex";
+
+            setTimeout(()=>{
+                notifier.style.display = "none";
+            }, 5000);
+        }
+
         document.querySelector("form").addEventListener("submit", ()=>{
             event.preventDefault();
 
             let data = {
-                firstName: document.getElementById("firstName");
-                lastName: document.getElementById("lastName");
-                email: document.getElementById("email").value,
+                firstName: document.getElementById("firstName").value,
+                lastName: document.getElementById("lastName").value,
+                email: document.getElementById("email").value
             };
 
             fetch("/newsletter/join", {
@@ -273,17 +298,15 @@
                 .then(r=>r.json())
                 .then((response)=>{
                     if(response.error === true){
-                        console.log("error");
-                        console.log(response);
+                        notify("red", response.message);
                     }else{
-                        console.log(response);
+                        notify("green", "Thanks for joining our newsletter. Look forward to hearing more from use soon!");
                     }
                 })
                 .catch((err)=>{
-                    console.log("error");
+                    notify("red", response.message);
                 });
         })
     </script>
 </body>
 </html>
-

@@ -16,7 +16,7 @@ module.exports = {
 
         axios({
             method: "post",
-            url: `https://api.mailgun.net/v3/lists/$newsletter@mg.cosphere.work/members`,
+            url: `https://api.mailgun.net/v3/lists/newsletter@mg.cosphere.work/members`,
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
             },
@@ -26,7 +26,7 @@ module.exports = {
             },
             data: queryString.stringify({
                 address: email,
-                name: `${firstName} ${lastName}`,
+                name: `${req.body.firstName} ${req.body.lastName}`,
                 upsert: true,
                 subscribed: true
             })
