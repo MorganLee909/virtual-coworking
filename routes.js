@@ -1,6 +1,7 @@
 const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
-const table = require("./controllers/table.js")
+const table = require("./controllers/table.js");
+const newsletter = require("./controllers/newsletter.js");
 const auth = require("./auth.js").auth;
 
 module.exports = (app)=>{
@@ -22,6 +23,9 @@ module.exports = (app)=>{
     app.post("/user", user.create);
     app.get("/email/code/:email/:code", user.confirmEmail);
     app.post("/user/login", user.login);
+
+    //NEWSLETTER
+    app.post("/newsletter/join", newsletter.join);
 
     //TABLES
     app.post("/table/join", auth, table.joinTable);
