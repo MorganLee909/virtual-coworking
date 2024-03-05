@@ -8,25 +8,29 @@
         <title>CoSphere</title>
     </head>
     <body>
-        <div id="homePage">
-            <div class="table" data-table="ny001-001">
-                <p>Table 1</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-002"> 
-                <p>Table 2</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-003">
-                <p>Table 3</p>
-                <button>Join</button>
-            </div>
-            <div class="table" data-table="ny01-004">
-                <p>Table 4</p>
-                <button>Join</button>
-            </div>
+        <div id="banner" style="display:none">
+            <p></p>
+        </div>
 
-            <div id="meeting" style="display:none"></div>
+        <div id="homePage" class="page">
+            <div id="tables"></div>
+
+            <template id="tablesTemplate">
+                <div class="table">
+                    <div class="tableCenter">
+                        <p></p>
+                        <button>Join</button>
+                    </div>
+                </div>
+            </template>
+
+            <template id="occupantTemplate">
+                <div class="occupant">
+                    <p class="name"></p>
+                </div>
+            </template>
+
+            <div id="meeting" style="display:none" data-fs="false"></div>
         </div>
         
         <script src='https://8x8.vc/external_api.js'></script>
