@@ -3,13 +3,18 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="/css/main.css"/>
     <link rel="icon" type="img/svg" href="/image/logo.svg"/>
-
-    <title>Connect, Collaborate, CoCreate: CoSphere's Virtual Workspace</title>
-
+    <title>CoSphere</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
+
+        :root{
+            --primary: #217ec3;
+            --primaryHover: #0580db;
+            --lightGray: #eff1f3;
+            --darkGray: #2f2f33;
+            --grey: #7a7a7a;
+        }
 
         body {
             background-color: var(--lightGray);
@@ -184,6 +189,16 @@
             line-height: 29px;
             padding-top: 40px;
         }
+
+        a{
+            color: var(--darkGray);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        a:hover{
+            color: var(--primaryHover);
+        }
     </style>
 
 </head>
@@ -242,51 +257,6 @@
             © Copyright 2024 CoSphere – All rights reserved. 
         </footer>
     </div>
-
-    <script>
-        const notify = (type, message)=>{
-            let notifier = document.getElementById("notifier");
-            notifier.textContent = message;
-            notifier.style.display = "flex";
-
-            setTimeout(()=>{
-                notifier.style.display = "none";
-            }, 5000);
-        }
-
-        document.querySelector("form").addEventListener("submit", ()=>{
-            event.preventDefault();
-
-            let data = {
-                email: document.getElementById("email").value,
-                password: document.getElementById("password").value,
-                confirmPassword: document.getElementById("confirmPassword").value,
-                firstName: document.getElementById("firstName").value,
-                lastName: document.getElementById("lastName").value
-            };
-
-            fetch("/user", {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            })
-                .then(r=>r.json())
-                .then((response)=>{
-                    if(response.error){
-                        notify("error", response.message);
-                    }else{
-                        localStorage.setItem("coworkToken", response.token);
-                        notify("success", response.message);
-                    }
-                })
-                .catch((err)=>{
-                    console.log(err);
-                    notify("error", "Internal server error");
-                });
-        });
-    </script>
 </body>
 </html>
 
