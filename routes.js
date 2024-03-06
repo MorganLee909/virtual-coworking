@@ -17,8 +17,7 @@ module.exports = (app)=>{
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
     app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
     app.get("/js/dashboard.js", (req, res)=>{res.sendFile(`${views}/build/js/dashboard.js`)});
-    app.get("/css/dashboard.js", (req, res)=>{res.sendFile(`${views}/build/css/dashboard.css`)});
-    app.get("/css/main.css", (req, res)=>{res.sendFile(`${views}/main.css`)});
+    app.get("/css/dashboard.css", (req, res)=>{res.sendFile(`${views}/build/css/dashboard.css`)});
 
     //USERS
     app.post("/user", user.create);

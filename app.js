@@ -21,7 +21,11 @@ let esbuildOptions = {
     bundle: true,
     minify: false,
     keepNames: true,
-    outdir: `${__dirname}/views/build/`
+    outdir: `${__dirname}/views/build/`,
+    define: {
+        //"process.env.SITE": process.env.NODE_ENV === "production" ? "cosphere.work" : JSON.stringify("localhost:8000")
+        "process.env.SITE": JSON.stringify(process.env.SITE)
+    }
 };
 
 if(process.env.NODE_ENV === "production"){

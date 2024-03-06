@@ -9,14 +9,9 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    currentUsers: {
-        type: Number,
-        required: true,
-        default: 0
-    },
     tables: [{
         name: String,
-        tableNumber: String,
+        tableNumber: Number,
         occupants: [{
             seatNumber: {
                 type: Number,
@@ -33,7 +28,6 @@ const LocationSchema = new mongoose.Schema({
             avatar: {
                 type: String,
                 required: false,
-                default: "/image/profileIcon.png"
             }
         }]
    }]

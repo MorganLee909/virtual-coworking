@@ -18,11 +18,10 @@ const participantJoined = (body)=>{
             user = response[0];
             for(let i = 0; i < response[1].tables.length; i++){
                 if(parseInt(response[1].tables[i].tableNumber) === table){
-                    response[1].tables[i].occupants.push({
-                        userId: body.data.id,
-                        name: response[0].firstName,
-                        avatar: "/image/profileicon.png"
-                    });
+                    let seat = response[1].tables[i].occupants.find(o => !o.userId);
+                    seat.userId = body.data.id;
+                    seat.name = response[0].firstName;
+                    avatar = "/image/profileIcon.png";
                 }
             }
 

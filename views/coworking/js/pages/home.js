@@ -2,8 +2,7 @@ module.exports = {
     render: function(){
         this.rendered = false;
         this.tableTemplate = document.getElementById("tablesTemplate").content.children[0];
-        this.occupantTemplate = document.getElementById("occupantTemplate").content.children[0];
-        this.location = "";
+        this.location = {};
 
         if(this.rendered === false){
             this.rendered = true;
@@ -21,11 +20,11 @@ module.exports = {
             this.getLocation();
 
             //Create websocket
-            const socket = new WebSocket(`ws://cosphere.work`);
+            const socket = new WebSocket(`ws://${process.env.SITE}`);
             socket.addEventListener("open", ()=>{
                 let data = {
                     token: localStorage.getItem("coworkToken"),
-                    location: "NY-001",
+                    location: "NY-01",
                     action: "setLocation"
                 };
 
@@ -36,7 +35,7 @@ module.exports = {
                 let data = JSON.parse(event.data);
 
                 switch(data.action){
-                    case "participantJoined": this.updateTables(data.tables); break;
+                    case "participantJoined": this.compareTables(this.location.tables, data.tables); break;
                 }
             });
 
@@ -144,7 +143,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65e625ade66c75c547c1597b`, {
+        fetch(`/location/65e8a011763e59e0d77e861a`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -153,57 +152,68 @@ module.exports = {
         })
             .then(r=>r.json())
             .then((location)=>{
-                this.location = location.identifier;
-
-                this.updateTables(location.tables);
+                this.compareTables([], location.tables);
+                this.location.tables = location.tables;
             })
             .catch((err)=>{
                 console.log(err);
             });
     },
 
-    updateTables: function(tables){
-        let existingTables = document.querySelectorAll(".table");
-        for(let i = 0; i < tables.length; i++){
-            let table = null;
-            for(let j = 0; j < existingTables.length; j++){
-                if(existingTables[j].getAttribute("data-table") === tables[i].tableNumber) table = existingTables[j];
+    compareTables: function(existing, updated){
+        existing.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
+        updated.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
+        let maxTables = existing.length > updated.length ? existing.length : updated.length;
+        for(let i = 0; i < maxTables; i++){
+            if(!existing[i]){
+                this.addTable(updated[i]);
+
+                for(let j = 0; j < updated[i].occupants.length; j++){
+                    if(updated[i].occupants[j].userId){
+                        this.addOccupant(updated[i].tableNumber, updated[i].occupants[j]);
+                    }
+                }
+
+            }else if(!updated[i]){
+                this.removeTable(existing[i]);
+            }else{
+                for(let j = 0; j < existing[i].occupants.length; j++){
+                    if(existing[i].occupants[j].userId !== updated[i].occupants[j].userId){
+                        if(!existing[i].occupants[j].userId){
+                            this.addOccupant(updated[i].tableNumber, updated[i].occupants[j]);
+                        }else if(!updated[i].occupants[j].userId){
+                            this.removeOccupant(updated[i].tableNumber, updated[i].occupants[j].seatNumber);
+                        }
+                    }
+                }
             }
-            if(!table) table = this.createTable(tables[i].tableNumber, tables[i].name);
-            this.setTableOccupants(table, tables[i].occupants);
         }
     },
 
-    createTable: function(tableNumber, tableName){
+    addTable: function(newTable){
         let table = this.tableTemplate.cloneNode(true);
-        table.setAttribute("data-table", tableNumber);
-        table.querySelector("p").textContent = tableName;
-        table.querySelector("button").addEventListener("click", ()=>{
-            this.joinTable(`${this.location}-${tableNumber}`);
+        table.setAttribute("data-table", newTable.tableNumber);
+        table.querySelector(".tableCenter p").textContent = newTable.tableName;
+        table.querySelector(".tableCenter button").addEventListener("click", ()=>{
+            this.joinTable(`${this.location.identifier}-${newTable.tableNumber}`);
         });
         document.getElementById("tables").appendChild(table);
+    },
 
-        return table;
-     },
+    removeTable: function(table){
+        document.querySelector(`[data-table="${table.tableNumber}"]`);
+    },
 
-    setTableOccupants: function(table, occupants){
-        let occupantDivs = table.querySelectorAll(".occupant");
-        
-        for(let i = 0; i < occupants.length; i++){
-            let occupant = Array.from(occupantDivs).find(a => a.getAttribute("data-user") === occupants[i].userId);
-            if(!occupant){
-                occupant = this.occupantTemplate.cloneNode(true);
-                occupant.setAttribute("data-user", occupants[i].userId);
-                occupant.querySelector(".name").textContent = occupants[i].name;
-                table.appendChild(occupant);
-            }
-        }
+    addOccupant: function(tableNumber, occupant){
+        let table = document.querySelector(`[data-table="${tableNumber}"]`);
+        let seat = table.querySelectorAll(".occupant")[occupant.seatNumber-1];
+        seat.querySelector("p").textContent = occupant.name;
+        seat.setAttribute("data-user", occupant.userId);
+    },
 
-        for(let i = 0; i < occupantDivs.length; i++){
-            let occupant = occupants.find(a => a.userId === occupantDivs[i].getAttribute("data-user"));
-            if(!occupant) occupantDivs[i].parentElement.removeChild(occupantDivs[i]);
-        }
-
-        return table;
+    removeOccupant: function(tableNumber, seatNumber){
+        let seat = document.querySelector(`[data-user=${user}]`);
+        seat.removeAttribute("data-user");
+        seat.querySelector("p").textContent = "";
     }
 }
