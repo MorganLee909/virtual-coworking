@@ -18,17 +18,21 @@ const LocationSchema = new mongoose.Schema({
         name: String,
         tableNumber: String,
         occupants: [{
+            seatNumber: {
+                type: Number,
+                required: true
+            },
             userId: {
                 type: mongoose.Schema.Types.ObjectId,
-                required: true
+                required: false
             },
             name: {
                 type: String,
-                required: true
+                required: false
             },
             avatar: {
                 type: String,
-                required: true,
+                required: false,
                 default: "/image/profileIcon.png"
             }
         }]

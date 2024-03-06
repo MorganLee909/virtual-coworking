@@ -1,3 +1,26 @@
+const createTable = (tableNumbers, tableSize)=>{
+    let newTable = 1;
+    while(true){
+        if(tableNumbers.includes(newTable)){
+            newTable++;
+        }else{
+            break;
+        }
+    }
+
+    let newTable = {
+        name: `Table ${newTable}`,
+        tableNumber: newTable,
+        occupants: []
+    };
+
+    for(let i = 0; i < tableSize; i++){
+        newTable.occupants.push({seatNumber: i});
+    }
+
+    return newTable;
+}
+
 module.exports = (location)=>{
     let emptyTables = [];
     let fullTables = [];
@@ -10,20 +33,7 @@ module.exports = (location)=>{
     tableNumbers.sort();
 
     if(fullTables.length === location.tables.length && emptyTables.length === 0){
-        let newTable = 1;
-        while(true){
-            if(tableNumbers.includes(newTable)){
-                newTable++;
-            }else{
-                break;
-            }
-        }
-
-        location.tables.push({
-            name: `Table ${newTable}`,
-            tableNumber: newTable,
-            occupants: []
-        });
+        location.tables.push(createTable(tableNumbers, 6));
     }else if(fullTables.length === location.tables.length && emptyTables.length > 1){
         for(let i = 1; i < emptyTables.length; i++){
             if(location.tables.length <= 3) break;
