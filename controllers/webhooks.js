@@ -2,6 +2,7 @@ const Location = require("../models/location.js");
 const User = require("../models/user.js");
 
 const websocketSend = require("./websockets.js").send;
+const manageTables = require("./manageTables.js");
 
 const participantJoined = (body)=>{
     let room = body.fqn.split("/")[1];
@@ -25,12 +26,15 @@ const participantJoined = (body)=>{
                 }
             }
 
+            manageTables(response[1]);
             return response[1].save();
         })
         .then((location)=>{
-            location = {...location};
-            location._doc.action = "participantJoined";
-            websocketSend(location._doc.identifier, location._doc);
+            let data = {
+                location: location,
+                action: "participantJoined"
+            };
+            websocketSend(location.identifier, data);
         })
         .catch((err)=>{
             console.error(err);

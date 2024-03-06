@@ -33,9 +33,13 @@ module.exports = {
 
             socket.addEventListener("message", (event)=>{
                 let data = JSON.parse(event.data);
+                console.log(data);
 
                 switch(data.action){
-                    case "participantJoined": this.compareTables(this.location.tables, data.tables); break;
+                    case "participantJoined":
+                        this.compareTables(this.location.tables, data.location.tables);
+                        this.location = data.location;
+                        break;
                 }
             });
 
@@ -143,7 +147,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65e8a011763e59e0d77e861a`, {
+        fetch(`/location/65e8a530763e59e0d77e861c`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -206,7 +210,7 @@ module.exports = {
 
     addOccupant: function(tableNumber, occupant){
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
-        let seat = table.querySelectorAll(".occupant")[occupant.seatNumber-1];
+        let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
         seat.querySelector("p").textContent = occupant.name;
         seat.setAttribute("data-user", occupant.userId);
     },
