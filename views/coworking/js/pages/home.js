@@ -33,10 +33,13 @@ module.exports = {
 
             socket.addEventListener("message", (event)=>{
                 let data = JSON.parse(event.data);
-                console.log(data);
 
                 switch(data.action){
                     case "participantJoined":
+                        this.compareTables(this.location.tables, data.location.tables);
+                        this.location = data.location;
+                        break;
+                    case "participantLeft":
                         this.compareTables(this.location.tables, data.location.tables);
                         this.location = data.location;
                         break;
@@ -186,7 +189,7 @@ module.exports = {
                         if(!existing[i].occupants[j].userId){
                             this.addOccupant(updated[i].tableNumber, updated[i].occupants[j]);
                         }else if(!updated[i].occupants[j].userId){
-                            this.removeOccupant(updated[i].tableNumber, updated[i].occupants[j].seatNumber);
+                            this.removeOccupant(updated[i].tableNumber, updated[i].occupants[j].seatNumber, existing[i].occupants[j].userId);
                         }
                     }
                 }
@@ -215,9 +218,11 @@ module.exports = {
         seat.setAttribute("data-user", occupant.userId);
     },
 
-    removeOccupant: function(tableNumber, seatNumber){
-        let seat = document.querySelector(`[data-user=${user}]`);
+    removeOccupant: function(tableNumber, seatNumber, user){
+        let seat = document.querySelector(`[data-user="${user}"]`);
+        console.log(seat);
         seat.removeAttribute("data-user");
         seat.querySelector("p").textContent = "";
+        console.log("done");
     }
 }
