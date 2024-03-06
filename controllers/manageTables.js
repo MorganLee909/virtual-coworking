@@ -21,6 +21,10 @@ const createTable = (tableNumbers, tableSize)=>{
     return newTable;
 }
 
+const removeTable = (tables, emptyTables)=>{
+    tables.splice(emptyTables[0], 1);
+}
+
 module.exports = (location)=>{
     let emptyTables = [];
     let fullTables = [];
@@ -34,16 +38,10 @@ module.exports = (location)=>{
 
     if(fullTables.length === location.tables.length && emptyTables.length === 0){
         location.tables.push(createTable(tableNumbers, 6));
-    }else if(fullTables.length === location.tables.length && emptyTables.length > 1){
-        for(let i = 1; i < emptyTables.length; i++){
-            if(location.tables.length <= 3) break;
-            location.tables.splice(emptyTables[i], 1);
-        }
-    }else if(fullTables.length < location.tables.length && emptyTables.length > 0){
-        for(let i = 0; i < emptyTables.length; i++){
-            if(location.tables.length <= 3) break;
-            location.tables.splice(emptyTables[i], 1);
-        }
+    }else if(emptyTables.length > 1 && location.tables.length > 3){
+        removeTable(location.tables, emptyTables);
+    }else if(fullTables.length < location.tables.length && emptyTables.length > 0 && location.tables.length > 3){
+        removeTable(location.tables, emptyTables);
     }
 
     location.tables.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);

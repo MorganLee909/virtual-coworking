@@ -55,7 +55,6 @@ const participantLeft = (body)=>{
                     seat.userId = undefined;
                     seat.name = undefined;
                     seat.avatar = undefined;
-
                     break;
                 }
             }
