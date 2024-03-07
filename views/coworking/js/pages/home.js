@@ -208,7 +208,8 @@ module.exports = {
     },
 
     removeTable: function(table){
-        document.querySelector(`[data-table="${table.tableNumber}"]`);
+        let tableElem = document.querySelector(`[data-table="${table.tableNumber}"]`);
+        tableElem.parentElement.removeChild(tableElem);
     },
 
     addOccupant: function(tableNumber, occupant){
@@ -220,9 +221,7 @@ module.exports = {
 
     removeOccupant: function(tableNumber, seatNumber, user){
         let seat = document.querySelector(`[data-user="${user}"]`);
-        console.log(seat);
         seat.removeAttribute("data-user");
         seat.querySelector("p").textContent = "";
-        console.log("done");
     }
 }
