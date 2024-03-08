@@ -8,37 +8,47 @@
         <title>CoSphere</title>
     </head>
     <body>
-        <div id="banner" style="display:none">
-            <p></p>
-        </div>
+        <header>
+            <img src="/image/text-logo.svg" alt="CoSphere logo with text"/>
 
-        <div id="homePage" class="page">
-            <div id="tables"></div>
+            <div class="headerRight">
+                <button class="buttonLink" id="deskBtn">My Desk</button>
+            </div>
+        </header>
 
-            <template id="tablesTemplate">
-                <div class="table">
-                    <div class="tableCenter">
-                        <p></p>
-                        <button>Join</button>
+        <main id="container">
+            <div id="banner" style="display:none">
+                <p></p>
+            </div>
+
+            <div id="homePage" class="page">
+                <div id="tables"></div>
+
+                <template id="tablesTemplate">
+                    <div class="table">
+                        <div class="tableCenter">
+                            <p></p>
+                            <button>Join</button>
+                        </div>
+
+                        <div class="occupant"><p class="name"</p></div>
+                        <div class="occupant"><p class="name"</p></div>
+                        <div class="occupant"><p class="name"</p></div>
+                        <div class="occupant"><p class="name"</p></div>
+                        <div class="occupant"><p class="name"</p></div>
+                        <div class="occupant"><p class="name"</p></div>
                     </div>
+                </template>
 
-                    <div class="occupant"><p class="name"</p></div>
-                    <div class="occupant"><p class="name"</p></div>
-                    <div class="occupant"><p class="name"</p></div>
-                    <div class="occupant"><p class="name"</p></div>
-                    <div class="occupant"><p class="name"</p></div>
-                    <div class="occupant"><p class="name"</p></div>
-                </div>
-            </template>
+                <template id="occupantTemplate">
+                    <div class="occupant">
+                        <p class="name"></p>
+                    </div>
+                </template>
 
-            <template id="occupantTemplate">
-                <div class="occupant">
-                    <p class="name"></p>
-                </div>
-            </template>
-
-            <div id="meeting" style="display:none" data-fs="false"></div>
-        </div>
+                <div id="meeting" style="display:none" data-fs="false"></div>
+            </div>
+        </main>
         
         <script src='https://8x8.vc/external_api.js'></script>
         <script src="/js/dashboard.js"></script>

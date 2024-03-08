@@ -3,8 +3,9 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 
 body{
-    height: 100vh;
+    height: calc(100vh - 75px);
     width: 100vw;
+    padding: 0 35px 35px 35px;
 }
 
 #banner{
@@ -19,4 +20,35 @@ body{
     font-size: 18px;
     color: white;
     z-index: 100;
+}
+
+main#container{
+    height: 100%;
+    width: 100%;
+    background: #fafafa;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 75px;
+    width: 100%;
+}
+
+header img{
+    height: 65px;
+}
+
+.buttonLink{
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #7a7a7a;
+    cursor: pointer;
+}
+
+.buttonLink:hover{
+    color: #8c8c8c;
 }
