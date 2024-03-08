@@ -99,11 +99,47 @@
     left: 25%;
     height: 50%;
     width: 50%;
-    resize: both;
-    overflow: auto;
     background: black;
-    border: 25px solid gray;
     z-index: 3;
+    overflow: visible;
+}
+
+#meetingTab{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 65px;
+    width: 25px;
+    position: absolute;
+    bottom: 0;
+    right: -25px;
+    background: #2f2f2f;
+    border-radius: 0 2px 2px 0;
+}
+
+#meetingTab > *{
+    cursor: pointer;
+}
+
+#meetingTab > *:hover{
+    background: #525252;
+}
+
+#meetingTab.fullscreen{
+    top: 0;
+    right: 0;
+    height: 50px;
+    width: 50px;
+}
+
+#meetingTab.fullscreen #expandTag{
+    height: 35px;
+    width: 35px;
+}
+
+#meetingTab.fullscreen #dragTag{
+    display: none;
 }
 
 #homeBlocker{
@@ -113,4 +149,9 @@
     position: absolute;
     top: 0;
     bottom: 0;
+}
+
+iframe.resize{
+    resize: both;
+    overflow: auto;
 }

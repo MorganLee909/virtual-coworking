@@ -3,7 +3,6 @@ module.exports = {
     tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
     location: {},
-    atTable: false,
 
     render: function(){
         if(!this.rendered){
@@ -40,8 +39,8 @@ module.exports = {
             });
 
             //Set video player frame controls
-            document.getElementById("meeting").addEventListener("dblclick", this.fullScreen);
-            this.dragElement(this.meetingDiv);
+            document.getElementById("expandTag").addEventListener("click", this.fullScreen);
+            this.dragElement(this.meetingDiv, document.getElementById("dragTag"));
         }
     },
 
@@ -51,7 +50,7 @@ module.exports = {
             jwt: jwt,
             height: "100%",
             width: "100%",
-            parentNode: document.getElementById("meeting")
+            parentNode: document.getElementById("meeting"),
         };
 
         api = new JitsiMeetExternalAPI("8x8.vc", options);
@@ -62,7 +61,6 @@ module.exports = {
             }
             document.getElementById("homeBlocker").style.display = "none";
             let thing = document.querySelector(".table.joinedTable");
-            console.log(thing);
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
         });
     },
@@ -114,7 +112,7 @@ module.exports = {
             });
     },
 
-    dragElement: function(elem){
+    dragElement: function(moveElem, clickElem){
         let positions = [];
         
         const dragMouseDown = (e)=>{
@@ -136,8 +134,8 @@ module.exports = {
             positions[2] = e.clientX;
             positions[3] = e.clientY;
 
-            elem.style.top = `${elem.offsetTop - positions[1]}px`;
-            elem.style.left = `${elem.offsetLeft - positions[0]}px`;
+            moveElem.style.top = `${moveElem.offsetTop - positions[1]}px`;
+            moveElem.style.left = `${moveElem.offsetLeft - positions[0]}px`;
         }
 
         const closeDragElement = ()=>{
@@ -145,23 +143,26 @@ module.exports = {
             document.onmousemove = null;
         }
 
-        elem.onmousedown = dragMouseDown;
+        clickElem.onmousedown = dragMouseDown;
     },
 
     fullScreen: function(event){
         let fs = event.target.getAttribute("data-fs");
+        let meetingDiv = document.getElementById("meeting");
         if(fs === "false"){
-            event.target.style.height = "100%";
-            event.target.style.width = "100%";
-            event.target.style.top = "0";
-            event.target.style.left = "0";
+            meetingDiv.style.height = "100%";
+            meetingDiv.style.width = "100%";
+            meetingDiv.style.top = "0";
+            meetingDiv.style.left = "0";
             event.target.setAttribute("data-fs", "true");
+            event.target.parentElement.classList.add("fullscreen");
         }else{
-            event.target.style.height = "50%";
-            event.target.style.width = "50%";
-            event.target.style.top = "25%";
-            event.target.style.left = "25%";
+            meetingDiv.style.height = "50%";
+            meetingDiv.style.width = "50%";
+            meetingDiv.style.top = "25%";
+            meetingDiv.style.left = "25%";
             event.target.setAttribute("data-fs", "false");
+            event.target.parentElement.classList.remove("fullscreen");
         }
     },
 
