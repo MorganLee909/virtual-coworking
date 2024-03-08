@@ -10,7 +10,10 @@ module.exports = {
             userData = jwt.verify(token, process.env.JWT_SECRET);
         }catch(e){
             console.error(e);
-            return res.redirect("/user/login");
+            return res.json({
+                error: true,
+                message: "Authorization"
+            });
         }
 
         User.findOne({_id: userData._id})

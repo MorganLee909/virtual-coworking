@@ -159,8 +159,12 @@ module.exports = {
         })
             .then(r=>r.json())
             .then((location)=>{
-                this.compareTables([], location.tables);
-                this.location.tables = location.tables;
+                if(location.error === true){
+                    window.location.href = "/user/login";
+                }else{
+                    this.compareTables([], location.tables);
+                    this.location.tables = location.tables;
+                }
             })
             .catch((err)=>{
                 console.log(err);
