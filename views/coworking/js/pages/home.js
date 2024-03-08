@@ -28,7 +28,7 @@ module.exports = {
 
                 switch(data.action){
                     case "participantJoined":
-                        this.compareTables(this.location.tables, data.location.tables);
+                        this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
                         this.location = data.location;
                         break;
                     case "participantLeft":
@@ -77,6 +77,7 @@ module.exports = {
     },
 
     joinTable: function(locationIdentifier, tableNumber){
+        console.log(locationIdentifier);
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
         if(this.tableFull(tableNumber)){
             createBanner("red", "All seats are occupied at this table");
@@ -179,7 +180,7 @@ module.exports = {
                 if(location.error === true){
                     window.location.href = "/user/login";
                 }else{
-                    this.compareTables([], location.tables);
+                    this.compareTables([], location.tables, location.identifier);
                     this.location.tables = location.tables;
                 }
             })
@@ -188,13 +189,13 @@ module.exports = {
             });
     },
 
-    compareTables: function(existing, updated){
+    compareTables: function(existing, updated, locationIdentifier){
         existing.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
         updated.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
         let maxTables = existing.length > updated.length ? existing.length : updated.length;
         for(let i = 0; i < maxTables; i++){
             if(!existing[i]){
-                this.addTable(updated[i]);
+                this.addTable(updated[i], locationIdentifier);
 
                 for(let j = 0; j < updated[i].occupants.length; j++){
                     if(updated[i].occupants[j].userId){
@@ -218,12 +219,12 @@ module.exports = {
         }
     },
 
-    addTable: function(newTable){
+    addTable: function(newTable, locationIdentifier){
         let table = this.tableTemplate.cloneNode(true);
         table.setAttribute("data-table", newTable.tableNumber);
         table.querySelector(".tableTitle").textContent = newTable.name;
         table.addEventListener("click", ()=>{
-            this.joinTable(this.location.identifier, newTable.tableNumber);
+            this.joinTable(locationIdentifier, newTable.tableNumber);
         });
         document.getElementById("tables").appendChild(table);
     },
