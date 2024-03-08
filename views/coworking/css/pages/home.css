@@ -5,6 +5,7 @@
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
+    position: relative;
 }
 
 #tables{
@@ -44,6 +45,10 @@
 }
 
 #tables .table:hover{
+    border: 3px solid #719ef0;
+}
+
+#tables .table.joinedTable{
     border: 3px solid #719ef0;
 }
 
@@ -98,4 +103,14 @@
     overflow: auto;
     background: black;
     border: 25px solid gray;
+    z-index: 3;
+}
+
+#homeBlocker{
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
 }

@@ -3,18 +3,11 @@ module.exports = {
     tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
     location: {},
+    atTable: false,
 
     render: function(){
         if(!this.rendered){
             this.rendered = true;
-            
-            //Add listeners to join table buttons
-            let tables = document.querySelectorAll(".table");
-            for(let i = 0; i < tables.length; i++){
-                tables[i].querySelector("button").addEventListener("click", ()=>{
-                    this.joinTable(tables[i].getAttribute("data-table"));
-                });
-            }
 
             //Retrieve and build tables
             this.getLocation();
@@ -67,10 +60,14 @@ module.exports = {
             while(this.meetingDiv.children.length > 0){
                 this.meetingDiv.removeChild(this.meetingDiv.firstChild);
             }
+            document.getElementById("homeBlocker").style.display = "none";
+            let thing = document.querySelector(".table.joinedTable");
+            console.log(thing);
+            document.querySelector(".table.joinedTable").classList.remove("joinedTable");
         });
     },
 
-    joinTable: function(table){
+    joinTable: function(locationIdentifier, tableNumber){
         this.meetingDiv.style.display = "flex";
 
         let api = {};
@@ -88,9 +85,11 @@ module.exports = {
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
-
+                    console.log(response.message);
                 }else{
-                    this.initIframeAPI(response, table);
+                    this.initIframeAPI(response, `${locationIdentifier}-${tableNumber}`);
+                    document.getElementById("homeBlocker").style.display = "flex";
+                    document.querySelector(`[data-table="${tableNumber}"]`).classList.add("joinedTable");
                 }
             })
             .catch((err)=>{
@@ -206,7 +205,7 @@ module.exports = {
         table.setAttribute("data-table", newTable.tableNumber);
         table.querySelector(".tableTitle").textContent = newTable.name;
         table.addEventListener("click", ()=>{
-            this.joinTable(`${this.location.identifier}-${newTable.tableNumber}`);
+            this.joinTable(this.location.identifier, newTable.tableNumber);
         });
         document.getElementById("tables").appendChild(table);
     },
