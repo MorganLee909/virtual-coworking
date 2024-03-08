@@ -23,8 +23,8 @@ let esbuildOptions = {
     keepNames: true,
     outdir: `${__dirname}/views/build/`,
     define: {
-        //"process.env.SITE": process.env.NODE_ENV === "production" ? "cosphere.work" : JSON.stringify("localhost:8000")
-        "process.env.SITE": JSON.stringify(process.env.SITE)
+        "process.env.SITE": JSON.stringify(process.env.SITE),
+        "process.env.WS": JSON.stringify(process.env.NODE_ENV === "production" ? "wss" : "ws")
     }
 };
 

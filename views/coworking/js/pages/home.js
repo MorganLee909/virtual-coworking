@@ -12,7 +12,7 @@ module.exports = {
             this.getLocation();
 
             //Create websocket
-            const socket = new WebSocket(`ws://${process.env.SITE}`);
+            const socket = new WebSocket(`process.env.WS://${process.env.SITE}`);
             socket.addEventListener("open", ()=>{
                 let data = {
                     token: localStorage.getItem("coworkToken"),
