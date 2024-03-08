@@ -30,5 +30,6 @@ createBanner = (color, message)=>{
 
 //BUTTONS
 document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
+document.getElementById("coworkingBtn").addEventListener("click", ()=>{changePage("home")});
 
 homePage.render();

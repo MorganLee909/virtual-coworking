@@ -1,12 +1,12 @@
 module.exports = {
-    render: function(){
-        this.rendered = false;
-        this.tableTemplate = document.getElementById("tablesTemplate").content.children[0];
-        this.location = {};
+    rendered: false,
+    tableTemplate: document.getElementById("tablesTemplate").content.children[0],
+    meetingDiv: document.getElementById("meeting"),
+    location: {},
 
-        if(this.rendered === false){
+    render: function(){
+        if(!this.rendered){
             this.rendered = true;
-            this.meetingDiv = document.getElementById("meeting");
             
             //Add listeners to join table buttons
             let tables = document.querySelectorAll(".table");
@@ -204,8 +204,8 @@ module.exports = {
     addTable: function(newTable){
         let table = this.tableTemplate.cloneNode(true);
         table.setAttribute("data-table", newTable.tableNumber);
-        table.querySelector(".tableCenter p").textContent = newTable.tableName;
-        table.querySelector(".tableCenter button").addEventListener("click", ()=>{
+        table.querySelector(".tableTitle").textContent = newTable.name;
+        table.addEventListener("click", ()=>{
             this.joinTable(`${this.location.identifier}-${newTable.tableNumber}`);
         });
         document.getElementById("tables").appendChild(table);
