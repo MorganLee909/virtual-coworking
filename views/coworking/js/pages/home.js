@@ -100,7 +100,7 @@ module.exports = {
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
-                    console.log(response.message);
+                    createBanner("red", response.message);
                 }else{
                     this.initIframeAPI(response, `${locationIdentifier}-${tableNumber}`);
                     document.getElementById("homeBlocker").style.display = "flex";
@@ -108,7 +108,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
+                createBanner("red", "Something went wrong. Please try refreshing the page");
             });
     },
 
@@ -184,7 +184,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
+                window.location.href="/user/login";
             });
     },
 
