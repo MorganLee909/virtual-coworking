@@ -237,12 +237,16 @@ module.exports = {
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
         let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
         seat.querySelector("p").textContent = occupant.name;
+        let image = document.createElement("img");
+        image.src = occupant.avatar;
+        seat.appendChild(image);
         seat.setAttribute("data-user", occupant.userId);
     },
 
     removeOccupant: function(tableNumber, seatNumber, user){
         let seat = document.querySelector(`[data-user="${user}"]`);
         seat.removeAttribute("data-user");
+        seat.removeChild(seat.querySelector("img"));
         seat.querySelector("p").textContent = "";
     }
 }

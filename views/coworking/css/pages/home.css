@@ -85,6 +85,13 @@
     border: 1px solid rgba(167, 167, 167, 0.2);
 }
 
+.table .occupant img{
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    border: 2px solid rgba(167, 167, 167, 0.2);
+}
+
 .table .occupant .name{
     position: absolute;
     bottom: -50%;
