@@ -1,4 +1,5 @@
 const homePage = require("./pages/home.js");
+const deskPage = require("./pages/desk.js");
 
 const pages = document.querySelectorAll(".page");
 
@@ -7,10 +8,11 @@ changePage = (page)=>{
         pages[i].style.display = "none";
     }
 
-    document.getElementById(`${page}page`).style.display = "flex";
+    document.getElementById(`${page}Page`).style.display = "flex";
 
     switch(page){
         case "home": homePage.render(); break;
+        case "desk": deskPage.render(); break;
     }
 }
 
@@ -25,5 +27,8 @@ createBanner = (color, message)=>{
         banner.style.display = "none";
     }, 5000);
 }
+
+//BUTTONS
+document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
 
 homePage.render();
