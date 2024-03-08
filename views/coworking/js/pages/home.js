@@ -67,7 +67,24 @@ module.exports = {
         });
     },
 
+    tableFull: function(tableNumber){
+        for(let i = 0; i < this.location.tables.length; i++){
+            if(this.location.tables[i].tableNumber === tableNumber){
+                for(let j = 0; j < this.location.tables[i].occupants.length; j++){
+                    if(!this.location.tables[i].occupants[j].userId) return false;
+                }
+            }
+        }
+        return true;
+    },
+
     joinTable: function(locationIdentifier, tableNumber){
+        let table = document.querySelector(`[data-table="${tableNumber}"]`);
+        if(this.tableFull(tableNumber)){
+            createBanner("red", "All seats are occupied at this table");
+            return;
+        }
+
         this.meetingDiv.style.display = "flex";
 
         let api = {};
@@ -89,7 +106,7 @@ module.exports = {
                 }else{
                     this.initIframeAPI(response, `${locationIdentifier}-${tableNumber}`);
                     document.getElementById("homeBlocker").style.display = "flex";
-                    document.querySelector(`[data-table="${tableNumber}"]`).classList.add("joinedTable");
+                    table.classList.add("joinedTable");
                 }
             })
             .catch((err)=>{
