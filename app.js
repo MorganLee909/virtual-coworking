@@ -49,6 +49,8 @@ if(process.env.NODE_ENV === "production"){
 
     esbuildOptions.minify = true;
     esbuildOptions.keepNames = false;
+
+    wss = new Websocket.Server({server: httpsServer});
 }
 
 mongoose.connect(mongoString);
