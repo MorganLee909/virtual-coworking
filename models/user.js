@@ -35,6 +35,10 @@ const UserSchema = new mongoose.Schema({
         productId: String,
         subscriptionId: String,
         subscriptionStatus: String
+    },
+    resetCode: {
+        type: String,
+        required: false
     }
 });
 

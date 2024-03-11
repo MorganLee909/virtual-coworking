@@ -1,10 +1,13 @@
 const User = require("../models/user.js");
 
+const passwordResetEmail = require("../email/passwordResetEmail.js");
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
 const queryString = require("querystring");
 const confirmationEmail = require("../email/confirmationEmail.js");
+const uuid = require("crypto").randomUUID;
 
 module.exports = {
     /*
@@ -64,7 +67,7 @@ module.exports = {
 
                 axios({
                     method: "post",
-                    url: "https://api.mailgun.net/v3/mg.leemorgan.dev/messages",
+                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
@@ -73,7 +76,7 @@ module.exports = {
                         password: process.env.MAILGUN_KEY
                     },
                     data: queryString.stringify({
-                        from: "Lee Morgan <lee@leemorgan.dev>",
+                        from: "CoSphere <support@cosphere.work>",
                         to: email,
                         subject: "Virtual Coworking email confirmation",
                         html: confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`)
@@ -150,7 +153,7 @@ module.exports = {
                     }, process.env.JWT_SECRET);
                     return res.json(token);
                 }else{
-                    console.log("pass bad");
+                    console.error("pass bad");
                     throw "pass";
                 }
             })
@@ -167,6 +170,55 @@ module.exports = {
                     default:
                         console.error(err);
                         return res.json({
+                            error: true,
+                            message: "Internal server error"
+                        });
+                }
+            })
+    },
+
+    /*
+     POST: send reset password email
+     req.body.email = String
+     response = String
+     */
+    passwordEmail: function(req, res){
+        let email = req.body.email.toLowerCase();
+
+        User.findOne({email: email})
+            .then((user)=>{
+                if(!user) throw "email";
+                user.resetCode = uuid();
+                return user.save();
+            })
+            .then((user)=>{
+                return axios({
+                    method: "post",
+                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MAILGUN_KEY
+                    },
+                    data: queryString.stringify({
+                        from: "CoSphere <support@cosphere.work>",
+                        to: email,
+                        subject: "CoSphere password reset",
+                        html: passwordResetEmail(email, user.resetCode)
+                    })
+                });
+            })
+            .then((response)=>{
+                res.json("Password reset email has been sent if account exists");
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "email": break;
+                    default:
+                        console.error(err);
+                        res.json({
                             error: true,
                             message: "Internal server error"
                         });
