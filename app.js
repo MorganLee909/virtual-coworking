@@ -7,7 +7,10 @@ const compression = require("compression");
 const esbuild = require("esbuild");
 const https = require("https");
 const fs = require("fs");
-const wss = new Websocket.Server({server: server});
+global.wss = new Websocket.Server({server: server});
+
+const {wsAuth} = require("./auth.js");
+const {leaveTable} = require("./controllers/manageTables.js");
 
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
@@ -54,10 +57,27 @@ esbuild.buildSync(esbuildOptions);
 app.use(compression());
 app.use(express.json());
 
-require("./controllers/websockets.js").incoming(wss);
+//require("./controllers/websockets.js").incoming(wss);
 require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
     httpsServer.listen(process.env.HTTPS_PORT);
 }
 server.listen(process.env.PORT);
+
+wss.on("connection", (ws)=>{
+    ws.on("message", (message)=>{
+        let data = JSON.parse(message);
+        wsAuth(data.token)
+            .then((user)=>{
+                if(!user) throw "auth";
+                switch(data.action){
+                    case "setLocation": ws.location = data.location; break;
+                    case "participantLeft": leaveTable(data.room, user); break;
+                }
+            })
+            .catch((err)=>{
+                console.error(err);
+            });
+    });
+})

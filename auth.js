@@ -36,5 +36,18 @@ module.exports = {
                         });
                 }
             });
+    },
+
+    wsAuth: async function(token){
+        let userData = {};
+        try{
+            userData = jwt.verify(token, process.env.JWT_SECRET);
+        }catch(e){
+            console.error(e);
+        }
+
+        let user = await User.findOne({_id: userData._id});
+        if(user.status !== "active") return false;
+        return user;
     }
 }

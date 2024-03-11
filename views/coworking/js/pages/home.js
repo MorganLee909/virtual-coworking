@@ -17,7 +17,7 @@ module.exports = {
             this.socket.addEventListener("open", ()=>{
                 let data = {
                     token: localStorage.getItem("coworkToken"),
-                    location: "NY-01",
+                    location: "ny-01",
                     action: "setLocation"
                 };
 
@@ -29,7 +29,6 @@ module.exports = {
 
                 switch(data.action){
                     case "participantJoined":
-                        console.log(data.action);
                         this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
                         this.location = data.location;
                         break;
@@ -64,6 +63,12 @@ module.exports = {
             document.getElementById("homeBlocker").style.display = "none";
             let thing = document.querySelector(".table.joinedTable");
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
+            console.log(data);
+            this.socket.send(JSON.stringify({
+                action: "participantLeft",
+                room: data.roomName,
+                token: localStorage.getItem("coworkToken")
+            }));
         });
     },
 
@@ -167,7 +172,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65ef0d49d0b674e64604c57d`, {
+        fetch(`/location/65ef1ad4d0b674e64604c57e`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",

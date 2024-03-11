@@ -1,4 +1,6 @@
 const Location = require("../models/location.js");
+
+const {leaveTable} = require("./manageTables.js");
 let wss = {};
 
 module.exports = {
@@ -10,6 +12,7 @@ module.exports = {
 
                 switch(data.action){
                     case "setLocation": ws.location = data.location; break;
+                    case "participantLeft": leaveTable(); break;
                 }
             });
         });

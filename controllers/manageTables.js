@@ -1,7 +1,5 @@
 const Location = require("../models/location.js");
 
-const websocketSend = require("./websockets.js").send;
-
 const createTable = (tableNumbers, tableSize)=>{
     let newTableNumber = 1;
     while(true){
@@ -77,11 +75,54 @@ const joinTable = (roomName, user)=>{
                 location: location,
                 action: "participantJoined"
             };
-            websocketSend(location.identifier, data);
+            wss.clients.forEach((client)=>{
+                if(client.location === location.identifier){
+                    client.send(client.send(JSON.stringify(data)));
+                }
+            })
         })
         .catch((err)=>{
             console.error(err);
         });
 }
 
-module.exports = {joinTable};
+const leaveTable = (roomName, user)=>{
+    let roomParts = roomName.split("-");
+    let locationString = `${roomParts[0]}-${roomParts[1]}`;
+    let table = parseInt(roomParts[2]);
+
+    Location.findOne({identifier: locationString})
+        .then((location)=>{
+            for(let i = 0; i < location.tables.length; i++){
+                if(location.tables[i].tableNumber === table){
+                    let seat = location.tables[i].occupants.find(o => o.userId?.toString() === user._id.toString());
+                    seat.userId = undefined;
+                    seat.name = undefined;
+                    seat.avatar = undefined;
+                    break;
+                }
+            }
+
+            manageTables(location);
+            return location.save();
+        })
+        .then((location)=>{
+            let data = {
+                location: location,
+                action: "participantLeft"
+            };
+            wss.clients.forEach((client)=>{
+                if(client.location === location.identifier){
+                    client.send(JSON.stringify(data));
+                }
+            })
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
+}
+
+module.exports = {
+    joinTable,
+    leaveTable
+};

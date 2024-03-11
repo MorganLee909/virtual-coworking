@@ -3,7 +3,7 @@ const stripe = require("./controllers/stripe.js");
 const newsletter = require("./controllers/newsletter.js");
 const location = require("./controllers/location.js")
 const webhooks = require("./controllers/webhooks.js");
-const auth = require("./auth.js").auth;
+const {auth}= require("./auth.js");
 
 module.exports = (app)=>{
     const views = `${__dirname}/views`;
