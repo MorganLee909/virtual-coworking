@@ -95,7 +95,10 @@ wss.on("connection", (ws)=>{
 
 const ping = setInterval(()=>{
     wss.clients.forEach((client)=>{
-        if(client.isAlive === false) client.terminate();
+        if(client.isAlive === false){
+            client.terminate();
+            leaveTable(ws.location, ws.user);
+        }
 
         client.isAlive = false;
         client.ping();
