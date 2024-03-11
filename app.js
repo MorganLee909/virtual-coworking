@@ -88,6 +88,19 @@ wss.on("connection", (ws)=>{
     });
 
     ws.on("close", ()=>{
-        leaveTable(room, user);
+        if(room) leaveTable(room, user);
     });
-})
+
+    ws.on("pong", ()=>{
+        ws.isAlive = true
+    });
+});
+
+const ping = setInterval(()=>{
+    wss.clients.forEach((client)=>{
+        if(client.isAlive === false) client.terminate();
+
+        client.isAlive = false;
+        client.ping();
+    })
+}, 60000);
