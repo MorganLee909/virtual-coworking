@@ -224,5 +224,64 @@ module.exports = {
                         });
                 }
             })
+    },
+
+    /*
+     POST: reset user password
+     req.body = {
+        password: String
+        confirmPassword: String
+        email: String
+        code: String
+     }
+     response = {}
+     */
+    passwordReset: function(req, res){
+        console.log("passwordReset");
+        if(req.body.password !== req.body.confirmPassword){
+            return res.json({
+                error: true,
+                message: "Passwords do not match"
+            });
+        }
+
+        if(req.body.password.length < 10){
+            return res.json({
+                error: true,
+                message: "Password must contain at least 10 characters"
+            });
+        }
+
+        let email = req.body.email.toLowerCase();
+        User.findOne({email: email})
+            .then((user)=>{
+                if(!user) throw "auth";
+                if(req.body.code !== user.resetCode) throw "auth";
+
+                let salt = bcrypt.genSaltSync(10);
+                let hash = bcrypt.hashSync(req.body.password, salt);
+
+                user.password = hash;
+
+                return user.save();
+            })
+            .then((user)=>{
+                res.json({});
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "auth":
+                        return res.json({
+                            error: true,
+                            message: "Invalid link, unable to update password"
+                        });
+                    default:
+                        console.error(err);
+                        return res.json({
+                            error: true,
+                            message: "Internal server error"
+                        });
+                }
+            });
     }
 }
