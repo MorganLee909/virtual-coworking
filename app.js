@@ -66,10 +66,16 @@ if(process.env.NODE_ENV === "production"){
 server.listen(process.env.PORT);
 
 wss.on("connection", (ws)=>{
+    let user = {};
+    let room = "";
+
     ws.on("message", (message)=>{
         let data = JSON.parse(message);
         wsAuth(data.token)
-            .then((user)=>{
+            .then((response)=>{
+                user = response;
+                room = data.room;
+
                 if(!user) throw "auth";
                 switch(data.action){
                     case "setLocation": ws.location = data.location; break;
@@ -79,5 +85,9 @@ wss.on("connection", (ws)=>{
             .catch((err)=>{
                 console.error(err);
             });
+    });
+
+    ws.on("close", ()=>{
+        leaveTable(room, user);
     });
 })
