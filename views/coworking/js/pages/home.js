@@ -172,7 +172,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65ef1ad4d0b674e64604c57e`, {
+        fetch(`/location/65ef3047d0b674e64604c57f`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",

@@ -1,4 +1,5 @@
 const Location = require("../models/location.js");
+const User = require("../models/user.js");
 
 const createTable = (tableNumbers, tableSize)=>{
     let newTableNumber = 1;
@@ -86,20 +87,40 @@ const joinTable = (roomName, user)=>{
         });
 }
 
-const leaveTable = (roomName, user)=>{
+const leaveTable = (roomName, userId)=>{
     let roomParts = roomName.split("-");
     let locationString = `${roomParts[0]}-${roomParts[1]}`;
-    let table = parseInt(roomParts[2]);
+    let table = "";
+    try{
+        table = parseInt(roomParts[2]);
+    }catch(e){}
 
     Location.findOne({identifier: locationString})
         .then((location)=>{
-            for(let i = 0; i < location.tables.length; i++){
-                if(location.tables[i].tableNumber === table){
-                    let seat = location.tables[i].occupants.find(o => o.userId?.toString() === user._id.toString());
-                    seat.userId = undefined;
-                    seat.name = undefined;
-                    seat.avatar = undefined;
-                    break;
+            if(table){
+                for(let i = 0; i < location.tables.length; i++){
+                    if(location.tables[i].tableNumber === table){
+                        let seat = location.tables[i].occupants.find(o => o.userId?.toString() === userId);
+                        seat.userId = undefined;
+                        seat.name = undefined;
+                        seat.avatar = undefined;
+                        break;
+                    }
+                }
+            }else{
+                let found = false;
+                for(let i = 0; i < location.tables.length; i++){
+                    for(let j = 0; j < location.tables[i].occupants.length; j++){
+                        if(location.tables[i].occupants[j].userId?.toString() === userId){
+                            let seat = location.tables[i].occupants[j];
+                            seat.userId = undefined;
+                            seat.name = undefined;
+                            seat.avatar = undefined;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(found) break;
                 }
             }
 

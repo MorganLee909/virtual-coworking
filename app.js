@@ -66,20 +66,17 @@ if(process.env.NODE_ENV === "production"){
 server.listen(process.env.PORT);
 
 wss.on("connection", (ws)=>{
-    let user = {};
-    let room = "";
-
     ws.on("message", (message)=>{
         let data = JSON.parse(message);
         wsAuth(data.token)
-            .then((response)=>{
-                user = response;
-                room = data.room;
-
+            .then((user)=>{
                 if(!user) throw "auth";
                 switch(data.action){
-                    case "setLocation": ws.location = data.location; break;
-                    case "participantLeft": leaveTable(data.room, user); break;
+                    case "setLocation":
+                        ws.location = data.location;
+                        ws.user = user._id.toString();
+                        break;
+                    case "participantLeft": leaveTable(data.room, user._id.toString()); break;
                 }
             })
             .catch((err)=>{
@@ -88,11 +85,11 @@ wss.on("connection", (ws)=>{
     });
 
     ws.on("close", ()=>{
-        if(room) leaveTable(room, user);
+        leaveTable(ws.location, ws.user);
     });
 
     ws.on("pong", ()=>{
-        ws.isAlive = true
+        ws.isAlive = true;
     });
 });
 
@@ -103,4 +100,4 @@ const ping = setInterval(()=>{
         client.isAlive = false;
         client.ping();
     })
-}, 60000);
+}, 30000);
