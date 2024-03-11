@@ -1,5 +1,7 @@
 const Location = require("../models/location.js");
 
+const {joinTable} = require("./manageTables.js");
+
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const crypto = require("crypto");
@@ -51,10 +53,12 @@ module.exports = {
             },
             iss: "chat",
             nbf: nbf,
-            room: "*",
+            room: req.body.room,
             exp: exp,
             sub: process.env.JAAS_APP_ID
         }, privateKey, options);
+
+        joinTable(req.body.room, res.locals.user);
 
         return res.json(token);
     },

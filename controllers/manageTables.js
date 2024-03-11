@@ -1,3 +1,7 @@
+const Location = require("../models/location.js");
+
+const websocketSend = require("./websockets.js").send;
+
 const createTable = (tableNumbers, tableSize)=>{
     let newTableNumber = 1;
     while(true){
@@ -25,7 +29,7 @@ const removeTable = (tables, emptyTables)=>{
     tables.splice(emptyTables[0], 1);
 }
 
-module.exports = (location)=>{
+const manageTables = (location)=>{
     let emptyTables = [];
     let fullTables = [];
     let tableNumbers = [];
@@ -48,3 +52,36 @@ module.exports = (location)=>{
 
     return location;
 }
+
+const joinTable = (roomName, user)=>{
+    let roomParts = roomName.split("-");
+    let locationString = `${roomParts[0]}-${roomParts[1]}`;
+    let table = parseInt(roomParts[2]);
+
+    Location.findOne({identifier: locationString})
+        .then((location)=>{
+            for(let i = 0; i < location.tables.length; i++){
+                if(parseInt(location.tables[i].tableNumber) === table){
+                    let seat = location.tables[i].occupants.find(o => !o.userId);
+                    seat.userId = user._id;
+                    seat.name = user.firstName;
+                    seat.avatar = "/image/profileIcon.png";
+                }
+            }
+
+            manageTables(location);
+            return location.save();
+        })
+        .then((location)=>{
+            let data = {
+                location: location,
+                action: "participantJoined"
+            };
+            websocketSend(location.identifier, data);
+        })
+        .catch((err)=>{
+            console.error(err);
+        });
+}
+
+module.exports = {joinTable};

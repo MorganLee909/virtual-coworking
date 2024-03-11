@@ -31,9 +31,6 @@ module.exports = (app)=>{
     app.post("/location/table/join", auth, location.joinTable);
     app.get("/location/:location", auth, location.getTables);
 
-    //WEBHOOKS
-    app.post("/jitsi/webhook", webhooks.handle);
-
     //STRIPE
     app.get("/stripe/checkout-session", stripe.checkoutSession);
     app.get("/stripe/payment-status*", stripe.finished);

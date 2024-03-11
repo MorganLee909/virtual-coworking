@@ -3,6 +3,7 @@ module.exports = {
     tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
     location: {},
+    socket: {},
 
     render: function(){
         if(!this.rendered){
@@ -12,22 +13,23 @@ module.exports = {
             this.getLocation();
 
             //Create websocket
-            const socket = new WebSocket(`process.env.WS://${process.env.SITE}`);
-            socket.addEventListener("open", ()=>{
+            this.socket = new WebSocket(`ws://localhost:8000`);
+            this.socket.addEventListener("open", ()=>{
                 let data = {
                     token: localStorage.getItem("coworkToken"),
                     location: "NY-01",
                     action: "setLocation"
                 };
 
-                socket.send(JSON.stringify(data));
+                this.socket.send(JSON.stringify(data));
             });
 
-            socket.addEventListener("message", (event)=>{
+            this.socket.addEventListener("message", (event)=>{
                 let data = JSON.parse(event.data);
 
                 switch(data.action){
                     case "participantJoined":
+                        console.log(data.action);
                         this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
                         this.location = data.location;
                         break;
@@ -77,7 +79,6 @@ module.exports = {
     },
 
     joinTable: function(locationIdentifier, tableNumber){
-        console.log(locationIdentifier);
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
         if(this.tableFull(tableNumber)){
             createBanner("red", "All seats are occupied at this table");
@@ -94,9 +95,7 @@ module.exports = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
             },
-            body: JSON.stringify({
-                room: "table-one"
-            })
+            body: JSON.stringify({room: `${locationIdentifier}-${tableNumber}`})
         })
             .then(r=>r.json())
             .then((response)=>{
@@ -168,7 +167,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65e8c313763e59e0d77e8622`, {
+        fetch(`/location/65ef0d49d0b674e64604c57d`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
