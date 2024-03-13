@@ -1,5 +1,44 @@
 module.exports = {
+    rendered: false,
+
     render: function(){
-        console.log("desk rendered");
+        if(!this.rendered){
+            let firstName = document.getElementById("firstNameChange");
+            let lastName = document.getElementById("lastNameChange");
+            let email = document.getelementById("emailChange");
+            let password = document.getElementById("passwordChange");
+
+            firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
+            lastName.addEventListener("change", ()=>{this.updateProfile("lastName", lastName.value, "Last name")});
+            email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
+            password.addEventListener("change", ()=>{this.updateProfile("password", password.value, "Password")});
+
+            this.rendered = true;
+        }
+    },
+
+    updateProfile: function(field, value, fieldName){
+        let data = {};
+        data[field] = value;
+
+        fetch("/user/profile", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(r=>r.json())
+            .then((response)=>{
+                if(response.error){
+                    createBanner("red", response.message);
+                }else{
+                    createBanner("green", "Your profile has been updated");
+                    createBanner("green", `${fieldName} has been updated`);
+                }
+            })
+            .then((err)=>{
+                createBanner("red", "Server error");
+            });
     }
 }

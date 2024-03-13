@@ -282,5 +282,63 @@ module.exports = {
                         });
                 }
             });
+    },
+
+    /*
+     POST: Update profile information
+     req.body = {
+        firstName: String
+        lastName: String
+        email: String
+        password: String
+     }
+     response = {
+        error: false,
+        message: String
+     }
+     */
+    updateProfile: function(req, res){
+        if(req.body.firstName) res.locals.user.firstName = req.body.firstName;
+        if(req.body.lastName) res.locals.user.lastName = req.body.lastName;
+        if(req.body.email){
+            let email = req.body.email.toLowerCase()
+            if(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email) === false){
+                return res.json({
+                    error: true,
+                    message: "Invalid email"
+                });
+            }
+            res.locals.user.email = email;
+        }
+
+        if(req.body.password){
+            if(password.length < 10){
+                return res.json({
+                    error: true,
+                    message: "Password must contain at least 10 characters"
+                });
+            }
+
+            let salt = bcrypt.genSaltSync(10);
+            let hash = bcrypt.hashSync(req.body.password, salt);
+            res.locals.user.password = hash;
+        }
+
+        res.locals.user.save()
+            .then((user)=>{
+                user.password = undefined;
+                user.expiration = undefined;
+                user.stripe = undefined;
+                user.resetCode = undefined;
+
+                res.json(user);
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error"
+                });
+            });
     }
 }
