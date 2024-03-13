@@ -13,6 +13,29 @@
     font-weight: 700;
 }
 
+.avatarManage{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 420px;
+}
+
+.avatarManageText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 280px;
+    height: 100%;
+    font-size: 14px;
+}
+
+.avatarManageText a{
+    font-weight: 600;
+    color: #4f4f50;
+    text-decoration: none;
+    margin-top: 15px;
+}
+
 #deskPage label{
     display: flex;
     flex-direction: column;
