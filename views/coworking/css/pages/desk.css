@@ -38,3 +38,15 @@
     width: 200px;
     margin: 0 12px;
 }
+
+#deskPage .payment{
+    display: flex;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f4f50;
+    text-decoration: none;
+}
+
+#deskPage .payment p{
+    margin-left: 18px;
+}
