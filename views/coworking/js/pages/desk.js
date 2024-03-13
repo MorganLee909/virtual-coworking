@@ -5,7 +5,7 @@ module.exports = {
         if(!this.rendered){
             let firstName = document.getElementById("firstNameChange");
             let lastName = document.getElementById("lastNameChange");
-            let email = document.getelementById("emailChange");
+            let email = document.getElementById("emailChange");
             let password = document.getElementById("passwordChange");
 
             firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
@@ -24,7 +24,8 @@ module.exports = {
         fetch("/user/profile", {
             method: "post",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
             },
             body: JSON.stringify(data)
         })
@@ -37,7 +38,7 @@ module.exports = {
                     createBanner("green", `${fieldName} has been updated`);
                 }
             })
-            .then((err)=>{
+            .catch((err)=>{
                 createBanner("red", "Server error");
             });
     }

@@ -236,7 +236,6 @@ module.exports = {
      response = {}
      */
     passwordReset: function(req, res){
-        console.log("passwordReset");
         if(req.body.password !== req.body.confirmPassword){
             return res.json({
                 error: true,
@@ -312,7 +311,7 @@ module.exports = {
         }
 
         if(req.body.password){
-            if(password.length < 10){
+            if(req.body.password.length < 10){
                 return res.json({
                     error: true,
                     message: "Password must contain at least 10 characters"
