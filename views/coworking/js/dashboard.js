@@ -31,5 +31,9 @@ createBanner = (color, message)=>{
 //BUTTONS
 document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
 document.getElementById("coworkingBtn").addEventListener("click", ()=>{changePage("home")});
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+    localStorage.removeItem("coworkToken");
+    window.location.href = "/";
+});
 
 homePage.render();
