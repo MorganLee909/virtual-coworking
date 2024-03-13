@@ -20,6 +20,7 @@ module.exports = (app)=>{
 
     //USERS
     app.post("/user", user.create);
+    app.get("/user", auth, user.getUser);
     app.get("/email/code/:email/:code", user.confirmEmail);
     app.post("/user/login", user.login);
     app.get("/user/password/email", (req, res)=>{res.sendFile(`${views}/passwordEmail.html`)});

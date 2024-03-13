@@ -103,6 +103,18 @@ module.exports = {
             });
     },
 
+    /*
+     GET: retrieve user data
+     response = User
+     */
+    getUser: function(req, res){
+        res.locals.user.password = undefined;
+        res.locals.user.stripe = undefined;
+        res.local.user.resetCode = undefined;
+
+        res.json(res.locals.user);
+    },
+
     confirmEmail: function(req, res){
         User.findOne({email: req.params.email.toLowerCase()})
             .then((user)=>{
