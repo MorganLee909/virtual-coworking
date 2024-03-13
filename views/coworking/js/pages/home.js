@@ -12,37 +12,38 @@ module.exports = {
             //Retrieve and build tables
             this.getLocation();
 
-            //Create websocket
-            this.socket = new WebSocket(`ws://localhost:8000`);
-            this.socket.addEventListener("open", ()=>{
-                let data = {
-                    token: localStorage.getItem("coworkToken"),
-                    location: "ny-01",
-                    action: "setLocation"
-                };
-
-                this.socket.send(JSON.stringify(data));
-            });
-
-            this.socket.addEventListener("message", (event)=>{
-                let data = JSON.parse(event.data);
-
-                switch(data.action){
-                    case "participantJoined":
-                        this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
-                        this.location = data.location;
-                        break;
-                    case "participantLeft":
-                        this.compareTables(this.location.tables, data.location.tables);
-                        this.location = data.location;
-                        break;
-                }
-            });
-
             //Set video player frame controls
             document.getElementById("expandTag").addEventListener("click", this.fullScreen);
             this.dragElement(this.meetingDiv, document.getElementById("dragTag"));
         }
+    },
+
+    activateWebsocket: function(){
+        this.socket = new WebSocket(`ws://localhost:8000`);
+        this.socket.addEventListener("open", ()=>{
+            let data = {
+                token: localStorage.getItem("coworkToken"),
+                location: "ny-01",
+                action: "setLocation"
+            };
+
+            this.socket.send(JSON.stringify(data));
+        });
+
+        this.socket.addEventListener("message", (event)=>{
+            let data = JSON.parse(event.data);
+
+            switch(data.action){
+                case "participantJoined":
+                    this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
+                    this.location = data.location;
+                    break;
+                case "participantLeft":
+                    this.compareTables(this.location.tables, data.location.tables);
+                    this.location = data.location;
+                    break;
+            }
+        });
     },
 
     initIframeAPI: function(jwt, table){
@@ -186,6 +187,7 @@ module.exports = {
                 }else{
                     this.compareTables([], location.tables, location.identifier);
                     this.location.tables = location.tables;
+                    this.activateWebsocket();
                 }
             })
             .catch((err)=>{
