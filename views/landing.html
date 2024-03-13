@@ -27,10 +27,12 @@
             align-items: center;
             font-family: "Open Sans";
             height: 75px;
-            width: 750px;
+            width: 100%;
+            max-width: 750px;
             position: fixed;
             top: 35px;
-            left: calc(50% - 375px);
+            left: 0;
+            right: 0;
             color: white;
             z-index: 100;
         }
@@ -53,8 +55,10 @@
             font-style: normal;
             font-weight: 400;
             line-height: 27px;
-            width: 600px;
             padding-bottom: 30px;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 750px;
         }
 
         .imageContainer{
@@ -148,7 +152,8 @@
             justify-content: center;
             align-items: center;
             height: 100%;
-            width: 420px;
+            width: 100%;
+            max-width: 420px;
         }
 
         #formName{
@@ -156,7 +161,8 @@
         }
 
         #formName label{
-            width: 196px;
+            width: 100%;
+            max-width: 196px;
         }
 
         label{
@@ -227,6 +233,39 @@
             margin-bottom: 30px;
             margin-top: 80px;
         }
+
+        @media screen and (max-width: 750px) {
+            body{
+                border: 0;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .heroImg{
+             width: 100%;
+            }
+
+            .headerContainer{
+                flex-flow: column;
+                padding-top: 12px;
+                margin-bottom: 14px;
+            }
+
+            .logo{
+                height: 100%;
+            }
+
+            #formName {
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #formName label{
+                width: 100%;
+                max-width: 100%;
+            }
+        }
     </style>
 
 </head>
@@ -243,7 +282,7 @@
     </div>
     
     <h1 class="mainTitle">Your Virtual Coworking Community</h1>
-    <p class="mainText" style="width: 686px; margin: 0 auto;">CoSphere is a virtual coworking community that allows you to connect with other remote workers and freelancers. Our platform provides a space for you to work, network, and collaborate with others in your field. Join us today and take your remote work experience to the next level!</p>
+    <p class="mainText">CoSphere is a virtual coworking community that allows you to connect with other remote workers and freelancers. Our platform provides a space for you to work, network, and collaborate with others in your field. Join us today and take your remote work experience to the next level!</p>
     
     <div class="imageContainer">
         <img class="heroImg" src="/image/heroimage.jpg" alt="Hero image" />
@@ -257,11 +296,11 @@
     
             <div id="formName">
                 <label>First Name
-                    <input type="text" id="firstName" placeholder="First Name" required/>
+                    <input class="nameInput" type="text" id="firstName" placeholder="First Name" required/>
                 </label>
     
                 <label>Last Name
-                    <input type="text" id="lastName" placeholder="Last Name" required/>
+                    <input class="nameInput" type="text" id="lastName" placeholder="Last Name" required/>
                 </label>
             </div>
     
