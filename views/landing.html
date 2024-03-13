@@ -56,6 +56,9 @@
             font-weight: 400;
             line-height: 27px;
             padding-bottom: 30px;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 750px;
         }
 
         .imageContainer{
@@ -203,7 +206,6 @@
 
         .heroImg{
              padding-bottom: 40px;
-             width: -webkit-fill-available;
         }
 
         .contactUs{
@@ -232,7 +234,17 @@
             margin-top: 80px;
         }
 
-        @media screen and (max-width: 430px) {
+        @media screen and (max-width: 750px) {
+            body{
+                border: 0;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .heroImg{
+             width: 100%;
+            }
+
             .headerContainer{
                 flex-flow: column;
                 padding-top: 12px;
@@ -240,7 +252,7 @@
             }
 
             .logo{
-                height: -webkit-fill-available;
+                height: 100%;
             }
 
             #formName {
@@ -252,12 +264,6 @@
             #formName label{
                 width: 100%;
                 max-width: 100%;
-            }
-
-            body{
-                border: 0;
-                padding-left: 16px;
-                padding-right: 16px;
             }
         }
     </style>
@@ -276,7 +282,7 @@
     </div>
     
     <h1 class="mainTitle">Your Virtual Coworking Community</h1>
-    <p class="mainText" style="margin: 0 auto;">CoSphere is a virtual coworking community that allows you to connect with other remote workers and freelancers. Our platform provides a space for you to work, network, and collaborate with others in your field. Join us today and take your remote work experience to the next level!</p>
+    <p class="mainText">CoSphere is a virtual coworking community that allows you to connect with other remote workers and freelancers. Our platform provides a space for you to work, network, and collaborate with others in your field. Join us today and take your remote work experience to the next level!</p>
     
     <div class="imageContainer">
         <img class="heroImg" src="/image/heroimage.jpg" alt="Hero image" />
