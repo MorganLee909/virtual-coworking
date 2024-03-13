@@ -110,7 +110,7 @@ module.exports = {
     getUser: function(req, res){
         res.locals.user.password = undefined;
         res.locals.user.stripe = undefined;
-        res.local.user.resetCode = undefined;
+        res.locals.user.resetCode = undefined;
 
         res.json(res.locals.user);
     },

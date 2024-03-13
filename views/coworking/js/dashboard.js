@@ -3,6 +3,8 @@ const deskPage = require("./pages/desk.js");
 
 const pages = document.querySelectorAll(".page");
 
+let user = {};
+
 changePage = (page)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";

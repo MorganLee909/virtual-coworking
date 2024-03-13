@@ -189,8 +189,22 @@ module.exports = {
                     this.location.tables = location.tables;
                     this.activateWebsocket();
                 }
+
+                return fetch("/user", {
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                    },
+                });
+            })
+            .then(r=>r.json())
+            .then((user)=>{
+                window.user = user;
             })
             .catch((err)=>{
+                console.log(err);
+                return;
                 window.location.href="/user/login";
             });
     },
