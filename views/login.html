@@ -14,6 +14,20 @@
             align-items: center;
         }
 
+        #notifier{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 35px;
+            left: calc(50% - 375px);
+            height: 50px;
+            width: 750px;
+            color: white;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+
         header{
             display: flex;
             justify-content: space-between;
@@ -103,6 +117,7 @@
             color: white;
             border: none;
             font-weight: 600;
+            cursor: pointer;
         }
 
         form a{
@@ -114,7 +129,7 @@
     </style>
 </head>
 <body>
-    <div id="notifier" style="display:none"><p></p></div>
+    <div id="notifier" style="display:none"></div>
 
     <header>
         <img id="topLogo" src="/image/text-logo.svg" alt="CoSphere Logo">
@@ -146,12 +161,13 @@
     <script>
         if(localStorage.getItem("coworkToken")) window.location.href = "/dashboard";
 
-        const notify = (type, message)=>{
+        const notify = (color, message)=>{
             let notifier = document.getElementById("notifier");
             notifier.textContent = message;
             notifier.style.display = "flex";
+            notifier.style.background = color;
 
-            setTimout(()=>{
+            setTimeout(()=>{
                 notifier.style.display = "none";
             }, 5000);
         }
@@ -174,7 +190,7 @@
                 .then(r=>r.json())
                 .then((response)=>{
                     if(response.error){
-                        console.log(response);
+                        notify("red", response.message);
                     }else{
                         localStorage.setItem("coworkToken", response);
                         window.location.href = "/dashboard";
@@ -182,6 +198,7 @@
                 })
                 .catch((err)=>{
                     console.log(err);
+                    notify("red", "Internal server error");
                 });
         });
     </script>

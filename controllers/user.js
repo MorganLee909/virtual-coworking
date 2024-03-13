@@ -153,7 +153,6 @@ module.exports = {
                     }, process.env.JWT_SECRET);
                     return res.json(token);
                 }else{
-                    console.error("pass bad");
                     throw "pass";
                 }
             })
