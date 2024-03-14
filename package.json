@@ -24,6 +24,7 @@
     "esbuild": "^0.20.1",
     "express": "^4.18.3",
     "jsonwebtoken": "^9.0.2",
+    "logrocket": "^8.1.0",
     "mongoose": "^8.1.3",
     "stripe": "^14.18.0",
     "ws": "^8.16.0"
