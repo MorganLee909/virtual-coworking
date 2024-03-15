@@ -2,7 +2,7 @@ module.exports = {
     rendered: false,
     tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
-    location: {},
+    location: null,
     socket: {},
 
     render: function(){
@@ -10,7 +10,7 @@ module.exports = {
             this.rendered = true;
 
             //Retrieve and build tables
-            this.getLocation();
+            this.getUser();
 
             //Set video player frame controls
             document.getElementById("expandTag").addEventListener("click", this.fullScreen);
@@ -19,13 +19,12 @@ module.exports = {
     },
 
     activateWebsocket: function(){
-        try{
         this.socket = new WebSocket(`ws://localhost:8000`);
         this.socket.addEventListener("open", ()=>{
             let data = {
                 token: localStorage.getItem("coworkToken"),
-                location: "ny-01",
-                action: "setLocation"
+                location: this.location ? this.location._id : user.defaultLocation,
+                action: "getLocation"
             };
 
             this.socket.send(JSON.stringify(data));
@@ -43,10 +42,11 @@ module.exports = {
                     this.compareTables(this.location.tables, data.location.tables);
                     this.location = data.location;
                     break;
+                case "getLocation":
+                    this.compareTables(this.location.tables, data.location.tables)
+                    break;
             }
         });
-        }catch(e){
-        }
 
         this.socket.addEventListener("close", (event)=>{
             setTimeout(()=>{
@@ -181,7 +181,7 @@ module.exports = {
         }
     },
 
-    getLocation: function(){
+    getUser: function(){
         fetch("/user", {
             method: "get",
             headers: {
@@ -195,23 +195,6 @@ module.exports = {
                     requestError(user.message);
                 }else{
                     window.user = user;
-                    return fetch(`/location/${user.defaultLocation}`, {
-                        method: "get",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
-                        }
-                    })
-                }
-            })
-            .then(r=>r.json())
-            .then((location)=>{
-                if(location.error){
-                    requestError(location.message);
-                }else{
-                    this.compareTables([], location.tables, location.identifier);
-                    this.location.tables = location.tables;
-                    this.activateWebsocket();
                 }
             })
             .catch((err)=>{
