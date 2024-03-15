@@ -20,8 +20,11 @@
     width: 420px;
 }
 
-.avatarManage svg{
+#avatarIcon{
     cursor: pointer;
+    height: 110px;
+    width: 110px;
+    border-radius: 8px;
 }
 
 .avatarManageText{
@@ -33,11 +36,14 @@
     font-size: 14px;
 }
 
-.avatarManageText a{
+.avatarManageText button{
     font-weight: 600;
     color: #4f4f50;
-    text-decoration: none;
     margin-top: 15px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
 }
 
 #deskPage label{

@@ -370,7 +370,7 @@ module.exports = {
             .then((something)=>{
                 if(res.locals.user.avatar !== "/image/profileIcon.png"){
                     let oldId = res.locals.user.avatar.split("/")[3];
-                    fs.unlink(`${appRoot}/profilePhoto/${oldId}.webp`, (err)=>{if(err)console.error(err)});
+                    fs.unlink(`${appRoot}/profilePhoto/${oldId}`, (err)=>{if(err)console.error(err)});
                 }
 
                 res.locals.user.avatar = `/image/profile/${id}.webp`;
@@ -380,7 +380,7 @@ module.exports = {
                 res.json(res.locals.user.avatar);
             })
             .catch((err)=>{
-                console.log(err);
+                console.error(err);
             });
     }
 }

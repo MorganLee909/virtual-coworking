@@ -1,19 +1,25 @@
 module.exports = {
+    firstName: document.getElementById("firstNameChange"),
+    lastName: document.getElementById("lastNameChange"),
+    email: document.getElementById("emailChange"),
+    password: document.getElementById("passwordChange"),
+    avatar: document.getElementById("avatarIcon"),
     rendered: false,
 
     render: function(){
+        this.firstName.value = user.firstName;
+        this.lastName.value = user.lastName;
+        this.email.value = user.email;
+        this.password.value = "**********";
+        this.avatar.src = user.avatar;
+
         if(!this.rendered){
-            let firstName = document.getElementById("firstNameChange");
-            let lastName = document.getElementById("lastNameChange");
-            let email = document.getElementById("emailChange");
-            let password = document.getElementById("passwordChange");
+            this.firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
+            this.lastName.addEventListener("change", ()=>{this.updateProfile("lastName", lastName.value, "Last name")});
+            this.email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
+            this.password.addEventListener("change", ()=>{this.updateProfile("password", password.value, "Password")});
 
-            firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
-            lastName.addEventListener("change", ()=>{this.updateProfile("lastName", lastName.value, "Last name")});
-            email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
-            password.addEventListener("change", ()=>{this.updateProfile("password", password.value, "Password")});
-
-            document.getElementById("avatarIcon").addEventListener("click", this.chooseProfilePhoto);
+            this.avatar.addEventListener("click", this.chooseProfilePhoto);
             document.getElementById("uploadPictureBtn").addEventListener("click", this.chooseProfilePhoto);
 
             this.rendered = true;
@@ -67,7 +73,9 @@ module.exports = {
                     if(response.error){
                         createBanner("red", response.message);
                     }else{
-                        console.log(response);
+                        user.avatar = response;
+                        document.getElementById("avatarIcon").src = user.avatar;
+                        createBanner("green", "Profile image updated");
                     }
                 })
                 .catch((err)=>{
