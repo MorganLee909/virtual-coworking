@@ -169,7 +169,8 @@ module.exports = {
                 if(bcrypt.compareSync(req.body.password, user.password)){
                     let token = jwt.sign({
                         _id: user._id,
-                        email: user.email
+                        email: user.email,
+                        session: user.session
                     }, process.env.JWT_SECRET);
                     return res.json(token);
                 }else{
