@@ -14,10 +14,10 @@ module.exports = {
         this.avatar.src = user.avatar;
 
         if(!this.rendered){
-            this.firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
-            this.lastName.addEventListener("change", ()=>{this.updateProfile("lastName", lastName.value, "Last name")});
-            this.email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
-            this.password.addEventListener("change", ()=>{this.updateProfile("password", password.value, "Password")});
+            this.firstName.addEventListener("change", ()=>{this.updateProfile("firstName", this.firstName.value, "First Name")});
+            this.lastName.addEventListener("change", ()=>{this.updateProfile("lastName", this.lastName.value, "Last name")});
+            this.email.addEventListener("change", ()=>{this.updateProfile("email", this.email.value, "Email")});
+            this.password.addEventListener("change", ()=>{this.updateProfile("password", this.password.value, "Password")});
 
             this.avatar.addEventListener("click", this.chooseProfilePhoto);
             document.getElementById("uploadPictureBtn").addEventListener("click", this.chooseProfilePhoto);
@@ -41,14 +41,16 @@ module.exports = {
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
-                    createBanner("red", response.message);
+                    requestError(response.message);
+                }else if(field === "password"){
+                    localStorage.removeItem("coworkToken");
+                    window.location.href = "/user/login";
                 }else{
-                    createBanner("green", "Your profile has been updated");
                     createBanner("green", `${fieldName} has been updated`);
                 }
             })
             .catch((err)=>{
-                createBanner("red", "Server error");
+                requestError(err.message);
             });
     },
 

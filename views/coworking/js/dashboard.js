@@ -31,7 +31,7 @@ createBanner = (color, message)=>{
 }
 
 requestError = (message)=>{
-    switch(type){
+    switch(message){
         case "payment": window.location.href = "/stripe/checkout"; break;
         case "token":
             localStorage.removeItem("coworkToken");

@@ -72,6 +72,11 @@
     margin: 0 12px;
 }
 
+#passChangeNote{
+    font-size: 10px;
+    color: black;
+}
+
 #deskPage .payment{
     display: flex;
     font-size: 14px;
