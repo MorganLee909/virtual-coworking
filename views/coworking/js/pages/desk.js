@@ -55,7 +55,7 @@ module.exports = {
         data.appendChild("image", input.files[0]);
 
         input.addEventListener("change", ()=>{
-            fetch("/user/image/upload", {
+            fetch("/user/profile/image", {
                 method: "post",
                 body: data
             })

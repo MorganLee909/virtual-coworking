@@ -351,5 +351,14 @@ module.exports = {
                     message: "Server error"
                 });
             });
+    },
+
+    /*
+     POST: upload a new profile image for the user
+     req.files = File
+     response = String
+     */
+    updateProfilePhoto: function(req, res){
+
     }
 }

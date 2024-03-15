@@ -28,6 +28,7 @@ module.exports = (app)=>{
     app.get("/user/password/reset*", (req, res)=>{res.sendFile(`${views}/passwordReset.html`)});
     app.post("/user/password/reset", user.passwordReset);
     app.post("/user/profile", auth, user.updateProfile);
+    app.post("/user/profile/image", auth, user.updateProfilePhoto);
 
     //NEWSLETTER
     app.post("/newsletter/join", newsletter.join);

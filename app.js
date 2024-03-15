@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 const Websocket = require("ws");
 const mongoose = require("mongoose");
 const compression = require("compression");
+const fileUpload = require("express-fileupload");
 const esbuild = require("esbuild");
 const https = require("https");
 const fs = require("fs");
@@ -58,6 +59,9 @@ esbuild.buildSync(esbuildOptions);
 
 app.use(compression());
 app.use(express.json());
+app.use(fileUpload({
+    limits: {fileSize 15 * 1024 * 1024}
+}));
 
 //require("./controllers/websockets.js").incoming(wss);
 require("./routes.js")(app);
