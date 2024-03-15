@@ -77,7 +77,7 @@ const joinTable = (roomName, user)=>{
                 action: "participantJoined"
             };
             wss.clients.forEach((client)=>{
-                if(client.location === location.identifier){
+                if(client.location === location._id.toString()){
                     client.send(client.send(JSON.stringify(data)));
                 }
             })

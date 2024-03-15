@@ -32,10 +32,10 @@ module.exports = {
 
         this.socket.addEventListener("message", (event)=>{
             let data = JSON.parse(event.data);
-            console.log(data);
 
             switch(data.action){
                 case "participantJoined":
+                    console.log("participantJoined");
                     this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
                     this.location = data.location;
                     break;
@@ -113,14 +113,14 @@ module.exports = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
             },
-            body: JSON.stringify({room: `${locationIdentifier}-${tableNumber}`})
+            body: JSON.stringify({room: `${this.location.identifier}-${tableNumber}`})
         })
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
                     requestError(response.message);
                 }else{
-                    this.initIframeAPI(response, `${locationIdentifier}-${tableNumber}`);
+                    this.initIframeAPI(response, `${this.location.identifier}-${tableNumber}`);
                     document.getElementById("homeBlocker").style.display = "flex";
                     table.classList.add("joinedTable");
                 }
