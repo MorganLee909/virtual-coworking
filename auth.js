@@ -17,7 +17,7 @@ module.exports = {
 
         User.findOne({_id: userData._id})
             .then((user)=>{
-                if(user.status.includes("email")) throw "email";
+                if(user.status.includes("email")) throw "token";
                 if(user.status === "payment") throw "payment";
 
                 res.locals.user = user;
@@ -25,8 +25,14 @@ module.exports = {
             })
             .catch((err)=>{
                 switch(err){
-                    case "email": return res.redirect("/");
-                    case "payment": return res.redirect("/stripe/checkout");
+                    case "token": return res.json({
+                        error: true,
+                        message: "bad token"
+                    });
+                    case "payment": return res.json({
+                        error: true,
+                        message: "payment"
+                    });
                     default:
                         console.error(err);
                         return res.json({

@@ -115,7 +115,7 @@ module.exports = {
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
-                    createBanner("red", response.message);
+                    requestError(response.message);
                 }else{
                     this.initIframeAPI(response, `${locationIdentifier}-${tableNumber}`);
                     document.getElementById("homeBlocker").style.display = "flex";
@@ -123,7 +123,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                createBanner("red", "Something went wrong. Please try refreshing the page");
+                requestError(response.message);
             });
     },
 
@@ -192,7 +192,7 @@ module.exports = {
             .then(r=>r.json())
             .then((user)=>{
                 if(user.error){
-                    createBanner("red", "Unable to load user data");
+                    requestError(user.message);
                 }else{
                     window.user = user;
                     return fetch(`/location/${user.defaultLocation}`, {
@@ -207,7 +207,7 @@ module.exports = {
             .then(r=>r.json())
             .then((location)=>{
                 if(location.error){
-                    window.location.href="/user/login";
+                    requestError(location.message);
                 }else{
                     this.compareTables([], location.tables, location.identifier);
                     this.location.tables = location.tables;
@@ -215,7 +215,7 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                window.location.href = "/user/login";
+                requestError(err.message);
             });
     },
 

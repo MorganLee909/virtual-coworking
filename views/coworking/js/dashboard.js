@@ -30,6 +30,18 @@ createBanner = (color, message)=>{
     }, 5000);
 }
 
+requestError = (message)=>{
+    switch(type){
+        case "payment": window.location.href = "/stripe/checkout"; break;
+        case "token":
+            localStorage.removeItem("coworkToken");
+            window.location.href = "/user/login";
+            break;
+        default:
+            createBanner("red", message);
+    }
+}
+
 //BUTTONS
 document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
 document.getElementById("coworkingBtn").addEventListener("click", ()=>{changePage("home")});
