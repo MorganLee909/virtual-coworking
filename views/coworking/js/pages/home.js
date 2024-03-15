@@ -79,7 +79,7 @@ module.exports = {
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
             this.socket.send(JSON.stringify({
                 action: "participantLeft",
-                room: data.roomName,
+                location: this.location._id,
                 token: localStorage.getItem("coworkToken")
             }));
         });

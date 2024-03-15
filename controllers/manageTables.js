@@ -87,41 +87,31 @@ const joinTable = (roomName, user)=>{
         });
 }
 
-const leaveTable = (roomName, userId)=>{
-    let roomParts = roomName.split("-");
-    let locationString = `${roomParts[0]}-${roomParts[1]}`;
-    let table = "";
+const leaveTable = (location, userId)=>{
+    //let roomParts = roomName.split("-");
+    //let locationString = `${roomParts[0]}-${roomParts[1]}`;
+    //let table = "";
     try{
         table = parseInt(roomParts[2]);
     }catch(e){}
 
-    Location.findOne({identifier: locationString})
+    console.log("leaveTable");
+    console.log(location);
+    Location.findOne({_id: location})
         .then((location)=>{
-            if(table){
-                for(let i = 0; i < location.tables.length; i++){
-                    if(location.tables[i].tableNumber === table){
-                        let seat = location.tables[i].occupants.find(o => o.userId?.toString() === userId);
+            let found = false;
+            for(let i = 0; i < location.tables.length; i++){
+                for(let j = 0; j < location.tables[i].occupants.length; j++){
+                    if(location.tables[i].occupants[j].userId?.toString() === userId){
+                        let seat = location.tables[i].occupants[j];
                         seat.userId = undefined;
                         seat.name = undefined;
                         seat.avatar = undefined;
+                        found = true;
                         break;
                     }
                 }
-            }else{
-                let found = false;
-                for(let i = 0; i < location.tables.length; i++){
-                    for(let j = 0; j < location.tables[i].occupants.length; j++){
-                        if(location.tables[i].occupants[j].userId?.toString() === userId){
-                            let seat = location.tables[i].occupants[j];
-                            seat.userId = undefined;
-                            seat.name = undefined;
-                            seat.avatar = undefined;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(found) break;
-                }
+                if(found) break;
             }
 
             manageTables(location);
@@ -133,7 +123,7 @@ const leaveTable = (roomName, userId)=>{
                 action: "participantLeft"
             };
             wss.clients.forEach((client)=>{
-                if(client.location === location.identifier){
+                if(client.location === location._id.toString()){
                     client.send(JSON.stringify(data));
                 }
             })
