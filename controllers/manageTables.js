@@ -95,8 +95,6 @@ const leaveTable = (location, userId)=>{
         table = parseInt(roomParts[2]);
     }catch(e){}
 
-    console.log("leaveTable");
-    console.log(location);
     Location.findOne({_id: location})
         .then((location)=>{
             let found = false;

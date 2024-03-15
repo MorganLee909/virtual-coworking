@@ -35,7 +35,6 @@ module.exports = {
 
             switch(data.action){
                 case "participantJoined":
-                    console.log("participantJoined");
                     this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
                     this.location = data.location;
                     break;

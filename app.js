@@ -79,8 +79,6 @@ wss.on("connection", (ws)=>{
         wsAuth(data.token)
             .then((user)=>{
                 if(!user) throw "auth";
-                console.log("ws");
-                console.log(data.location);
                 switch(data.action){
                     case "getLocation": getLocation(data.location, ws, user); break;
                     case "participantLeft": leaveTable(data.location, user._id.toString()); break;
@@ -93,7 +91,7 @@ wss.on("connection", (ws)=>{
 
     ws.on("close", ()=>{
         leaveTable(ws.location, ws.user);
-        //console.log(`${ws.user} closed at ${new Date()}`);
+        console.log(`${ws.user} closed at ${new Date()}`);
     });
 
     ws.on("pong", ()=>{
@@ -105,7 +103,7 @@ const ping = setInterval(()=>{
     wss.clients.forEach((client)=>{
         if(client.isAlive === false){
             client.terminate();
-            //console.log(`${client.user} closed at ${new Date()}`);
+            console.log(`${client.user} closed at ${new Date()}`);
             leaveTable(client.location, client.user);
         }
 
