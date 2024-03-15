@@ -32,6 +32,7 @@ module.exports = {
 
         this.socket.addEventListener("message", (event)=>{
             let data = JSON.parse(event.data);
+            console.log(data);
 
             switch(data.action){
                 case "participantJoined":
@@ -43,7 +44,9 @@ module.exports = {
                     this.location = data.location;
                     break;
                 case "getLocation":
-                    this.compareTables(this.location.tables, data.location.tables)
+                    let tables = this.location ? this.location.tables : [];
+                    this.compareTables(tables, data.location.tables);
+                    this.location = data.location;
                     break;
             }
         });
@@ -195,6 +198,7 @@ module.exports = {
                     requestError(user.message);
                 }else{
                     window.user = user;
+                    this.activateWebsocket();
                 }
             })
             .catch((err)=>{

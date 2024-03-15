@@ -67,13 +67,24 @@ module.exports = {
     GET: retrieve table information for a single location
     req.params.location
      */
-    getTables: function(req, res){
-        Location.findOne({_id: req.params.location})
+    getLocation: function(location, ws, user){
+        ws.location = location;
+        ws.user = user._id.toString();
+
+        Location.findOne({_id: location})
             .then((location)=>{
-                res.json(location);
+                let data = {
+                    location: location,
+                    action: "getLocation"
+                };
+                ws.send(JSON.stringify(data));
             })
             .catch((err)=>{
-                console.log(err);
+                console.error(err);
+                ws.send({
+                    error: true,
+                    message: "Server error"
+                });
             });
     }
 }

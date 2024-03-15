@@ -12,6 +12,7 @@ global.wss = new Websocket.Server({server: server});
 
 const {wsAuth} = require("./auth.js");
 const {leaveTable} = require("./controllers/manageTables.js");
+const {getLocation} = require("./controllers/location.js");
 
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
@@ -79,10 +80,7 @@ wss.on("connection", (ws)=>{
             .then((user)=>{
                 if(!user) throw "auth";
                 switch(data.action){
-                    case "setLocation":
-                        ws.location = data.location;
-                        ws.user = user._id.toString();
-                        break;
+                    case "getLocation": getLocation(data.location, ws, user); break;
                     case "participantLeft": leaveTable(data.room, user._id.toString()); break;
                 }
             })
