@@ -70,8 +70,9 @@ module.exports = {
             this.meetingDiv.style.display = "none";
 
             let iframe = this.meetingDiv.querySelector("iframe");
+            this.meetingDiv.removeChild(iframe);
+
             document.getElementById("homeBlocker").style.display = "none";
-            let thing = document.querySelector(".table.joinedTable");
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
             this.socket.send(JSON.stringify({
                 action: "participantLeft",
