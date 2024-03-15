@@ -340,6 +340,8 @@ module.exports = {
 
             let salt = bcrypt.genSaltSync(10);
             let hash = bcrypt.hashSync(req.body.password, salt);
+
+            res.locals.user.session = uuid();
             res.locals.user.password = hash;
         }
 
