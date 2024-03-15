@@ -106,7 +106,7 @@ const ping = setInterval(()=>{
         if(client.isAlive === false){
             client.terminate();
             console.log(`${client.user} closed at ${new Date()}`);
-            leaveTable(ws.location, ws.user);
+            leaveTable(client.location, client.user);
         }
 
         client.isAlive = false;

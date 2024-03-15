@@ -58,9 +58,8 @@ module.exports = {
         api = new JitsiMeetExternalAPI("8x8.vc", options);
         api.addListener("videoConferenceLeft", (data)=>{
             this.meetingDiv.style.display = "none";
-            while(this.meetingDiv.children.length > 0){
-                this.meetingDiv.removeChild(this.meetingDiv.firstChild);
-            }
+
+            let iframe = this.meetingDiv.querySelector("iframe");
             document.getElementById("homeBlocker").style.display = "none";
             let thing = document.querySelector(".table.joinedTable");
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
@@ -205,7 +204,6 @@ module.exports = {
                 }
             })
             .catch((err)=>{
-                console.log(err);
                 window.location.href = "/user/login";
             });
     },
