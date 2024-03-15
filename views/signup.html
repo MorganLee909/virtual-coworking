@@ -14,6 +14,20 @@
                 align-items: center;
             }
 
+            #notifier{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 35px;
+                left: calc(50% - 375px);
+                height: 50px;
+                width: 750px;
+                color: white;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+
             header{
                 display: flex;
                 justify-content: space-between;
@@ -150,10 +164,11 @@
         </div>
 
         <script>
-            const notify = (type, message)=>{
+            const notify = (color, message)=>{
                 let notifier = document.getElementById("notifier");
                 notifier.textContent = message;
                 notifier.style.display = "flex";
+                notifier.style.background = color;
 
                 setTimeout(()=>{
                     notifier.style.display = "none";
@@ -188,7 +203,6 @@
                         }
                     })
                     .catch((err)=>{
-                        console.log(err);
                         notify("error", "Internal server error");
                     });
             });

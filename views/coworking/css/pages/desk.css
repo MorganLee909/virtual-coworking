@@ -1,0 +1,85 @@
+#deskPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    padding: 55px 0;
+}
+
+#deskPage h1{
+    color: #2f2f33;
+    font-size: 23px;
+    font-weight: 700;
+}
+
+.avatarManage{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 420px;
+}
+
+#avatarIcon{
+    cursor: pointer;
+    height: 110px;
+    width: 110px;
+    border-radius: 8px;
+}
+
+.avatarManageText{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 280px;
+    height: 100%;
+    font-size: 14px;
+}
+
+.avatarManageText button{
+    font-weight: 600;
+    color: #4f4f50;
+    margin-top: 15px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+}
+
+#deskPage label{
+    display: flex;
+    flex-direction: column;
+    color: #7a7a7a;
+    font-size: 14px;
+    width: 420px;
+}
+
+#deskPage input{
+    height: 50px;
+    font-size: 16px;
+    border-radius: 2px;
+    border: 1px solid #d4d4d4;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25) inset;
+    padding-left: 15px;
+}
+
+#deskPage .nameContainer{
+    display: flex;
+}
+
+#deskPage .nameContainer label{
+    width: 200px;
+    margin: 0 12px;
+}
+
+#deskPage .payment{
+    display: flex;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f4f50;
+    text-decoration: none;
+}
+
+#deskPage .payment p{
+    margin-left: 18px;
+}

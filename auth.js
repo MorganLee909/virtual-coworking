@@ -9,7 +9,6 @@ module.exports = {
             let token = req.headers.authorization.split(" ")[1];
             userData = jwt.verify(token, process.env.JWT_SECRET);
         }catch(e){
-            console.error(e);
             return res.json({
                 error: true,
                 message: "Authorization"

@@ -64,7 +64,7 @@ const joinTable = (roomName, user)=>{
                     let seat = location.tables[i].occupants.find(o => !o.userId);
                     seat.userId = user._id;
                     seat.name = user.firstName;
-                    seat.avatar = "/image/profileIcon.png";
+                    seat.avatar = user.avatar;
                 }
             }
 

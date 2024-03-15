@@ -3,6 +3,8 @@ const deskPage = require("./pages/desk.js");
 
 const pages = document.querySelectorAll(".page");
 
+let user = {};
+
 changePage = (page)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";
@@ -31,5 +33,9 @@ createBanner = (color, message)=>{
 //BUTTONS
 document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
 document.getElementById("coworkingBtn").addEventListener("click", ()=>{changePage("home")});
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+    localStorage.removeItem("coworkToken");
+    window.location.href = "/";
+});
 
 homePage.render();

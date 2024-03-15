@@ -4,6 +4,7 @@ const server = require("http").createServer(app);
 const Websocket = require("ws");
 const mongoose = require("mongoose");
 const compression = require("compression");
+const fileUpload = require("express-fileupload");
 const esbuild = require("esbuild");
 const https = require("https");
 const fs = require("fs");
@@ -15,6 +16,7 @@ const {leaveTable} = require("./controllers/manageTables.js");
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
 global.privateKey = fs.readFileSync("./private.pem", "utf8");
+global.appRoot = __dirname;
 
 let esbuildOptions = {
     entryPoints: [
@@ -58,6 +60,9 @@ esbuild.buildSync(esbuildOptions);
 
 app.use(compression());
 app.use(express.json());
+app.use(fileUpload({
+    limits: {fileSize: 15 * 1024 * 1024}
+}));
 
 //require("./controllers/websockets.js").incoming(wss);
 require("./routes.js")(app);

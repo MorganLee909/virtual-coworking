@@ -20,17 +20,20 @@ module.exports = (app)=>{
 
     //USERS
     app.post("/user", user.create);
+    app.get("/user", auth, user.getUser);
     app.get("/email/code/:email/:code", user.confirmEmail);
     app.post("/user/login", user.login);
     app.get("/user/password/email", (req, res)=>{res.sendFile(`${views}/passwordEmail.html`)});
     app.post("/user/password/email", user.passwordEmail);
     app.get("/user/password/reset*", (req, res)=>{res.sendFile(`${views}/passwordReset.html`)});
     app.post("/user/password/reset", user.passwordReset);
+    app.post("/user/profile", auth, user.updateProfile);
+    app.post("/user/profile/image", auth, user.updateProfilePhoto);
 
     //NEWSLETTER
     app.post("/newsletter/join", newsletter.join);
 
-    //TABLES
+    //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
     app.get("/location/:location", auth, location.getTables);
 
@@ -40,4 +43,5 @@ module.exports = (app)=>{
 
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
+    app.get("/image/profile/:image", (req, res)=>{res.sendFile(`${appRoot}/profilePhoto/${req.params.image}`)});
 }

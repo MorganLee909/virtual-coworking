@@ -12,37 +12,38 @@ module.exports = {
             //Retrieve and build tables
             this.getLocation();
 
-            //Create websocket
-            this.socket = new WebSocket(`ws://localhost:8000`);
-            this.socket.addEventListener("open", ()=>{
-                let data = {
-                    token: localStorage.getItem("coworkToken"),
-                    location: "ny-01",
-                    action: "setLocation"
-                };
-
-                this.socket.send(JSON.stringify(data));
-            });
-
-            this.socket.addEventListener("message", (event)=>{
-                let data = JSON.parse(event.data);
-
-                switch(data.action){
-                    case "participantJoined":
-                        this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
-                        this.location = data.location;
-                        break;
-                    case "participantLeft":
-                        this.compareTables(this.location.tables, data.location.tables);
-                        this.location = data.location;
-                        break;
-                }
-            });
-
             //Set video player frame controls
             document.getElementById("expandTag").addEventListener("click", this.fullScreen);
             this.dragElement(this.meetingDiv, document.getElementById("dragTag"));
         }
+    },
+
+    activateWebsocket: function(){
+        this.socket = new WebSocket(`ws://localhost:8000`);
+        this.socket.addEventListener("open", ()=>{
+            let data = {
+                token: localStorage.getItem("coworkToken"),
+                location: "ny-01",
+                action: "setLocation"
+            };
+
+            this.socket.send(JSON.stringify(data));
+        });
+
+        this.socket.addEventListener("message", (event)=>{
+            let data = JSON.parse(event.data);
+
+            switch(data.action){
+                case "participantJoined":
+                    this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
+                    this.location = data.location;
+                    break;
+                case "participantLeft":
+                    this.compareTables(this.location.tables, data.location.tables);
+                    this.location = data.location;
+                    break;
+            }
+        });
     },
 
     initIframeAPI: function(jwt, table){
@@ -63,7 +64,6 @@ module.exports = {
             document.getElementById("homeBlocker").style.display = "none";
             let thing = document.querySelector(".table.joinedTable");
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
-            console.log(data);
             this.socket.send(JSON.stringify({
                 action: "participantLeft",
                 room: data.roomName,
@@ -172,7 +172,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65ef3047d0b674e64604c57f`, {
+        fetch("/user", {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -180,16 +180,33 @@ module.exports = {
             }
         })
             .then(r=>r.json())
+            .then((user)=>{
+                if(user.error){
+                    createBanner("red", "Unable to load user data");
+                }else{
+                    window.user = user;
+                    return fetch(`/location/${user.defaultLocation}`, {
+                        method: "get",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                        }
+                    })
+                }
+            })
+            .then(r=>r.json())
             .then((location)=>{
-                if(location.error === true){
-                    window.location.href = "/user/login";
+                if(location.error){
+                    window.location.href="/user/login";
                 }else{
                     this.compareTables([], location.tables, location.identifier);
                     this.location.tables = location.tables;
+                    this.activateWebsocket();
                 }
             })
             .catch((err)=>{
-                window.location.href="/user/login";
+                console.log(err);
+                window.location.href = "/user/login";
             });
     },
 
@@ -241,6 +258,7 @@ module.exports = {
     addOccupant: function(tableNumber, occupant){
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
         let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
+        seat.classList.add("noBorder");
         seat.querySelector("p").textContent = occupant.name;
         let image = document.createElement("img");
         image.src = occupant.avatar;
