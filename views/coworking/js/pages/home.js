@@ -19,6 +19,7 @@ module.exports = {
     },
 
     activateWebsocket: function(){
+        try{
         this.socket = new WebSocket(`ws://localhost:8000`);
         this.socket.addEventListener("open", ()=>{
             let data = {
@@ -43,6 +44,15 @@ module.exports = {
                     this.location = data.location;
                     break;
             }
+        });
+        }catch(e){
+        }
+
+        this.socket.addEventListener("close", (event)=>{
+            setTimeout(()=>{
+                createBanner("red", "Disconnected from server, attempting to reconnect...");
+                this.activateWebsocket();
+            }, 5000)
         });
     },
 
