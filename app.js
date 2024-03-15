@@ -9,9 +9,6 @@ const https = require("https");
 const fs = require("fs");
 global.wss = new Websocket.Server({server: server});
 
-const LogRocket =  require('logrocket');
-LogRocket.init('aynauq/cosphere');
-
 const {wsAuth} = require("./auth.js");
 const {leaveTable} = require("./controllers/manageTables.js");
 
