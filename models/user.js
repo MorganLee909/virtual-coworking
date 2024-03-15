@@ -44,6 +44,11 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: "/image/profileIcon.png",
         required: true
+    },
+    defaultLocation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "location",
+        required: true
     }
 });
 

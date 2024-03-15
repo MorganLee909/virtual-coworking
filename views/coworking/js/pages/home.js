@@ -172,7 +172,7 @@ module.exports = {
     },
 
     getLocation: function(){
-        fetch(`/location/65ef3047d0b674e64604c57f`, {
+        fetch("/user", {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
@@ -180,29 +180,33 @@ module.exports = {
             }
         })
             .then(r=>r.json())
+            .then((user)=>{
+                if(user.error){
+                    createBanner("red", "Unable to load user data");
+                }else{
+                    window.user = user;
+                    return fetch(`/location/${user.defaultLocation}`, {
+                        method: "get",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                        }
+                    })
+                }
+            })
+            .then(r=>r.json())
             .then((location)=>{
-                if(location.error === true){
-                    window.location.href = "/user/login";
+                if(location.error){
+                    window.location.href="/user/login";
                 }else{
                     this.compareTables([], location.tables, location.identifier);
                     this.location.tables = location.tables;
                     this.activateWebsocket();
                 }
-
-                return fetch("/user", {
-                    method: "get",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
-                    },
-                });
-            })
-            .then(r=>r.json())
-            .then((user)=>{
-                window.user = user;
             })
             .catch((err)=>{
-                window.location.href="/user/login";
+                console.log(err);
+                window.location.href = "/user/login";
             });
     },
 

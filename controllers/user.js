@@ -45,8 +45,12 @@ module.exports = {
             });
         }
 
-        User.findOne({email: email})
-            .then((user)=>{
+        let userPromise = User.findOne({email: email});
+        let locationPromise = Location.findOne({}, {_id: 1});
+
+        Promise.all([userPromise, locationPromise])
+            .then((response)=>{
+                let user = response[0];
                 if(user){
                     return res.json({
                         error: true,
@@ -65,6 +69,7 @@ module.exports = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     status: `email-${confirmationCode}`,
+                    defaultLocation: response[1]._id
                 });
 
                 axios({
