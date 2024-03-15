@@ -92,6 +92,10 @@
     border: 2px solid rgba(167, 167, 167, 0.2);
 }
 
+.table .occupant.noBorder img{
+    border: none;
+}
+
 .table .occupant .name{
     position: absolute;
     bottom: -50%;

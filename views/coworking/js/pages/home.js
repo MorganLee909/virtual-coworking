@@ -254,6 +254,7 @@ module.exports = {
     addOccupant: function(tableNumber, occupant){
         let table = document.querySelector(`[data-table="${tableNumber}"]`);
         let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
+        seat.classList.add("noBorder");
         seat.querySelector("p").textContent = occupant.name;
         let image = document.createElement("img");
         image.src = occupant.avatar;
