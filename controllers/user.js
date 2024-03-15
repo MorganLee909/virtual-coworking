@@ -69,7 +69,8 @@ module.exports = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     status: `email-${confirmationCode}`,
-                    defaultLocation: response[1]._id
+                    defaultLocation: response[1]._id,
+                    session: uuid()
                 });
 
                 axios({

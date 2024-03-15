@@ -49,6 +49,10 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "location",
         required: true
+    },
+    session: {
+        type: String,
+        required: true
     }
 });
 
