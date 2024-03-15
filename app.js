@@ -16,6 +16,7 @@ const {leaveTable} = require("./controllers/manageTables.js");
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
 global.privateKey = fs.readFileSync("./private.pem", "utf8");
+global.appRoot = __dirname;
 
 let esbuildOptions = {
     entryPoints: [
@@ -60,7 +61,7 @@ esbuild.buildSync(esbuildOptions);
 app.use(compression());
 app.use(express.json());
 app.use(fileUpload({
-    limits: {fileSize 15 * 1024 * 1024}
+    limits: {fileSize: 15 * 1024 * 1024}
 }));
 
 //require("./controllers/websockets.js").incoming(wss);

@@ -39,6 +39,11 @@ const UserSchema = new mongoose.Schema({
     resetCode: {
         type: String,
         required: false
+    },
+    avatar: {
+        type: String,
+        default: "/image/profileIcon.png",
+        required: true
     }
 });
 

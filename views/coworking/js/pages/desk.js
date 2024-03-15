@@ -51,12 +51,15 @@ module.exports = {
         input.type = "file";
         input.click();
 
-        let data = new FormData();
-        data.appendChild("image", input.files[0]);
-
         input.addEventListener("change", ()=>{
+            let data = new FormData();
+            data.append("image", input.files[0]);
+
             fetch("/user/profile/image", {
                 method: "post",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                },
                 body: data
             })
                 .then(r=>r.json())
@@ -64,7 +67,7 @@ module.exports = {
                     if(response.error){
                         createBanner("red", response.message);
                     }else{
-                        //do things
+                        console.log(response);
                     }
                 })
                 .catch((err)=>{

@@ -8,6 +8,8 @@ const axios = require("axios");
 const queryString = require("querystring");
 const confirmationEmail = require("../email/confirmationEmail.js");
 const uuid = require("crypto").randomUUID;
+const sharp = require("sharp");
+const fs = require("fs");
 
 module.exports = {
     /*
@@ -62,7 +64,7 @@ module.exports = {
                     password: hash,
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    status: `email-${confirmationCode}`
+                    status: `email-${confirmationCode}`,
                 });
 
                 axios({
@@ -355,10 +357,30 @@ module.exports = {
 
     /*
      POST: upload a new profile image for the user
-     req.files = File
+     req.files.image = File
      response = String
      */
     updateProfilePhoto: function(req, res){
+        const id = uuid();
 
+        sharp(req.files.image.data)
+            .resize({width: 500})
+            .webp()
+            .toFile(`${appRoot}/profilePhoto/${id}.webp`)
+            .then((something)=>{
+                if(res.locals.user.avatar !== "/image/profileIcon.png"){
+                    let oldId = res.locals.user.avatar.split("/")[3];
+                    fs.unlink(`${appRoot}/profilePhoto/${oldId}.webp`);
+                }
+
+                res.locals.user.avatar = `/image/profile/${id}`;
+                return res.locals.user.save();
+            })
+            .then((user)=>{
+                res.json(res.locals.user.avatar);
+            })
+            .catch((err)=>{
+                console.log(err);
+            });
     }
 }
