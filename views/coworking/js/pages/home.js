@@ -64,7 +64,6 @@ module.exports = {
             document.getElementById("homeBlocker").style.display = "none";
             let thing = document.querySelector(".table.joinedTable");
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
-            console.log(data);
             this.socket.send(JSON.stringify({
                 action: "participantLeft",
                 room: data.roomName,
@@ -203,8 +202,6 @@ module.exports = {
                 window.user = user;
             })
             .catch((err)=>{
-                console.log(err);
-                return;
                 window.location.href="/user/login";
             });
     },
