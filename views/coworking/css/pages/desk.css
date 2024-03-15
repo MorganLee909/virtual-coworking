@@ -20,6 +20,10 @@
     width: 420px;
 }
 
+.avatarManage svg{
+    cursor: pointer;
+}
+
 .avatarManageText{
     display: flex;
     flex-direction: column;

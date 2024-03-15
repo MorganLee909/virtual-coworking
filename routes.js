@@ -32,7 +32,7 @@ module.exports = (app)=>{
     //NEWSLETTER
     app.post("/newsletter/join", newsletter.join);
 
-    //TABLES
+    //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
     app.get("/location/:location", auth, location.getTables);
 

@@ -13,6 +13,9 @@ module.exports = {
             email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
             password.addEventListener("change", ()=>{this.updateProfile("password", password.value, "Password")});
 
+            document.getElementById("avatarIcon").addEventListener("click", this.chooseProfilePhoto);
+            document.getElementById("uploadPictureBtn").addEventListener("click", this.chooseProfilePhoto);
+
             this.rendered = true;
         }
     },
@@ -41,5 +44,32 @@ module.exports = {
             .catch((err)=>{
                 createBanner("red", "Server error");
             });
+    },
+
+    chooseProfilePhoto: function(){
+        let input = document.createElement("input");
+        input.type = "file";
+        input.click();
+
+        let data = new FormData();
+        data.appendChild("image", input.files[0]);
+
+        input.addEventListener("change", ()=>{
+            fetch("/user/image/upload", {
+                method: "post",
+                body: data
+            })
+                .then(r=>r.json())
+                .then((response)=>{
+                    if(response.error){
+                        createBanner("red", response.message);
+                    }else{
+                        //do things
+                    }
+                })
+                .catch((err)=>{
+                    createBanner("red", "Server error");
+                });
+        });
     }
 }
