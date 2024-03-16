@@ -76,8 +76,9 @@ const joinTable = (roomName, user)=>{
                 location: location,
                 action: "participantJoined"
             };
+            let locationString = location._id.toString();
             wss.clients.forEach((client)=>{
-                if(client.location === location._id.toString()){
+                if(client.location === locationString){
                     client.send(client.send(JSON.stringify(data)));
                 }
             })
@@ -88,13 +89,6 @@ const joinTable = (roomName, user)=>{
 }
 
 const leaveTable = (location, userId)=>{
-    //let roomParts = roomName.split("-");
-    //let locationString = `${roomParts[0]}-${roomParts[1]}`;
-    //let table = "";
-    try{
-        table = parseInt(roomParts[2]);
-    }catch(e){}
-
     Location.findOne({_id: location})
         .then((location)=>{
             let found = false;

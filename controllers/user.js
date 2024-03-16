@@ -1,4 +1,5 @@
 const User = require("../models/user.js");
+const Location = require("../models/location.js");
 
 const passwordResetEmail = require("../email/passwordResetEmail.js");
 

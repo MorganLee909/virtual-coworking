@@ -91,7 +91,6 @@ wss.on("connection", (ws)=>{
 
     ws.on("close", ()=>{
         leaveTable(ws.location, ws.user);
-        console.log(`${ws.user} closed at ${new Date()}`);
     });
 
     ws.on("pong", ()=>{
@@ -103,7 +102,6 @@ const ping = setInterval(()=>{
     wss.clients.forEach((client)=>{
         if(client.isAlive === false){
             client.terminate();
-            console.log(`${client.user} closed at ${new Date()}`);
             leaveTable(client.location, client.user);
         }
 
