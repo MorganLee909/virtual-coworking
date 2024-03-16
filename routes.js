@@ -14,7 +14,7 @@ module.exports = (app)=>{
     app.get("/email/confirmation", (req, res)=>{res.sendFile(`${views}/emailConfirmation.html`)}); // Remove this, go straight to checkout
     app.get("/email/unconfirmed", (req, res)=>{res.sendFile(`${views}/unconfirmedEmail.html`)});
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
-    app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
+    //app.get("/stripe/finished*", (req, res)=>{res.sendFile(`${views}/stripeFinished.html`)});
     app.get("/js/dashboard.js", (req, res)=>{res.sendFile(`${views}/build/js/dashboard.js`)});
     app.get("/css/dashboard.css", (req, res)=>{res.sendFile(`${views}/build/css/dashboard.css`)});
 
@@ -37,8 +37,8 @@ module.exports = (app)=>{
     app.post("/location/table/join", auth, location.joinTable);
 
     //STRIPE
-    app.get("/stripe/checkout-session", stripe.checkoutSession);
-    app.get("/stripe/payment-status*", stripe.finished);
+    app.post("/stripe/checkout-session", auth, stripe.checkoutSession);
+    app.get("/stripe/finished*", stripe.finished);
 
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});

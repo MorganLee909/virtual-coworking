@@ -17,11 +17,9 @@ module.exports = {
 
         User.findOne({_id: userData._id})
             .then((user)=>{
-                console.log(user.session);
-                console.log(userData.session);
                 if(user.status.includes("email")) throw "token";
                 if(userData.session !== user.session) throw "token";
-                if(user.status === "payment") throw "payment";
+                if(user.status === "payment" && !req.body.payment) throw "payment";
 
                 res.locals.user = user;
                 next();

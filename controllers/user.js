@@ -11,6 +11,7 @@ const confirmationEmail = require("../email/confirmationEmail.js");
 const uuid = require("crypto").randomUUID;
 const sharp = require("sharp");
 const fs = require("fs");
+const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 
 module.exports = {
     /*
@@ -49,15 +50,16 @@ module.exports = {
         let userPromise = User.findOne({email: email});
         let locationPromise = Location.findOne({}, {_id: 1});
 
+        let location = {};
         Promise.all([userPromise, locationPromise])
             .then((response)=>{
                 let user = response[0];
-                if(user){
-                    return res.json({
-                        error: true,
-                        message: "User with this email already exists"
-                    });
-                }
+                if(user) throw "email";
+                location = response[1];
+
+                return stripe.customers.create({email: email});
+            })
+            .then((response)=>{
                 let confirmationCode = Math.floor(Math.random() * 1000000).toString();
                 confirmationCode = confirmationCode.padStart(6, "0");
 
@@ -70,8 +72,9 @@ module.exports = {
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
                     status: `email-${confirmationCode}`,
-                    defaultLocation: response[1]._id,
-                    session: uuid()
+                    stripe: {customerId: response.id},
+                    defaultLocation: location._id,
+                    session: uuid(),
                 });
 
                 axios({
@@ -87,28 +90,42 @@ module.exports = {
                     data: queryString.stringify({
                         from: "CoSphere <support@cosphere.work>",
                         to: email,
-                        subject: "Virtual Coworking email confirmation",
+                        subject: "CoSphere email confirmation",
                         html: confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`)
                     })
-                });
+                })
+                    .catch((err)=>{
+                        console.error(err);
+                    });
 
                 return newUser.save();
             })
             .then((user)=>{
                 let token = jwt.sign({
                     _id: user._id,
-                    email: user.email
+                    email: user.email,
+                    session: user.session
                 }, process.env.JWT_SECRET);
 
-                return res.json({
+                res.json({
                     error: false,
                     message: "Please check your inbox to confirm your email",
                     token: token
                 });
             })
             .catch((err)=>{
-                console.error(err);
-                res.redirect("/dashboard");
+                switch(err){
+                    case "email": return res.json({
+                        error: true,
+                        message: "User with this email already exists"
+                    });
+                    default:
+                        console.error(err);
+                        res.json({
+                            error: true,
+                            message: "Server error"
+                        });
+                }
             });
     },
 

@@ -4,24 +4,33 @@ const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const jwt = require("jsonwebtoken");
 
 module.exports = {
+    /*
+     POST: Create stripe checkout session for a user payment
+     req.body.price = String
+     redirect = session.url
+     */
     checkoutSession: function(req, res){
         stripe.checkout.sessions.create({
+            customer: res.locals.user.stripe.customerId,
             mode: "subscription",
             line_items: [{
-                price: "price_1On7CgI8NTnuAPIlq2ATM9Xl",
+                price: req.body.price,
                 quantity: 1
             }],
-            ui_mode: "embedded",
-            return_url: `${req.protocol}://${req.get("host")}/stripe/finished?session_id={CHECKOUT_SESSION_ID}`
+            ui_mode: "hosted",
+            success_url: `${req.protocol}://${req.get("host")}/stripe/finished?session_id={CHECKOUT_SESSION_ID}`
         })
-            .then((response)=>{
-                return res.json(response.client_secret);
+            .then((session)=>{
+                res.json({
+                    error: false,
+                    url: session.url
+                });
             })
             .catch((err)=>{
                 console.error(err);
                 res.json({
                     error: true,
-                    message: "Internal server error"
+                    message: "Stripe error"
                 });
             });
     },
@@ -33,14 +42,13 @@ module.exports = {
         stripe.checkout.sessions.retrieve(req.query.session_id)
             .then((response)=>{
                 session = response;
-                let token = req.headers.authorization.split(" ")[1];
-                let userData = jwt.verify(token, process.env.JWT_SECRET);
 
                 let customer = stripe.customers.retrieve(session.customer);
-                let user = User.findOne({_id: userData._id})
+                let user = User.findOne({"stripe.customerId": response.customer});
                 return Promise.all([customer, user]);
             })
             .then((response)=>{
+                console.log(response);
                 customer = response[0];
                 response[1].stripe.customerId = customer.id;
                 response[1].stripe.productId = "price_1On7CgI8NTnuAPIlq2ATM9Xl";
@@ -56,11 +64,7 @@ module.exports = {
                 return response[1].save();
             })
             .then((user)=>{
-                res.json({
-                    status: session.status,
-                    paymentStatus: session.payment_status,
-                    customerEmail: customer.email
-                });
+                res.redirect("/dashboard");
             })
             .catch((err)=>{
                 console.error(err);
