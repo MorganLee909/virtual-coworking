@@ -1,5 +1,7 @@
 const User = require("./models/user.js");
 
+const checkStripeAccount = require("./controllers/checkStripeAccount.js");
+
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -17,12 +19,21 @@ module.exports = {
 
         User.findOne({_id: userData._id})
             .then((user)=>{
+                res.locals.user = user;
                 if(user.status.includes("email")) throw "token";
                 if(userData.session !== user.session) throw "token";
                 if(user.status === "payment" && !req.body.payment) throw "payment";
+                if(user.expiration <= new Date()) return checkStripeAccount(user);
 
-                res.locals.user = user;
                 next();
+                throw "done";
+            })
+            .then((response)=>{
+                if(response){
+                    next();
+                }else{
+                    throw "payment";
+                }
             })
             .catch((err)=>{
                 switch(err){
@@ -34,6 +45,7 @@ module.exports = {
                         error: true,
                         message: "payment"
                     });
+                    case "done": break;
                     default:
                         console.error(err);
                         return res.json({
