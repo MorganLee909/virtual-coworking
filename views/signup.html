@@ -119,6 +119,15 @@
                 font-weight: 600;
                 cursor: pointer;
             }
+
+            #resend{
+                background: none;
+                border: none;
+                margin-bottom: 35px;
+                cursor: pointer;
+                color: #4f4f50;
+                text-decoration: underline;
+            }
         </style>
     </head>
     <body>
@@ -162,6 +171,8 @@
 
                 <input id="submitBtn" type="submit" value="Sign Up"/>
             </form>
+
+            <button id="resend" style="display:none">Send confirmation email again</button>
         </div>
 
         <script>
@@ -204,7 +215,27 @@
                         }
                     })
                     .catch((err)=>{
-                        notify("red", "Internal server error");
+                        notify("red", "Server error");
+                    });
+            });
+
+            document.querySelector("resend").addEventListener("click", ()=>{
+                fetch("/email/resend", {
+                    method: "get",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(r=>r.json())
+                    .then((response)=>{
+                        if(response.error){
+                            notify("red", response.message);
+                        }else{
+                            notify("green", "Another confirmation email has been sent");
+                        }
+                    })
+                    .catch((err)=>{
+                        notify("red", "Server error");
                     });
             });
         </script>
