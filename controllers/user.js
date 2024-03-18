@@ -82,6 +82,9 @@ module.exports = {
                 return newUser.save();
             })
             .then((user)=>{
+                let html = `<p>New user registered: ${user.firstName} ${user.lastName} (${user.email})</p>`;
+                sendEmail("ivan@cosphere.work", "New user registration", html);
+
                 let token = jwt.sign({
                     _id: user._id,
                     email: user.email,
