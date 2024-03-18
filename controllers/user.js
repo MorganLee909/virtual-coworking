@@ -1,12 +1,11 @@
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
 
+const sendEmail = require("./sendEmail.js");
 const passwordResetEmail = require("../email/passwordResetEmail.js");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const axios = require("axios");
-const queryString = require("querystring");
 const confirmationEmail = require("../email/confirmationEmail.js");
 const uuid = require("crypto").randomUUID;
 const sharp = require("sharp");
@@ -77,26 +76,8 @@ module.exports = {
                     session: uuid(),
                 });
 
-                axios({
-                    method: "post",
-                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    auth: {
-                        username: "api",
-                        password: process.env.MAILGUN_KEY
-                    },
-                    data: queryString.stringify({
-                        from: "CoSphere <support@cosphere.work>",
-                        to: email,
-                        subject: "CoSphere email confirmation",
-                        html: confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`)
-                    })
-                })
-                    .catch((err)=>{
-                        console.error(err);
-                    });
+                let html = confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`);
+                sendEmail(email, "CoSphere email confirmation", html);
 
                 return newUser.save();
             })
@@ -189,24 +170,9 @@ module.exports = {
 
         User.findOne({_id: userData._id})
             .then((user)=>{
-                axios({
-                    method: "post",
-                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    auth: {
-                        username: "api",
-                        password: process.env.MAILGUN_KEY
-                    },
-                    data: queryString.stringify({
-                        from: "CoSphere <support@cosphere.work>",
-                        to: user.email,
-                        subject: "CoSphere email confirmation",
-                        html: confirmationEmail(user.firstName, `${req.protocol}://${req.get("host")}/email/code/${user.email}/${confirmationCode}`)
-                    })
-                }).catch((err)=>{console.error(err)});
-
+                let html = confirmationEmail(user.firstName, `${req.protocol}://${req.get("host")}/email/code/${user.email}/${confirmationCode}`);
+                sendEmail(user.email, "CoSphere email confirmation", html);
+                
                 user.status = `email-${confirmationCode}`;
                 return user.save();
             })
@@ -283,23 +249,8 @@ module.exports = {
                 return user.save();
             })
             .then((user)=>{
-                return axios({
-                    method: "post",
-                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    auth: {
-                        username: "api",
-                        password: process.env.MAILGUN_KEY
-                    },
-                    data: queryString.stringify({
-                        from: "CoSphere <support@cosphere.work>",
-                        to: email,
-                        subject: "CoSphere password reset",
-                        html: passwordResetEmail(email, user.resetCode)
-                    })
-                });
+                let html = passwordResetEmail(email, user.resetCode);
+                return sendEmail(email, "CoSphere password reset", html);
             })
             .then((response)=>{
                 res.json("Password reset email has been sent if account exists");
