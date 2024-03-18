@@ -170,6 +170,59 @@ module.exports = {
     },
 
     /*
+     GET: resend user email confirmation
+     response = {};
+     */
+    resendEmail: function(req, res){
+        let userData = {};
+        try{
+            let token = req.headers.authorization.split(" ")[1];
+            userData = jwt.verify(token, process.env.JWT_SECRET);
+        }catch(e){
+            return res.json({
+                error: true,
+                message: "Authorization"
+            });
+        }
+        let confirmationCode = Math.floor(Math.random() * 1000000).toString();
+        confirmationCode = confirmationCode.padStart(6, "0");
+
+        User.findOne({_id: userData._id})
+            .then((user)=>{
+                axios({
+                    method: "post",
+                    url: "https://api.mailgun.net/v3/mg.cosphere.work/messages",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    auth: {
+                        username: "api",
+                        password: process.env.MAILGUN_KEY
+                    },
+                    data: queryString.stringify({
+                        from: "CoSphere <support@cosphere.work>",
+                        to: user.email,
+                        subject: "CoSphere email confirmation",
+                        html: confirmationEmail(user.firstName, `${req.protocol}://${req.get("host")}/email/code/${user.email}/${confirmationCode}`)
+                    })
+                }).catch((err)=>{console.error(err)});
+
+                user.status = `email-${confirmationCode}`;
+                return user.save();
+            })
+            .then((user)=>{
+                res.json({});
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error"
+                });
+            });
+    },
+
+    /*
      * POST: Login the user
      * req.body = {
      *      email: String
