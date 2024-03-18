@@ -41,5 +41,23 @@ module.exports = {
                     message: "Internal server error"
                 });
             });
+
+        axios({
+            method: "post",
+            url: `https://api.mailgun.net/v3/mg.cosphere.work/messages`,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            auth: {
+                username: "api",
+                password: process.env.MAILGUN_KEY
+            },
+            data: queryString.stringify({
+                from: "CoSphere <support@cosphere.work>",
+                to: "ivan@cosphere.work",
+                subject: "New newsletter subscriber",
+                html: `<p>New user, ${req.body.firstName} ${req.body.lastName} (${email}) has subscribed to the newsletter`
+            })
+        }).catch((err)=>{console.error(err)});
     }
 }
