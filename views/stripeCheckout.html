@@ -5,18 +5,90 @@
         <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
         <link rel="icon" type="img/svg" href="/image/logo.svg"/>
         <title>Checkout | CoSphere </title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+
+            body{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 75px;
+                width: 100%;
+                margin: 13px 0;
+                padding: 26px;
+            }
+
+            #background{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: #fafafa;
+                height: calc(100vh - 127px);
+                width: calc(100vw - 52px);
+            }
+
+            #standard{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                height: 500px;
+                width: 350px;
+                border-radius: 10px;
+                border: 1px solid black;
+                background: white;
+            }
+
+            ul{
+                margin-left: 35px;
+            }
+
+            li{
+                margin: 10px 0;
+            }
+
+            button{
+                border-radius: 3px;
+                background: linear-gradient(300deg, #3581C1 33.58%, #50A2E7 54.2%, #3581C1 75.24%);
+                padding: 13px 0;
+                width: 75%;
+                font-size: 16px;
+                color: white;
+                border: none;
+                font-weight: 600;
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
-        <form id="form">
-            <h1>One month</h1>
+        <header>
+            <img id="topLogo" src="/image/text-logo.svg" alt="CoSphere Logo">
+        </header>
 
-            <button>Purchase</button>
-        </form>
+        <div id="background">
+            <div id="standard">
+                <h1>Standard</h1>
+
+                <h2>$50 / month</h2>
+
+                <ul>
+                    <li>Join others virtually for inspiration, collaboration and motivation</li>
+                    <li>Travel virtually to other cities to work with a diverse range of people (Coming soon)</li>
+                    <li>Collaborate 24/7, no opening/closing times</li>
+                </ul>
+
+                <button id="standardSubscribe">Subscribe</button>
+            </div>
+        </div>
 
         <script>
-            document.getElementById("form").addEventListener("submit", ()=>{
-                event.preventDefault();
-
+            document.getElementById("standardSubscribe").addEventListener("click", ()=>{
                 fetch("/stripe/checkout-session", {
                     method: "post",
                     redirect: "follow",
