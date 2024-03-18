@@ -47,6 +47,7 @@ module.exports = {
                     window.location.href = "/user/login";
                 }else{
                     createBanner("green", `${fieldName} has been updated`);
+                    if(field === "firstName") this.updateIcon();
                 }
             })
             .catch((err)=>{
@@ -78,11 +79,22 @@ module.exports = {
                         user.avatar = response;
                         document.getElementById("avatarIcon").src = user.avatar;
                         createBanner("green", "Profile image updated");
+                        this.updateIcon();
                     }
                 })
                 .catch((err)=>{
                     createBanner("red", "Server error");
                 });
         });
+    },
+
+    updateIcon: function(){
+        let data = {
+            token: localStorage.getItem("coworkToken"),
+            action: "updateIcon",
+            location: location._id
+        };
+
+        socket.send(JSON.stringify(data));
     }
 }

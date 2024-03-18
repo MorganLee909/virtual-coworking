@@ -2,8 +2,6 @@ module.exports = {
     rendered: false,
     tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
-    location: null,
-    socket: {},
 
     render: function(){
         if(!this.rendered){
@@ -19,38 +17,38 @@ module.exports = {
     },
 
     activateWebsocket: function(){
-        this.socket = new WebSocket(`ws://localhost:8000`);
-        this.socket.addEventListener("open", ()=>{
+        socket = new WebSocket(`ws://localhost:8000`);
+        socket.addEventListener("open", ()=>{
             let data = {
                 token: localStorage.getItem("coworkToken"),
-                location: this.location ? this.location._id : user.defaultLocation,
+                location: locationData ? locationData._id : user.defaultLocation,
                 action: "getLocation"
             };
 
-            this.socket.send(JSON.stringify(data));
+            socket.send(JSON.stringify(data));
         });
 
-        this.socket.addEventListener("message", (event)=>{
+        socket.addEventListener("message", (event)=>{
             let data = JSON.parse(event.data);
 
             switch(data.action){
                 case "participantJoined":
-                    this.compareTables(this.location.tables, data.location.tables, data.location.identifier);
-                    this.location = data.location;
+                    this.compareTables(locationData.tables, data.location.tables, data.location.identifier);
+                    locationData = data.location;
                     break;
                 case "participantLeft":
-                    this.compareTables(this.location.tables, data.location.tables);
-                    this.location = data.location;
+                    this.compareTables(locationData.tables, data.location.tables);
+                    locationData = data.location;
                     break;
                 case "getLocation":
-                    let tables = this.location ? this.location.tables : [];
+                    let tables = locationData ? locationData.tables : [];
                     this.compareTables(tables, data.location.tables);
-                    this.location = data.location;
+                    locationData = data.location;
                     break;
             }
         });
 
-        this.socket.addEventListener("close", (event)=>{
+        socket.addEventListener("close", (event)=>{
             setTimeout(()=>{
                 createBanner("red", "Disconnected from server, attempting to reconnect...");
                 this.activateWebsocket();
@@ -76,19 +74,19 @@ module.exports = {
 
             document.getElementById("homeBlocker").style.display = "none";
             document.querySelector(".table.joinedTable").classList.remove("joinedTable");
-            this.socket.send(JSON.stringify({
+            socket.send(JSON.stringify({
                 action: "participantLeft",
-                location: this.location._id,
+                location: locationData._id,
                 token: localStorage.getItem("coworkToken")
             }));
         });
     },
 
     tableFull: function(tableNumber){
-        for(let i = 0; i < this.location.tables.length; i++){
-            if(this.location.tables[i].tableNumber === tableNumber){
-                for(let j = 0; j < this.location.tables[i].occupants.length; j++){
-                    if(!this.location.tables[i].occupants[j].userId) return false;
+        for(let i = 0; i < locationData.tables.length; i++){
+            if(locationData.tables[i].tableNumber === tableNumber){
+                for(let j = 0; j < locationData.tables[i].occupants.length; j++){
+                    if(!locationData.tables[i].occupants[j].userId) return false;
                 }
             }
         }
@@ -112,14 +110,14 @@ module.exports = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
             },
-            body: JSON.stringify({room: `${this.location.identifier}-${tableNumber}`})
+            body: JSON.stringify({room: `${locationData.identifier}-${tableNumber}`})
         })
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
                     requestError(response.message);
                 }else{
-                    this.initIframeAPI(response, `${this.location.identifier}-${tableNumber}`);
+                    this.initIframeAPI(response, `${locationData.identifier}-${tableNumber}`);
                     document.getElementById("homeBlocker").style.display = "flex";
                     table.classList.add("joinedTable");
                 }

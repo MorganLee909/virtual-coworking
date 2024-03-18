@@ -3,7 +3,9 @@ const deskPage = require("./pages/desk.js");
 
 const pages = document.querySelectorAll(".page");
 
-let user = {};
+window.user = {};
+window.socket = {};
+window.locationData = null;
 
 changePage = (page)=>{
     for(let i = 0; i < pages.length; i++){
