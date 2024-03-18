@@ -2,14 +2,14 @@ const Location = require("../models/location.js");
 
 const sendToLocation = (locationId, data)=>{
     wss.clients.forEach((client)=>{
-        if(client.location === locationString){
+        if(client.location === locationId){
             client.send(JSON.stringify(data));
         }
     });
 }
 
 module.exports = {
-    updateIcon: function(user, locationId, ws){
+    updateIcon: function(user, locationId){
         Location.findOne({_id: locationId})
             .then((location)=>{
                 for(let i = 0; i < location.tables.length; i++){

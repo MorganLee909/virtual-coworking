@@ -79,7 +79,13 @@ module.exports = {
                         user.avatar = response;
                         document.getElementById("avatarIcon").src = user.avatar;
                         createBanner("green", "Profile image updated");
-                        this.updateIcon();
+                        let data = {
+                            token: localStorage.getItem("coworkToken"),
+                            action: "updateIcon",
+                            location: locationData._id
+                        };
+
+                        socket.send(JSON.stringify(data));
                     }
                 })
                 .catch((err)=>{
@@ -92,7 +98,7 @@ module.exports = {
         let data = {
             token: localStorage.getItem("coworkToken"),
             action: "updateIcon",
-            location: location._id
+            location: locationData._id
         };
 
         socket.send(JSON.stringify(data));
