@@ -13,6 +13,7 @@ global.wss = new Websocket.Server({server: server});
 const {wsAuth} = require("./auth.js");
 const {leaveTable} = require("./controllers/manageTables.js");
 const {getLocation} = require("./controllers/location.js");
+const websockets = require("./controllers/websockets.js");
 
 let mongoString = "mongodb://127.0.0.1:27017/coworking";
 
@@ -82,6 +83,7 @@ wss.on("connection", (ws)=>{
                 switch(data.action){
                     case "getLocation": getLocation(data.location, ws, user); break;
                     case "participantLeft": leaveTable(data.location, user._id.toString()); break;
+                    case "updateIcon": websockets.updateIcon(user, data.location, ws); break;
                 }
             })
             .catch((err)=>{

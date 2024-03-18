@@ -79,7 +79,7 @@ const joinTable = (roomName, user)=>{
             let locationString = location._id.toString();
             wss.clients.forEach((client)=>{
                 if(client.location === locationString){
-                    client.send(client.send(JSON.stringify(data)));
+                    client.send(JSON.stringify(data));
                 }
             })
         })
