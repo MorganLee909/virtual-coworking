@@ -11,6 +11,7 @@ module.exports = {
             this.getUser();
 
             //Set video player frame controls
+            document.getElementById("closeTag").addEventListener("click", ()=>{this.closeMeeting(this.meetingDiv)});
             document.getElementById("expandTag").addEventListener("click", this.fullScreen);
             this.dragElement(this.meetingDiv, document.getElementById("dragTag"));
         }
@@ -69,20 +70,7 @@ module.exports = {
         };
 
         api = new JitsiMeetExternalAPI("8x8.vc", options);
-        api.addListener("videoConferenceLeft", (data)=>{
-            this.meetingDiv.style.display = "none";
-
-            let iframe = this.meetingDiv.querySelector("iframe");
-            this.meetingDiv.removeChild(iframe);
-
-            document.getElementById("homeBlocker").style.display = "none";
-            document.querySelector(".table.joinedTable").classList.remove("joinedTable");
-            socket.send(JSON.stringify({
-                action: "participantLeft",
-                location: locationData._id,
-                token: localStorage.getItem("coworkToken")
-            }));
-        });
+        api.addListener("videoConferenceLeft", (data)=>{this.closeMeeting(this.meetingDiv)});
     },
 
     tableFull: function(tableNumber){
@@ -162,6 +150,22 @@ module.exports = {
         }
 
         clickElem.onmousedown = dragMouseDown;
+    },
+
+    closeMeeting: function(meetingDiv){
+        let iframe = meetingDiv.querySelector("iframe");
+        if(iframe) meetingDiv.removeChild(iframe);
+        meetingDiv.style.display = "none";
+
+        document.getElementById("homeBlocker").style.display = "none";
+        let joinedTable = document.querySelector(".table.joinedTable");
+        if(joinedTable) joinedTable.classList.remove("joinedTable");
+
+        socket.send(JSON.stringify({
+            action: "participantLeft",
+            location: locationData._id,
+            token: localStorage.getItem("coworkToken")
+        }));
     },
 
     fullScreen: function(event){
