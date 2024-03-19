@@ -42,4 +42,6 @@ module.exports = (app)=>{
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
     app.get("/image/profile/:image", (req, res)=>{res.sendFile(`${appRoot}/profilePhoto/${req.params.image}`)});
+
+    app.get("*", (req, res)=>{res.sendFile(`${views}/404.html`)});
 }
