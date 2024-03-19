@@ -138,13 +138,14 @@
 }
 
 #meetingTab.fullscreen{
+    flex-direction: row;
     top: 0;
     right: 0;
     height: 50px;
-    width: 50px;
+    width: 100px;
 }
 
-#meetingTab.fullscreen #expandTag{
+#meetingTab.fullscreen > *{
     height: 35px;
     width: 35px;
 }
