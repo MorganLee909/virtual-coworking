@@ -17,6 +17,7 @@ module.exports = {
                 price: req.body.price,
                 quantity: 1
             }],
+            subscription_data: {trial_period_days: 7},
             ui_mode: "hosted",
             success_url: `${req.protocol}://${req.get("host")}/stripe/finished?session_id={CHECKOUT_SESSION_ID}`
         })
@@ -48,14 +49,13 @@ module.exports = {
                 return Promise.all([customer, user]);
             })
             .then((response)=>{
-                console.log(response);
                 customer = response[0];
                 response[1].stripe.customerId = customer.id;
                 response[1].stripe.productId = "price_1On7CgI8NTnuAPIlq2ATM9Xl";
                 response[1].stripe.subscriptionId = session.subscription;
                 if(session.payment_status === "paid" && session.status === "complete"){
                     let expiration = new Date();
-                    expiration.setMonth(expiration.getMonth() + 1);
+                    expiration.setDate(expiration.getDate() + 7);
 
                     response[1].expiration = expiration;
                     response[1].status = "active";
