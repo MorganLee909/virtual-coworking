@@ -1,6 +1,8 @@
 const User = require("./models/user.js");
 
 const checkStripeAccount = require("./controllers/checkStripeAccount.js");
+const sendEmail = require("./controllers/sendEmail.js");
+const confirmationEmail = require("./email/confirmationEmail.js");
 
 const jwt = require("jsonwebtoken");
 
@@ -20,7 +22,12 @@ module.exports = {
         User.findOne({_id: userData._id})
             .then((user)=>{
                 res.locals.user = user;
-                if(user.status.includes("email")) throw "token";
+                if(user.status.includes("email")){
+                    let code = user.status.split("-")[1];
+                    let html = confirmationEmail(user.firstName, `${req.protocol}://${req.get("host")}/email/code/${user.email}/${code}`);
+                    sendEmail(user.email, "CoSphere email confirmation", html);
+                    throw "email";
+                }
                 if(userData.session !== user.session) throw "token";
                 if(user.status === "payment" && !req.body.payment) throw "payment";
                 if(user.expiration <= new Date()) return checkStripeAccount(user);
@@ -37,14 +44,21 @@ module.exports = {
             })
             .catch((err)=>{
                 switch(err){
-                    case "token": return res.json({
-                        error: true,
-                        message: "bad token"
-                    });
-                    case "payment": return res.json({
-                        error: true,
-                        message: "payment"
-                    });
+                    case "token":
+                        return res.json({
+                            error: true,
+                            message: "bad token"
+                        });
+                    case "email":
+                        return res.json({
+                            error: true,
+                            message: "email"
+                        });
+                    case "payment":
+                        return res.json({
+                            error: true,
+                            message: "payment"
+                        });
                     case "done": break;
                     default:
                         console.error(err);

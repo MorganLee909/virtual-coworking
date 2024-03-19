@@ -5,9 +5,67 @@
         <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
         <link rel="icon" type="img/svg" href="/image/logo.svg"/>
         <title>Unconfirmed Email | CoSphere</title>
+        <style>
+            *{margin:0;padding:0;box-sizing:border-box;}
+
+            body{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #notifier{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: fixed;
+                top: 35px;
+                left: calc(50% - 375px);
+                height: 50px;
+                width: 750px;
+                color: white;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+
+            header{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                height: 75px;
+                width: 100%;
+                margin: 13px 0;
+                padding: 26px;
+            }
+
+            #background{
+                display: flex;
+                flex-direction: column;
+                justify-content: space-around;
+                align-items: center;
+                background: #fafafa;
+                height: calc(100vh - 127px);
+                width: calc(100vw - 52px);
+            }
+
+            a{
+                color: #7a7a7a;
+                font-size: 14px;
+                margin-top: 50px;
+                text-decoration: none;
+            }
+        </style>
     </head>
     <body>
-        <h1>Email unconfirmed</h1>
-        <a href="/">Return home</a>
+        <header>
+            <img id="topLogo" src="/image/text-logo.svg" alt="CoSphere Logo">
+        </header>
+        
+        <div id="background">
+            <h1>Email Validation required</h1>
+
+            <p>An email has been sent to confirm your email address. Please use the link in that email to continue.</p>
+            <a href="/">Return home</a>
+        </div>
     </body>
 </html>
