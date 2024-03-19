@@ -33,9 +33,15 @@ createBanner = (color, message)=>{
 }
 
 requestError = (message)=>{
+    console.log(message);
+    console.trace();
     switch(message){
         case "payment": window.location.href = "/stripe/checkout"; break;
         case "token":
+            localStorage.removeItem("coworkToken");
+            window.location.href = "/user/login";
+            break;
+        case "Authorization":
             localStorage.removeItem("coworkToken");
             window.location.href = "/user/login";
             break;
