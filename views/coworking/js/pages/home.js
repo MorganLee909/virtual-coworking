@@ -302,6 +302,7 @@ module.exports = {
         let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
         seat.classList.add("noBorder");
         seat.querySelector("p").textContent = occupant.name;
+        if(occupant.userId === "65f9d62c1dea3702d2744c09") seat.classList.add("goldBorder");
         let image = document.createElement("img");
         image.src = occupant.avatar;
         seat.appendChild(image);
@@ -313,6 +314,7 @@ module.exports = {
         seat.removeAttribute("data-user");
         seat.removeChild(seat.querySelector("img"));
         seat.querySelector("p").textContent = "";
+        seat.classList.remove("goldBorder");
     },
 
     updateIcon: function(user, name, avatar){
