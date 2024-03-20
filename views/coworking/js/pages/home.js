@@ -19,7 +19,7 @@ module.exports = {
     },
 
     changeLocation: function(){
-        socket.close();
+        socket.close(3001, "changeLocation");
 
         locationData._id = document.getElementById("locationSelect").value;
         this.activateWebsocket();
@@ -89,11 +89,13 @@ module.exports = {
             }
         });
 
-        socket.addEventListener("close", (event)=>{
-            setTimeout(()=>{
-                createBanner("red", "Disconnected from server, attempting to reconnect...");
-                this.activateWebsocket();
-            }, 5000)
+        socket.closeListener = socket.addEventListener("close", (event)=>{
+            if(event.code !== 3001){
+                setTimeout(()=>{
+                    createBanner("red", "Disconnected from server, attempting to reconnect...");
+                    this.activateWebsocket();
+                }, 5000)
+            }
         });
     },
 
