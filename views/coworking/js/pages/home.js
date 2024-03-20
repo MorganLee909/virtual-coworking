@@ -19,6 +19,7 @@ module.exports = {
     },
 
     changeLocation: function(){
+        this.closeMeeting(this.meetingDiv);
         socket.close(3001, "changeLocation");
 
         locationData._id = document.getElementById("locationSelect").value;
@@ -82,6 +83,7 @@ module.exports = {
                     let tables = locationData ? locationData.tables : [];
                     this.compareTables(tables, data.location.tables);
                     locationData = data.location;
+                    document.getElementById("locationSelect").value = locationData._id;
                     break;
                 case "updateIcon":
                     this.updateIcon(data.user, data.name, data.avatar);
