@@ -7,6 +7,11 @@ window.user = {};
 window.socket = {};
 window.locationData = null;
 
+const isMobile = ()=>{
+    const match = window.matchMedia("(pointer:coarse)");
+    return match && match.matches;
+}
+
 changePage = (page)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";
@@ -59,4 +64,10 @@ document.getElementById("logoutBtn").addEventListener("click", ()=>{
     window.location.href = "/";
 });
 
-homePage.render();
+if(isMobile()){
+    document.getElementById("container").style.display = "none";
+    document.getElementById("mobileContainer").style.display = "flex";
+    document.querySelector(".headerRight").style.display = "none";
+}else{
+    homePage.render();
+}
