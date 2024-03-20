@@ -7,8 +7,9 @@ module.exports = {
         if(!this.rendered){
             this.rendered = true;
 
-            //Retrieve and build tables
+            //Retrieve and build user/tables
             this.getUser();
+            this.populateLocations();
 
             //Set video player frame controls
             document.getElementById("closeTag").addEventListener("click", ()=>{this.closeMeeting(this.meetingDiv)});
@@ -16,6 +17,42 @@ module.exports = {
             this.dragElement(this.meetingDiv, document.getElementById("dragTag"));
         }
     },
+
+    changeLocation: function(){
+        socket.close();
+
+        locationData._id = document.getElementById("locationSelect").value;
+        this.activateWebsocket();
+    },
+
+    populateLocations: function(){
+        fetch("/location", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(r=>r.json())
+            .then((response)=>{
+                if(response.error){
+                    createBanner("red", response.message);
+                }else{
+                    let locations = document.getElementById("locationSelect");
+
+                    for(let i = 0; i < response.length; i++){
+                        let option = document.createElement("option");
+                        option.value = response[i]._id;
+                        option.textContent = response[i].name;
+                        locations.appendChild(option);
+                    }
+                }
+
+                document.getElementById("locationSelect").addEventListener("change", this.changeLocation.bind(this));
+            })
+            .catch((err)=>{
+                createBanner("red", "Server error");
+            });
+    }, 
 
     activateWebsocket: function(){
         socket = new WebSocket(`ws://localhost:8000`);

@@ -86,5 +86,22 @@ module.exports = {
                     message: "Server error"
                 });
             });
+    },
+
+    /*
+     GET, retrieve list of all locations
+     */
+    getAll: function(req, res){
+        Location.find({}, {_id: 1, name: 1})
+            .then((locations)=>{
+                res.json(locations);
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error"
+                });
+            });
     }
 }

@@ -34,6 +34,7 @@ module.exports = (app)=>{
 
     //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
+    app.get("/location", location.getAll);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);
