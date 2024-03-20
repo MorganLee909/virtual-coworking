@@ -84,6 +84,7 @@ module.exports = {
                     this.compareTables(tables, data.location.tables);
                     locationData = data.location;
                     document.getElementById("locationSelect").value = locationData._id;
+                    document.getElementById("locationTitle").textContent = locationData.name;
                     break;
                 case "updateIcon":
                     this.updateIcon(data.user, data.name, data.avatar);
