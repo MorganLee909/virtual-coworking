@@ -10,8 +10,14 @@ const LocationSchema = new mongoose.Schema({
         required: true
     },
     tables: [{
-        name: String,
-        tableNumber: Number,
+        name: {
+            type: String,
+            required: true
+        },
+        type: {
+            type: String,
+            required: true
+        },
         occupants: [{
             seatNumber: {
                 type: Number,

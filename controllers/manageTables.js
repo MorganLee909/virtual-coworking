@@ -24,30 +24,46 @@ const createTable = (tableNumbers, tableSize)=>{
     return newTable;
 }
 
-const removeTable = (tables, emptyTables)=>{
-    tables.splice(emptyTables[0], 1);
+const addRemoveTables = (allTables, tables, empty, full)=>{
+    if(full.length === tables.length) allTables.push(createTable(6));
+    if(full.length < tables.length && empty.length > 0) return empty[i];
 }
 
-const manageTables = (location)=>{
-    let emptyTables = [];
-    let fullTables = [];
-    let tableNumbers = [];
+const mangeTables = (location)=>{
+    let tables = {};
     for(let i = 0; i < location.tables.length; i++){
-        if(!location.tables[i].occupants.some(o => o.userId)) emptyTables.push(i);
-        if(location.tables[i].occupants.filter(o => o.userId).length >= 5) fullTables.push(i);
-        tableNumbers.push(location.tables[i].tableNumber);
-    }
-    tableNumbers.sort();
+        let type = location.tables[i].type;
 
-    if(fullTables.length === location.tables.length && emptyTables.length === 0){
-        location.tables.push(createTable(tableNumbers, 6));
-    }else if(emptyTables.length > 1 && location.tables.length > 3){
-        removeTable(location.tables, emptyTables);
-    }else if(fullTables.length < location.tables.length && emptyTables.length > 0 && location.tables.length > 3){
-        removeTable(location.tables, emptyTables);
+        if(!tables[type]){
+            tables[type] = {
+                all: [],
+                empty: [],
+                full: []
+            }
+        }
+
+        tables[location.tables[i].type];
+        if(!location.tables[i].occupants.some(o=>o.userId)) tables[type].empty.push(i);
+        if(location.tables[i].occupants.filter(o=>o.userId).length >=5) tables[type].full.push(i);
     }
 
-    location.tables.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
+    let types = Object.keys(tables);
+    let toRemove = [];
+    for(let i = 0; i < types.length; i++){
+        let result = addRemoveTables(
+            location.tables,
+            tables[types[i]].all,
+            tables[types[i]].empty,
+            tables[types[i]].full
+        );
+
+        if(result) toRemove.push(result);
+    }
+
+    for(let i = 0; i < toRemove.length; i++){
+        location.tables.splice(toRemove[i], 1);
+        i--;
+    }
 
     return location;
 }
