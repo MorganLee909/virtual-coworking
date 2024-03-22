@@ -72,16 +72,16 @@ module.exports = {
 
             switch(data.action){
                 case "participantJoined":
-                    this.compareTables(locationData.tables, data.location.tables, data.location.identifier);
+                    this.updateTables(data.location.tables);
                     locationData = data.location;
                     break;
                 case "participantLeft":
-                    this.compareTables(locationData.tables, data.location.tables);
+                    this.updateTables(data.location.tables);
                     locationData = data.location;
                     break;
                 case "getLocation":
                     let tables = locationData ? locationData.tables : [];
-                    this.compareTables(tables, data.location.tables);
+                    this.updateTables(data.location.tables);
                     locationData = data.location;
                     document.getElementById("locationSelect").value = locationData._id;
                     document.getElementById("locationTitle").textContent = locationData.name;
@@ -115,20 +115,17 @@ module.exports = {
         api.addListener("videoConferenceLeft", (data)=>{this.closeMeeting(this.meetingDiv)});
     },
 
-    tableFull: function(tableNumber){
-        for(let i = 0; i < locationData.tables.length; i++){
-            if(locationData.tables[i].tableNumber === tableNumber){
-                for(let j = 0; j < locationData.tables[i].occupants.length; j++){
-                    if(!locationData.tables[i].occupants[j].userId) return false;
-                }
-            }
+    tableFull: function(table){
+        let seats = table.querySelectorAll(".occupant");
+        let tableFull = true;
+        for(let i = 0; i < seats.length; i++){
+            if(!seats[i].id) return false;
         }
         return true;
     },
 
-    joinTable: function(locationIdentifier, tableNumber){
-        let table = document.querySelector(`[data-table="${tableNumber}"]`);
-        if(this.tableFull(tableNumber)){
+    joinTable: function(table){
+        if(this.tableFull(table)){
             createBanner("red", "All seats are occupied at this table");
             return;
         }
@@ -143,20 +140,23 @@ module.exports = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
             },
-            body: JSON.stringify({room: `${locationData.identifier}-${tableNumber}`})
+            body: JSON.stringify({
+                location: locationData.identifier,
+                table: table.id
+            })
         })
             .then(r=>r.json())
             .then((response)=>{
                 if(response.error){
                     requestError(response.message);
                 }else{
-                    this.initIframeAPI(response, `${locationData.identifier}-${tableNumber}`);
+                    this.initIframeAPI(response, `${locationData.identifier}-${table.id}`);
                     document.getElementById("homeBlocker").style.display = "flex";
                     table.classList.add("joinedTable");
                 }
             })
             .catch((err)=>{
-                requestError(response.message);
+                requestError(err.message);
             });
     },
 
@@ -252,69 +252,53 @@ module.exports = {
             });
     },
 
-    compareTables: function(existing, updated, locationIdentifier){
-        existing.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
-        updated.sort((a, b) => a.tableNumber > b.tableNumber ? 1 : -1);
-        let maxTables = existing.length > updated.length ? existing.length : updated.length;
-        for(let i = 0; i < maxTables; i++){
-            if(!existing[i]){
-                this.addTable(updated[i], locationIdentifier);
+    updateTables: function(newTables){
+        for(let i = 0; i < newTables.length; i++){
+            let table = document.getElementById(newTables[i]._id);
+            if(!table) table = this.addTable(newTables[i]);
 
-                for(let j = 0; j < updated[i].occupants.length; j++){
-                    if(updated[i].occupants[j].userId){
-                        this.addOccupant(updated[i].tableNumber, updated[i].occupants[j]);
-                    }
-                }
-
-            }else if(!updated[i]){
-                this.removeTable(existing[i]);
-            }else{
-                for(let j = 0; j < existing[i].occupants.length; j++){
-                    if(existing[i].occupants[j].userId !== updated[i].occupants[j].userId){
-                        if(!existing[i].occupants[j].userId){
-                            this.addOccupant(updated[i].tableNumber, updated[i].occupants[j]);
-                        }else if(!updated[i].occupants[j].userId){
-                            this.removeOccupant(updated[i].tableNumber, updated[i].occupants[j].seatNumber, existing[i].occupants[j].userId);
-                        }
-                    }
+            let occupants = table.querySelectorAll(".occupant");
+            for(let j = 0; j < newTables[i].occupants.length; j++){
+                if(newTables[i].occupants[j].userId != occupants[j].getAttribute("userId")){
+                    this.updateOccupant(newTables[i].occupants[j], occupants[j]);
                 }
             }
         }
+
+        let tables = document.querySelectorAll(".table");
+        for(let i = 0; i < tables.length; i++){
+            let match = newTables.find(t => t._id === tables[i].id);
+            if(!match) tables[i].parentElement.removeChild(tables[i]);
+        }
     },
 
-    addTable: function(newTable, locationIdentifier){
+    addTable: function(newTable){
         let table = this.tableTemplate.cloneNode(true);
-        table.setAttribute("data-table", newTable.tableNumber);
-        table.querySelector(".tableTitle").textContent = newTable.name;
+        table.id = newTable._id;
         table.addEventListener("click", ()=>{
-            this.joinTable(locationIdentifier, newTable.tableNumber);
+            this.joinTable(table);
         });
         document.getElementById("tables").appendChild(table);
+        return table;
     },
 
-    removeTable: function(table){
-        let tableElem = document.querySelector(`[data-table="${table.tableNumber}"]`);
-        tableElem.parentElement.removeChild(tableElem);
-    },
-
-    addOccupant: function(tableNumber, occupant){
-        let table = document.querySelector(`[data-table="${tableNumber}"]`);
-        let seat = table.querySelectorAll(".occupant")[occupant.seatNumber];
-        seat.classList.add("noBorder");
-        seat.querySelector("p").textContent = occupant.name;
-        if(occupant.userId === "65f9d62c1dea3702d2744c09") seat.classList.add("goldBorder");
-        let image = document.createElement("img");
-        image.src = occupant.avatar;
-        seat.appendChild(image);
-        seat.setAttribute("data-user", occupant.userId);
-    },
-
-    removeOccupant: function(tableNumber, seatNumber, user){
-        let seat = document.querySelector(`[data-user="${user}"]`);
-        seat.removeAttribute("data-user");
-        seat.removeChild(seat.querySelector("img"));
-        seat.querySelector("p").textContent = "";
-        seat.classList.remove("goldBorder");
+    updateOccupant: function(occupant, seat){
+        if(!occupant.userId){
+            seat.removeAttribute("userId");
+            seat.classList.remove("noBorder");
+            seat.classList.remove("goldBorder");
+            seat.querySelector("p").textContent = "";
+            seat.removeChild(seat.querySelector("img"));
+        }else{
+            seat.setAttribute("userId", occupant.userId);
+            seat.classList.add("noBorder");
+            seat.querySelector("p").textContent = occupant.name;
+            if(occupant.userId === "65f9d62c1dea3702d2744c09") seat.classList.add("goldBorder");
+            
+            let image = document.createElement("img");
+            image.src = occupant.avatar;
+            seat.appendChild(image);
+        }
     },
 
     updateIcon: function(user, name, avatar){

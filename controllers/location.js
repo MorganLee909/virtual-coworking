@@ -10,7 +10,8 @@ module.exports = {
     /*
      * POST: create JWT for user to join a table
      * req.body = {
-     *      room: String
+     *      location: String
+     *      table: String Id
      * }
      * response: JWT
      */
@@ -53,12 +54,12 @@ module.exports = {
             },
             iss: "chat",
             nbf: nbf,
-            room: req.body.room,
+            room: `${req.body.location}-${req.body.table}`,
             exp: exp,
             sub: process.env.JAAS_APP_ID
         }, privateKey, options);
 
-        joinTable(req.body.room, res.locals.user);
+        joinTable(res.locals.user, req.body.location, req.body.table);
 
         return res.json(token);
     },

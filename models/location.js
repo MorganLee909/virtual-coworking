@@ -10,10 +10,6 @@ const LocationSchema = new mongoose.Schema({
         required: true
     },
     tables: [{
-        name: {
-            type: String,
-            required: true
-        },
         type: {
             type: String,
             required: true

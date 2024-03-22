@@ -1,19 +1,9 @@
 const Location = require("../models/location.js");
 const User = require("../models/user.js");
 
-const createTable = (tableNumbers, tableSize)=>{
-    let newTableNumber = 1;
-    while(true){
-        if(tableNumbers.includes(newTableNumber)){
-            newTableNumber++;
-        }else{
-            break;
-        }
-    }
-
+const createTable = (tableSize)=>{
     let newTable = {
-        name: `Table ${newTableNumber}`,
-        tableNumber: newTableNumber,
+        type: "general",
         occupants: []
     };
 
@@ -26,10 +16,10 @@ const createTable = (tableNumbers, tableSize)=>{
 
 const addRemoveTables = (allTables, tables, empty, full)=>{
     if(full.length === tables.length) allTables.push(createTable(6));
-    if(full.length < tables.length && empty.length > 0) return empty[i];
+    if(full.length < tables.length && empty.length > 0) return empty[0];
 }
 
-const mangeTables = (location)=>{
+const manageTables = (location)=>{
     let tables = {};
     for(let i = 0; i < location.tables.length; i++){
         let type = location.tables[i].type;
@@ -42,7 +32,7 @@ const mangeTables = (location)=>{
             }
         }
 
-        tables[location.tables[i].type];
+        tables[type].all.push(i);
         if(!location.tables[i].occupants.some(o=>o.userId)) tables[type].empty.push(i);
         if(location.tables[i].occupants.filter(o=>o.userId).length >=5) tables[type].full.push(i);
     }
@@ -60,28 +50,26 @@ const mangeTables = (location)=>{
         if(result) toRemove.push(result);
     }
 
+    let offset = 0;
     for(let i = 0; i < toRemove.length; i++){
-        location.tables.splice(toRemove[i], 1);
-        i--;
+        location.tables.splice(toRemove[i-offset], 1);
+        offset++;
     }
 
     return location;
 }
 
-const joinTable = (roomName, user)=>{
-    let roomParts = roomName.split("-");
-    let locationString = `${roomParts[0]}-${roomParts[1]}`;
-    let table = parseInt(roomParts[2]);
-
-    Location.findOne({identifier: locationString})
+const joinTable = (user, locationIdentifier, tableId)=>{
+    Location.findOne({identifier: locationIdentifier})
         .then((location)=>{
             for(let i = 0; i < location.tables.length; i++){
-                if(parseInt(location.tables[i].tableNumber) === table){
+                if(location.tables[i]._id.toString() === tableId){
                     let seat = location.tables[i].occupants.find(o => !o.userId);
                     seat.userId = user._id;
                     seat.name = user.firstName;
                     seat.avatar = user.avatar;
                 }
+                break;
             }
 
             manageTables(location);
