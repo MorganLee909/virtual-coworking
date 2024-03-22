@@ -70,8 +70,8 @@ const joinTable = (user, locationIdentifier, tableId)=>{
                     seat.userId = user._id;
                     seat.name = user.firstName;
                     seat.avatar = user.avatar;
+                    break;
                 }
-                break;
             }
 
             manageTables(location);
