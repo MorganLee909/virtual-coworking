@@ -16,7 +16,9 @@ const createTable = (tableSize)=>{
 
 const addRemoveTables = (allTables, tables, empty, full)=>{
     if(full.length === tables.length) allTables.push(createTable(6));
-    if(full.length < tables.length && empty.length > 0) return empty[0];
+    if(allTables.length > 3){
+        if(full.length < tables.length && empty.length > 0) return empty[0];
+    }
 }
 
 const manageTables = (location)=>{

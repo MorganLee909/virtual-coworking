@@ -72,6 +72,7 @@ module.exports = {
 
             switch(data.action){
                 case "participantJoined":
+                    console.log(data);
                     this.updateTables(data.location.tables);
                     locationData = data.location;
                     break;
