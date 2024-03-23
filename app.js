@@ -66,7 +66,6 @@ app.use(fileUpload({
     limits: {fileSize: 15 * 1024 * 1024}
 }));
 
-//require("./controllers/websockets.js").incoming(wss);
 require("./routes.js")(app);
 
 if(process.env.NODE_ENV === "production"){
