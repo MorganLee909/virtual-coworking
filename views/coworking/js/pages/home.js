@@ -110,6 +110,40 @@ module.exports = {
             height: "100%",
             width: "100%",
             parentNode: document.getElementById("meeting"),
+            configOverwrite: {
+                toolbarButtons: [
+                    'camera',
+                    'chat',
+                    'closedcaptions',
+                    'desktop',
+                    'download',
+                    'embedmeeting',
+                    'etherpad',
+                    'feedback',
+                    'filmstrip',
+                    'fullscreen',
+                    'hangup',
+                    'help',
+                    'highlight',
+                    'microphone',
+                    'noisesuppression',
+                    'participants-pane',
+                    'profile',
+                    'raisehand',
+                    'recording',
+                    'security',
+                    'select-background',
+                    'settings',
+                    'shareaudio',
+                    'sharedvideo',
+                    'shortcuts',
+                    'stats',
+                    'tileview',
+                    'toggle-camera',
+                    'videoquality',
+                    'whiteboard',
+                ]
+            }
         };
 
         api = new JitsiMeetExternalAPI("8x8.vc", options);
