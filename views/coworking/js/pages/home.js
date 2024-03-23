@@ -60,10 +60,12 @@ module.exports = {
         socket.addEventListener("open", ()=>{
             let data = {
                 token: localStorage.getItem("coworkToken"),
-                location: locationData ? locationData._id : user.defaultLocation,
-                action: "getLocation"
+                action: "status"
             };
+            socket.send(JSON.stringify(data));
 
+            data.location = locationData ? locationData._id : user.defaultLocation;
+            data.action = "getLocation";
             socket.send(JSON.stringify(data));
         });
 
@@ -71,8 +73,12 @@ module.exports = {
             let data = JSON.parse(event.data);
 
             switch(data.action){
+                case "status":
+                    document.getElementById("extraConnection").style.display = "flex";
+                    document.getElementById("container").style.display = "none";
+                    document.querySelector("header .headerRight").style.display = "none";
+                    socket.close(3001);
                 case "participantJoined":
-                    console.log(data);
                     this.updateTables(data.location.tables);
                     locationData = data.location;
                     break;

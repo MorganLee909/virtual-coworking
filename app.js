@@ -81,6 +81,13 @@ wss.on("connection", (ws)=>{
             .then((user)=>{
                 if(!user) throw "auth";
                 switch(data.action){
+                    case "status": 
+                        wss.clients.forEach((client)=>{
+                            if(client.user === user._id.toString()){
+                                ws.send(JSON.stringify({action: "status"}));
+                            }
+                        });
+                        break;
                     case "getLocation": getLocation(data.location, ws, user); break;
                     case "participantLeft": leaveTable(data.location, user._id.toString()); break;
                     case "updateIcon": websockets.updateIcon(user, data.location); break;
