@@ -14,7 +14,7 @@
         :root{
             --primary: #217ec3;
             --primaryHover: #0580db;
-            --lightGray: #eff1f3;
+            --lightGray: #eef2f4;
             --darkGray: #2f2f33;
             --grey: #7a7a7a;
         }
@@ -48,6 +48,16 @@
             font-style: normal;
             font-weight: 700;
             line-height: normal;
+        }
+
+        .secondaryTitle{
+            color: var(--darkGray);
+            text-align: center;
+            font-family: "Open Sans";
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            margin-bottom: 6px;
         }
 
         .mainText{
@@ -191,14 +201,19 @@
             margin-top: 15px;
         }
 
+        .emailInput{
+            margin-bottom: 60px;
+        }
+
         #submitBtn{
             box-sizing: content-box;
             display: block;
             border-radius: 3px;
             background: linear-gradient(300deg, #3581C1 33.58%, #50A2E7 54.2%, #3581C1 75.24%);
             padding: 13px 0;
-            margin-top: 47px;
+            margin-bottom: 70px;
             width: 100%;
+            text-align: center;
             font-size: 16px;
             color: white;
             border: none;
@@ -237,6 +252,14 @@
             margin-top: 80px;
         }
 
+        .joiNowContainer{
+            width: 420px;
+        }
+        
+        .bottom16{
+            margin-bottom: 16px;
+        }
+        
         @media screen and (max-width: 750px) {
             body{
                 border: 0;
@@ -301,12 +324,49 @@
     <div class="imageContainer">
         <img class="heroImg" src="/image/heroimage.jpg" alt="Hero image" />
 
-        <form>
-            <h1 class="mainTitle">Coming Soon!<br>
-                Sign Up For Exclusive Updates!
-            </h1>
+        <div class="joiNowContainer">
+            <h1 class="mainTitle">We're Launched! Ready to Dive In?</h1>
+            <p class="mainText">Join Us for Seamless Collaboration and Productive Workspaces!</p>
+            <input id="submitBtn" class="width420" value="Join Now" onclick="window.location.href='/user/signup'"/>
+        </div>
+    
+        <h1 class="secondaryTitle">Flexibility</h1>
+        <p class="mainText">Virtual coworking spaces offer flexibility in terms of time and location. People can join from the comfort of their homes or any location with an internet connection, making it convenient for individuals with diverse schedules and lifestyles.</p>
+            
+        <h1 class="secondaryTitle">Community and Networking</h1>
+        <p class="mainText">
+            Virtual coworking spaces provide opportunities for networking and building professional relationships, similar to physical coworking spaces. By connecting with both familiar contacts and new individuals, users can expand their networks and exchange ideas with a diverse group of professionals.
+        </p>
+        
+        <h1 class="secondaryTitle">Productivity and Accountability</h1>
+        <p class="mainText">
+            Working in a virtual coworking space can create a sense of accountability and motivation. Knowing that others are working alongside them, even virtually, can help individuals stay focused and productive.
+        </p>
+                    
+        <h1 class="secondaryTitle">Social Interaction</h1>
+        <p class="mainText">
+            Remote work can sometimes feel isolating, and virtual coworking spaces offer a solution by providing opportunities for social interaction and collaboration. People can engage in casual conversations, seek advice, or simply enjoy the presence of others while working independently.
+        </p>
+        
+        <h1 class="secondaryTitle">Access to Resources and Expertise</h1>
+        <p class="mainText">
+            Virtual coworking spaces can facilitate knowledge-sharing and collaboration among professionals from different backgrounds and industries. Users can leverage the expertise and resources available within the community to solve problems, seek feedback, and collaborate on projects.
+        </p>
 
-            <p class="mainText">Stay in the loop and get ready for the launch of our exciting new platform</p>
+        <h1 class="secondaryTitle">Social Interaction</h1>
+        <p class="mainText">
+            Remote work can sometimes feel isolating, and virtual coworking spaces offer a solution by providing opportunities for social interaction and collaboration. People can engage in casual conversations, seek advice, or simply enjoy the presence of others while working independently.
+        </p>
+        
+        <h1 class="secondaryTitle">Access to Resources and Expertise</h1>
+        <p class="mainText">
+            Virtual coworking spaces can facilitate knowledge-sharing and collaboration among professionals from different backgrounds and industries. Users can leverage the expertise and resources available within the community to solve problems, seek feedback, and collaborate on projects.
+        </p>
+
+        <form>
+            <h1 class="mainTitle bottom16">Want to be in touch?</h1>
+
+            <p class="mainText"> Subscribe to our Newsletter</p>
     
             <div id="formName">
                 <label>First Name
@@ -319,10 +379,10 @@
             </div>
     
             <label>Email
-                <input type="email" id="email" placeholder="Email" required/>
+                <input class="emailInput" type="email" id="email" placeholder="Email" required/>
             </label>
     
-            <input id="submitBtn" type="submit" value="Sign Up"/>
+            <input id="submitBtn" type="submit" value="Subsribe"/>
         </form>
 
         <div class="joinedPlaceholder">
@@ -365,6 +425,7 @@
                 lastName: document.getElementById("lastName").value,
                 email: document.getElementById("email").value
             };
+            console.log('data 2', data);
 
             fetch("/newsletter/join", {
                 method: "post",
