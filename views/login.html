@@ -69,7 +69,6 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #fafafa;
             height: calc(100vh - 127px);
             width: calc(100vw - 52px);
         }
@@ -181,7 +180,6 @@
             font-weight: 600;
             line-height: normal;
             padding-right: 16px;
-            width: 98px;
             text-decoration: none;
             cursor: pointer;
         }
@@ -195,10 +193,61 @@
         }
 
         .iconLogin{
+            margin-right: 8px;
             fill: var(--grey);
         }
 
+        .contactUs{
+            color: var(--darkGray);
+            text-align: center;
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: 29px;
+            padding-top: 40px;
+        }
+
+        a{
+            color: var(--darkGray);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        a:hover{
+            color: var(--primary);
+        }
+
+        footer{
+            color: var(--darkGray);
+            font-family: "Open Sans";
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 29px;
+            padding-bottom: 20px;
+            text-align: center;
+        }
+
         @media screen and (max-width: 500px){
+            .loginSignUpTitle{
+                padding-right: 0px;
+                width: auto;
+            }
+        
+            .loginSignUpTitle{
+                padding-right: 0px;
+            }
+            
+            .logo{
+                margin-top: 6px;
+                height: 54px;
+            }
+
+            #background{
+                background: none;
+            }
+
             form{
                 width: 100%;
             }
@@ -246,6 +295,13 @@
 
             <a href="/user/password/email">Forgot Your <strong>Password?</strong></a>
         </form>
+
+        <footer>
+            <p class="contactUs">
+                <a href="mailto:support@cosphere.work">Contact Us</a>
+            </p>
+            © Copyright 2024 CoSphere – All rights reserved. 
+        </footer>
     </div>
 
     <script>

@@ -98,7 +98,6 @@
 
         .loginSignUpTitle{
             align-items: center;
-            justify-content: space-between;
             display: flex;
             flex-wrap: nowrap;
             color: var(--grey);
@@ -107,8 +106,8 @@
             font-style: normal;
             font-weight: 600;
             line-height: normal;
-            width: 68px;
             cursor: pointer;
+            margin-right: 12px;
         }
 
         .loginSignUpTitle:hover{
@@ -153,13 +152,14 @@
         }
 
         footer{
-            color: #585866;
+            color: var(--darkGray);
             font-family: "Open Sans";
             font-size: 14px;
             font-style: normal;
             font-weight: 400;
             line-height: 29px;
             padding-bottom: 20px;
+            text-align: center;
         }
 
         h1{
@@ -242,7 +242,7 @@
         }
 
         .contactUs{
-            color: #2F2F33;
+            color: var(--darkGray);
             text-align: center;
             font-family: "Open Sans";
             font-size: 14px;
@@ -267,8 +267,8 @@
             margin-top: 80px;
         }
 
-        .joiNowContainer{
-            width: 420px;
+        .joinNowContainer{
+            max-width: 420px;
         }
         
         .bottom16{
@@ -276,6 +276,7 @@
         }
 
         .iconLogin{
+            margin-right: 8px;
             fill: var(--grey);
         }
         
@@ -286,25 +287,23 @@
                 padding-right: 16px;
             }
 
+            header{
+                padding: 0;
+                margin: 0;
+                margin-bottom: 20px;
+            }
+
+            .loginSignUpTitle{
+                margin-right: 0px;
+            }
+
             .heroImg{
              width: 100%;
             }
 
             .logo{
                 margin-top: 6px;
-                height: 75px;
-            }
-
-            .loginSignUpTitle{
-                justify-content: space-between;
-                padding: 10px;
-                position: absolute;
-                width: 100%;
-                padding-right: 20px;
-            }
-
-            .loginSignUpTitle > a{
-                margin: 0;
+                height: 64px;
             }
 
             #formName {
@@ -345,7 +344,7 @@
     <div class="imageContainer">
         <img class="heroImg" src="/image/heroimage.jpg" alt="Hero image" />
 
-        <div class="joiNowContainer">
+        <div class="joinNowContainer">
             <h1 class="mainTitle">We're Launched! Ready to Dive In?</h1>
             <p class="mainText">Join Us for Seamless Collaboration and Productive Workspaces!</p>
             <input id="submitBtn" class="width420" value="Join Now" onclick="window.location.href='/user/signup'"/>
