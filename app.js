@@ -84,6 +84,7 @@ wss.on("connection", (ws)=>{
                         wss.clients.forEach((client)=>{
                             if(client.user === user._id.toString()){
                                 ws.send(JSON.stringify({action: "status"}));
+                                ws.close(3001);
                             }
                         });
                         break;
@@ -97,7 +98,8 @@ wss.on("connection", (ws)=>{
             });
     });
 
-    ws.on("close", ()=>{
+    ws.on("close", (code)=>{
+        if(code === 3001) return;
         leaveTable(ws.location, ws.user);
     });
 

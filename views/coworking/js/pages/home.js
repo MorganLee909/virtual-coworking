@@ -78,6 +78,7 @@ module.exports = {
                     document.getElementById("container").style.display = "none";
                     document.querySelector("header .headerRight").style.display = "none";
                     socket.close(3001);
+                    break;
                 case "participantJoined":
                     this.updateTables(data.location.tables);
                     locationData = data.location;
