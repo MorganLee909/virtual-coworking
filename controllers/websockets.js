@@ -40,5 +40,22 @@ module.exports = {
             .catch((err)=>{
                 console.error(err);
             });
+    },
+
+    changeLocation: function(ws, locationId){
+        ws.location = locationId;
+
+        Location.findOne({_id: locationId})
+            .then((location)=>{
+                let data = {
+                    action: "changeLocation",
+                    location: location
+                };
+
+                ws.send(JSON.stringify(data));
+            })
+            .catch((err)=>{
+                console.error(err);
+            });
     }
 }

@@ -18,11 +18,13 @@ module.exports = {
     },
 
     changeLocation: function(){
-        this.closeMeeting(this.meetingDiv);
-        socket.close(3001, "changeLocation");
-
-        locationData._id = document.getElementById("locationSelect").value;
-        this.activateWebsocket();
+        let locationId = document.getElementById("locationSelect").value;
+        let data = {
+            action: "changeLocation",
+            token: localStorage.getItem("coworkToken"),
+            location: locationId
+        }
+        socket.send(JSON.stringify(data));
     },
 
     populateLocations: function(){

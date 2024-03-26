@@ -103,6 +103,11 @@ const activateWebsocket = ()=>{
                 document.getElementById("locationSelect").value = locationData._id;
                 document.getElementById("locationTitle").textContent = locationData.name;
                 break;
+            case "changeLocation":
+                locationData = data.location;
+                homePage.updateTables(locationData.tables);
+                document.getElementById("locationTitle").textContent = locationData.name;
+                break;
             case "updateIcon":
                 homePage.updateIcon(data.user, data.name, data.avatar);
                 break;

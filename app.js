@@ -91,6 +91,7 @@ wss.on("connection", (ws)=>{
                     case "getLocation": getLocation(data.location, ws, user); break;
                     case "participantLeft": leaveTable(data.location, user._id.toString()); break;
                     case "updateIcon": websockets.updateIcon(user, data.location); break;
+                    case "changeLocation": websockets.changeLocation(ws, data.location); break;
                 }
             })
             .catch((err)=>{
