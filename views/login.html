@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.logr-ingest.com/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>window.LogRocket && window.LogRocket.init('aynauq/cosphere');</script>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device.width, initial-scale=1.0"/>
     <link rel="icon" type="img/ico" href="/image/favicon.ico" media="(prefers-color-scheme: light)">
@@ -17,12 +19,6 @@
             --grey: #7a7a7a;
         }
 
-        body{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         #notifier{
             display: flex;
             justify-content: center;
@@ -37,11 +33,16 @@
             border-radius: 3px;
         }
 
+        body{
+            background-color: var(--lightGray);
+            margin: 0;
+        }
+
         header{
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 75px;
+            height: 80px;
             width: 100%;
             margin: 13px 0;
             padding: 26px;
@@ -49,7 +50,7 @@
 
         .logo{
             margin-top: 6px;
-            height: 75px;
+            height: 80px;
         }
 
         #signIn{
@@ -64,13 +65,12 @@
             color: var(--grey);
         }
 
-        #background{
+        #container{
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: calc(100vh - 127px);
-            width: calc(100vw - 52px);
         }
 
         form{
@@ -85,7 +85,7 @@
         form a{
             color: var(--darkGray);
             font-family: "Open Sans";
-            font-size: 14px;
+            font-size: 16px;
             font-style: normal;
             font-weight: 400;
             text-decoration: none;
@@ -230,6 +230,15 @@
         }
 
         @media screen and (max-width: 500px){
+            #container{
+                height: 100vh;
+            }
+
+            header{
+                padding: 0 16px;
+                margin: 0;
+            }
+
             .loginSignUpTitle{
                 padding-right: 0px;
                 width: auto;
@@ -241,17 +250,17 @@
             
             .logo{
                 margin-top: 6px;
-                height: 54px;
-            }
-
-            #background{
-                background: none;
+                height: 60px;
             }
 
             form{
                 width: 100%;
+                padding: 0 16px;
             }
 
+            form a{
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -275,7 +284,7 @@
         </a>
     </header>
 
-    <div id="background">
+    <div id="container">
         <form id="form">
             <h1 class="mainTitle">Login</h1>
                 
