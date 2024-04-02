@@ -3,12 +3,12 @@ const deskPage = require("./pages/desk.js");
 
 require("./components/location.js");
 require("./components/table.js");
+require("./components/occupant.js");
 
 const pages = document.querySelectorAll(".page");
 
 window.user = {};
 window.socket = {};
-window.locationData = null;
 
 const isMobile = ()=>{
     const match = window.matchMedia("(pointer:coarse)");
@@ -75,10 +75,6 @@ const activateWebsocket = ()=>{
             action: "status"
         };
         socket.send(JSON.stringify(data));
-
-        data.location = locationData ? locationData._id : user.defaultLocation;
-        data.action = "getLocation";
-        socket.send(JSON.stringify(data));
     });
 
     socket.addEventListener("message", (event)=>{
@@ -92,19 +88,12 @@ const activateWebsocket = ()=>{
                 socket.close(3001);
                 break;
             case "participantJoined":
-                homePage.updateTables(data.location.tables);
+                locationData.component.updateTables(data.location.tables);
                 locationData = data.location;
                 break;
             case "participantLeft":
                 homePage.updateTables(data.location.tables);
                 locationData = data.location;
-                break;
-            case "getLocation":
-                let tables = locationData ? locationData.tables : [];
-                homePage.updateTables(data.location.tables);
-                locationData = data.location;
-                document.getElementById("locationSelect").value = locationData._id;
-                document.getElementById("locationTitle").textContent = locationData.name;
                 break;
             case "changeLocation":
                 locationData = data.location;
@@ -132,7 +121,9 @@ const getUser = ()=>{
                 requestError(user.message);
             }else{
                 window.user = user;
+                window.user.currentLocation = user.defaultLocation;
                 activateWebsocket();
+                homePage.render();
             }
         })
         .catch((err)=>{
@@ -145,6 +136,5 @@ if(isMobile()){
     document.getElementById("mobileContainer").style.display = "flex";
     document.querySelector(".headerRight").style.display = "none";
 }else{
-    homePage.render();
     getUser();
 }

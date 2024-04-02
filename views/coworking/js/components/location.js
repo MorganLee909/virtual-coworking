@@ -38,6 +38,7 @@ class Location extends HTMLElement{
         })
             .then(r=>r.json())
             .then((location)=>{
+                console.log(location);
                 if(location.error){
                     requestError(location.message);
                 }else{

@@ -34,6 +34,7 @@ module.exports = (app)=>{
 
     //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
+    app.get("/location/:locationId", auth, location.getOne);
     app.get("/location", location.getAll);
 
     //STRIPE

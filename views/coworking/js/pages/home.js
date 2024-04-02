@@ -1,6 +1,5 @@
 module.exports = {
     rendered: false,
-    tableTemplate: document.getElementById("tablesTemplate").content.children[0],
     meetingDiv: document.getElementById("meeting"),
 
     render: function(){
@@ -9,6 +8,11 @@ module.exports = {
 
             //Retrieve and build user/tables
             this.populateLocations();
+
+            //Add Location component
+            let location = document.createElement("location-comp");
+            location.id = `location_${user.defaultLocation}`;
+            document.getElementById("homePage").appendChild(location);
 
             //Set video player frame controls
             document.getElementById("closeTag").addEventListener("click", ()=>{this.closeMeeting(this.meetingDiv)});
@@ -103,51 +107,6 @@ module.exports = {
         api.addListener("videoConferenceLeft", (data)=>{this.closeMeeting(this.meetingDiv)});
     },
 
-    tableFull: function(table){
-        let seats = table.querySelectorAll(".occupant");
-        let tableFull = true;
-        for(let i = 0; i < seats.length; i++){
-            if(!seats[i].id) return false;
-        }
-        return true;
-    },
-
-    joinTable: function(table){
-        if(this.tableFull(table)){
-            createBanner("red", "All seats are occupied at this table");
-            return;
-        }
-
-        this.meetingDiv.style.display = "flex";
-
-        let api = {};
-
-        fetch("/location/table/join", {
-            method: "post",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
-            },
-            body: JSON.stringify({
-                location: locationData.identifier,
-                table: table.id
-            })
-        })
-            .then(r=>r.json())
-            .then((response)=>{
-                if(response.error){
-                    requestError(response.message);
-                }else{
-                    this.initIframeAPI(response, `${locationData.identifier}-${table.id}`);
-                    document.getElementById("homeBlocker").style.display = "flex";
-                    table.classList.add("joinedTable");
-                }
-            })
-            .catch((err)=>{
-                requestError(err.message);
-            });
-    },
-
     dragElement: function(moveElem, clickElem){
         let positions = [];
         
@@ -215,55 +174,6 @@ module.exports = {
             meetingDiv.style.left = "25%";
             event.target.setAttribute("data-fs", "false");
             event.target.parentElement.classList.remove("fullscreen");
-        }
-    },
-
-    updateTables: function(newTables){
-        for(let i = 0; i < newTables.length; i++){
-            let table = document.getElementById(newTables[i]._id);
-            if(!table) table = this.addTable(newTables[i]);
-
-            let occupants = table.querySelectorAll(".occupant");
-            for(let j = 0; j < newTables[i].occupants.length; j++){
-                if(newTables[i].occupants[j].userId != occupants[j].getAttribute("userId")){
-                    this.updateOccupant(newTables[i].occupants[j], occupants[j]);
-                }
-            }
-        }
-
-        let tables = document.querySelectorAll(".table");
-        for(let i = 0; i < tables.length; i++){
-            let match = newTables.find(t => t._id === tables[i].id);
-            if(!match) tables[i].parentElement.removeChild(tables[i]);
-        }
-    },
-
-    addTable: function(newTable){
-        let table = this.tableTemplate.cloneNode(true);
-        table.id = newTable._id;
-        table.addEventListener("click", ()=>{
-            this.joinTable(table);
-        });
-        document.getElementById("tables").appendChild(table);
-        return table;
-    },
-
-    updateOccupant: function(occupant, seat){
-        if(!occupant.userId){
-            seat.removeAttribute("userId");
-            seat.classList.remove("noBorder");
-            seat.classList.remove("goldBorder");
-            seat.querySelector("p").textContent = "";
-            seat.removeChild(seat.querySelector("img"));
-        }else{
-            seat.setAttribute("userId", occupant.userId);
-            seat.classList.add("noBorder");
-            seat.querySelector("p").textContent = occupant.name;
-            if(occupant.userId === "65f9d62c1dea3702d2744c09") seat.classList.add("goldBorder");
-            
-            let image = document.createElement("img");
-            image.src = occupant.avatar;
-            seat.appendChild(image);
         }
     },
 

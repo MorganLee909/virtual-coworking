@@ -90,6 +90,25 @@ module.exports = {
     },
 
     /*
+    GET: get data for a single location
+    req.params.locationId = String ID
+    response = Location
+     */
+    getOne: function(req, res){
+        Location.findOne({_id: req.params.locationId})
+            .then((location)=>{
+                res.json(location);
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error"
+                });
+            });
+    },
+
+    /*
      GET, retrieve list of all locations
      */
     getAll: function(req, res){
