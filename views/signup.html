@@ -18,9 +18,8 @@
             }
 
             body{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+                background-color: var(--lightGray);
+                margin: 0;
             }
 
             #notifier{
@@ -41,7 +40,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                height: 75px;
+                height: 80px;
                 width: 100%;
                 margin: 13px 0;
                 padding: 26px;
@@ -60,7 +59,7 @@
             #signIn p{
                 font-size: 14px;
                 font-weight: 600;
-                color: #7a7a7a;
+                color: var(--grey);
             }
 
             .logo{
@@ -68,7 +67,7 @@
                 height: 75px;
             }
 
-            #background{
+            #container{
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
@@ -107,7 +106,7 @@
             form a{
                 color: var(--darkGray);
                 font-family: "Open Sans";
-                font-size: 14px;
+                font-size: 16px;
                 font-style: normal;
                 font-weight: 400;
                 text-decoration: none;
@@ -253,7 +252,21 @@
                 form{
                     width: 100%; 
                 }
+
+                form{
+                    width: 100%;
+                    padding: 0 16px;
+                }
+
+                form a{
+                    font-size: 14px;
+                }
                 
+                header{
+                    padding: 0 16px;
+                    margin: 0;
+                }
+
                 .loginSignUpTitle{
                     padding-right: 0px;
                     width: auto;
@@ -261,12 +274,9 @@
 
                 .logo{
                     margin-top: 6px;
-                    height: 54px;
+                    height: 60px;
                 }
 
-                #background{
-                    width: calc(100vw - 52px);
-                }
 
                 #formName{
                     flex-direction: column;
@@ -300,7 +310,7 @@
             </a>
         </header>
 
-        <div id="background">
+        <div id="container">
             <form>
                 <h1 class="mainTitle">Sign Up</h1>
 
