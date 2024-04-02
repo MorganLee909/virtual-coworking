@@ -27,7 +27,6 @@ module.exports = (wss)=>{
                 .then((user)=>{
                     if(!user) throw "auth";
 
-                    console.log(data);
                     switch(data.action){
                         case "status": closeExtraConnection(wss.clients, client, user._id.toString(), data.location); break;
                         case "getLocation": location.getLocation(data.location, client, user); break;

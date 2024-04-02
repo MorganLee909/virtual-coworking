@@ -165,6 +165,12 @@ class Meeting extends HTMLElement{
         this.table.leaveTable();
 
         this.parentElement.removeChild(this);
+
+        socket.send(JSON.stringify({
+            action: "participantLeft",
+            location: user.currentLocation,
+            token: localStorage.getItem("coworkToken")
+        }));
     }
 
     fullScreen(){

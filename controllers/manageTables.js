@@ -84,9 +84,6 @@ const joinTable = (user, locationIdentifier, tableId)=>{
             };
             let locationString = location._id.toString();
             wss.clients.forEach((client)=>{
-                console.log(client.location);
-                console.log(locationString);
-                console.log();
                 if(client.location === locationString){
                     client.send(JSON.stringify(data));
                 }

@@ -140,7 +140,7 @@ class Table extends HTMLElement{
         socket.send(JSON.stringify({
             action: "participantLeft",
             token: localStorage.getItem("coworkToken"),
-            location: this.parentElement.id.split("_")[1]
+            location: user.currentLocation
         }));
     }
 }
