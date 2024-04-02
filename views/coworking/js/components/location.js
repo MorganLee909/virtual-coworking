@@ -7,6 +7,12 @@ const css = `
     height: 100%;
     width: 100%;
 }
+
+h1{
+    width: 100%;
+    text-align: center;
+    margin-bottom: 0;
+}
 `;
 
 //id = "location_ID"
@@ -26,6 +32,12 @@ class Location extends HTMLElement{
 
     connectedCallback(){
         this.getLocation();
+    }
+
+    set name(value){
+        let h1 = document.createElement("h1");
+        h1.textContent = value;
+        this.shadow.appendChild(h1);
     }
 
     getLocation(){
