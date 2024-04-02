@@ -99,7 +99,8 @@ const activateWebsocket = ()=>{
                 location.updateTables(data.location.tables);
                 break;
             case "updateIcon":
-                homePage.updateIcon(data.user, data.name, data.avatar);
+                location = document.getElementById(`location_${data.location}`);
+                location.updateIcon(data.table, data.user, data.avatar, data.name);
                 break;
         }
     });

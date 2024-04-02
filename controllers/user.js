@@ -420,36 +420,40 @@ module.exports = {
 
     //WS: update icon on table and send to all clients at location
     updateIcon: function(user, locationId, clients){
+        let table = null;
         Location.findOne({_id: locationId})
             .then((location)=>{
                 for(let i = 0; i < location.tables.length; i++){
-                    let found = false;
                     for(let j = 0; j < location.tables[i].occupants.length; j++){
-                        if(user._id.toString() === location.tables[i].occupants[j].userId.toString()){
+                        if(user._id.toString() === location.tables[i].occupants[j].userId?.toString()){
                             location.tables[i].occupants[j].name = user.firstName;
                             location.tables[i].occupants[j].avatar = user.avatar;
-                            found = true;
+                            table = location.tables[i]._id.toString();
                             break;
                         }
                     }
-                    if(found) break;
+                    if(table) break;
                 }
 
                 return location.save();
             })
             .then((location)=>{
-                let data = {
-                    action: "updateIcon",
-                    user: user._id,
-                    name: user.firstName,
-                    avatar: user.avatar
-                };
+                if(table){
+                    let data = {
+                        action: "updateIcon",
+                        user: user._id,
+                        name: user.firstName,
+                        avatar: user.avatar,
+                        location: locationId,
+                        table: table
+                    };
 
-                clients.forEach((client)=>{
-                    if(client.location === locationId){
-                        client.send(JSON.stringify(data));
-                    }
-                })
+                    clients.forEach((client)=>{
+                        if(client.location === locationId){
+                            client.send(JSON.stringify(data));
+                        }
+                    });
+                }
             })
             .catch((err)=>{
                 console.error(err);

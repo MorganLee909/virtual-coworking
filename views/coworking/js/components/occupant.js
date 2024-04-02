@@ -105,25 +105,12 @@ class Occupant extends HTMLElement{
         if(avatar) avatar.src = "";
     }
 
-    updateIcon(user, name, avatar){
-        let tables = locationData.tables;
+    updateIcon(avatar, name){
+        this._avatar = avatar;
+        this._name = name;
 
-        for(let i = 0; i < tables.length; i++){
-            let found = false;
-            for(let j = 0; j < tables[i].occupants.length; j++){
-                if(user === tables[i].occupants[j].userId){
-                    tables[i].occupants[j].name = name;
-                    tables[i].occupants[j].avatar = avatar;
-                    found = true;
-                    break;
-                }
-            }
-            if(found) break;
-        }
-
-        let icon = document.querySelector(`[data-user="${user}"]`);
-        icon.querySelector("p").textContent = name;
-        icon.querySelector("img").src = avatar;
+        this.shadow.querySelector(".name").textContent = name;
+        this.shadow.querySelector("img").src = avatar;
     }
 }
 

@@ -143,6 +143,17 @@ class Table extends HTMLElement{
             location: user.currentLocation
         }));
     }
+
+    updateIcon(userId, avatar, name){
+        let occupants = this.shadow.querySelectorAll("occupant-comp");
+
+        for(let i = 0; i < occupants.length; i++){
+            if(occupants[i].userId === userId){
+                occupants[i].updateIcon(avatar, name);
+                break;
+            }
+        }
+    }
 }
 
 customElements.define("table-comp", Table);

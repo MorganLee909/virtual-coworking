@@ -1,6 +1,6 @@
 const {wsAuth} = require("./auth.js");
 const {leaveTable} = require("./controllers/manageTables.js");
-const user = require("./controllers/user.js");
+const userController = require("./controllers/user.js");
 const location = require("./controllers/location.js");
 
 const closeExtraConnection = (clients, newClient, userId, location)=>{
@@ -31,7 +31,7 @@ module.exports = (wss)=>{
                         case "status": closeExtraConnection(wss.clients, client, user._id.toString(), data.location); break;
                         case "getLocation": location.getLocation(data.location, client, user); break;
                         case "participantLeft": leaveTable(data.location, user._id.toString()); break;
-                        case "updateIcon": user.updateIcon(user, data.location, wss.clients); break;
+                        case "updateIcon": userController.updateIcon(user, data.location, wss.clients); break;
                     }
                 })
                 .catch((err)=>{
