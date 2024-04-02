@@ -82,6 +82,7 @@ const activateWebsocket = ()=>{
     socket.addEventListener("message", (event)=>{
         let data = JSON.parse(event.data);
 
+        let location = {};
         switch(data.action){
             case "status":
                 document.getElementById("extraConnection").style.display = "flex";
@@ -90,12 +91,12 @@ const activateWebsocket = ()=>{
                 socket.close(3001);
                 break;
             case "participantJoined":
-                let location = document.getElementById(`location_${user.currentLocation}`);
+                location = document.getElementById(`location_${user.currentLocation}`);
                 location.updateTables(data.location.tables);
                 break;
             case "participantLeft":
-                homePage.updateTables(data.location.tables);
-                locationData = data.location;
+                location = document.getElementById(`location_${data.location._id}`);
+                location.updateTables(data.location.tables);
                 break;
             case "changeLocation":
                 locationData = data.location;

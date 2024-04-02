@@ -101,7 +101,8 @@ class Occupant extends HTMLElement{
         this.avatar = undefined;
 
         this.shadow.querySelector(".name").textContent = "";
-        this.shadow.querySelector("img").src = "";
+        let avatar = this.shadow.querySelector("img");
+        if(avatar) avatar.src = "";
     }
 
     updateIcon(user, name, avatar){
