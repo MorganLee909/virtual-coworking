@@ -38,7 +38,6 @@ img{
     height: 100%;
     width: 100%;
     border-radius: 5px;
-    border: 2px solid rgba(167, 167, 167, 0.2);
 }
 `;
 
@@ -76,6 +75,27 @@ class Occupant extends HTMLElement{
 
         this.querySelector(".name").textContent = "";
         this.querySelector("img").src = "";
+    }
+
+    updateIcon(user, name, avatar){
+        let tables = locationData.tables;
+
+        for(let i = 0; i < tables.length; i++){
+            let found = false;
+            for(let j = 0; j < tables[i].occupants.length; j++){
+                if(user === tables[i].occupants[j].userId){
+                    tables[i].occupants[j].name = name;
+                    tables[i].occupants[j].avatar = avatar;
+                    found = true;
+                    break;
+                }
+            }
+            if(found) break;
+        }
+
+        let icon = document.querySelector(`[data-user="${user}"]`);
+        icon.querySelector("p").textContent = name;
+        icon.querySelector("img").src = avatar;
     }
 }
 

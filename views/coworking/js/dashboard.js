@@ -4,6 +4,7 @@ const deskPage = require("./pages/desk.js");
 require("./components/location.js");
 require("./components/table.js");
 require("./components/occupant.js");
+require("./components/meeting.js");
 
 const pages = document.querySelectorAll(".page");
 
