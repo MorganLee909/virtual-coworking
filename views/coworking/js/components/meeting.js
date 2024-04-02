@@ -11,8 +11,6 @@ const html = `
     <svg id="dragTag" width="17" height="17" viewBox="0 0 17 17" fill="none">
         <path d="M10.1313 2.79206L8.50032 1.16113M8.50032 1.16113L6.86939 2.79206M8.50032 1.16113V15.8395M8.50032 15.8395L10.1313 14.2086M8.50032 15.8395L6.86939 14.2086M14.2086 10.1313L15.8395 8.50032M15.8395 8.50032L14.2086 6.86939M15.8395 8.50032H1.16113M1.16113 8.50032L2.79206 10.1313M1.16113 8.50032L2.79206 6.86939" stroke="white" stroke-width="0.720618" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-
-    <div id="homeBlocker"></div>
 </div>
 `;
 
@@ -28,7 +26,7 @@ const css = `
     overflow: visible;
 }
 
-:host.fullscreen{
+:host(.fullscreen){
     height: 100%;
     width: 100%;
     top: 0;
@@ -57,7 +55,7 @@ const css = `
     background: #525252;
 }
 
-:host.fullscreen #controlTab{
+:host(.fullscreen) #controlTab{
     flex-direction: row;
     top: 0;
     right: 0;
@@ -65,22 +63,13 @@ const css = `
     width: 100px;
 }
 
-:host.fullscreen #controlTab > *{
+:host(.fullscreen) #controlTab > *{
     height: 35px;
     width: 35px;
 }
 
-:host.fullscreen #dragTag{
+:host(.fullscreen) #dragTag{
     display: none;
-}
-
-#homeBlocker{
-    height: 100%;
-    width: 100%;
-    z-index: 2;
-    position: absolute;
-    top: 0;
-    bottom: 0;
 }
 
 iframe.resize{
@@ -108,8 +97,8 @@ class Meeting extends HTMLElement{
         this.initIframeAPI()
         this.isFullscreen = false;
 
-        this.shadow.querySelector("#closeTag").addEventListener("click", this.closeMeeting);
-        this.shadow.querySelector("#expandTag").addEventListener("click", this.fullscreen);
+        this.shadow.querySelector("#closeTag").addEventListener("click", this.closeMeeting.bind(this));
+        this.shadow.querySelector("#expandTag").addEventListener("click", this.fullscreen.bind(this));
         this.dragElement(this.shadow.querySelector("#dragTag"));
     }
 
@@ -173,7 +162,7 @@ class Meeting extends HTMLElement{
         }));
     }
 
-    fullScreen(){
+    fullscreen(){
         this.classList.toggle("fullscreen");
     }
 
