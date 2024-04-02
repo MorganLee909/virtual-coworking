@@ -19,7 +19,7 @@ class Location extends HTMLElement{
         this.tables = [];
 
         const template = document.createElement("template");
-        template.innerHTML = `<style>${css}</style>${html}`;
+        template.innerHTML = `<style>${css}</style>`;
         this.shadow = this.attachShadow({mode: "closed"});
         this.shadow.appendChild(template.content.cloneNode(true));
     }

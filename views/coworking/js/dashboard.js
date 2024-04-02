@@ -1,6 +1,9 @@
 const homePage = require("./pages/home.js");
 const deskPage = require("./pages/desk.js");
 
+require("./components/location.js");
+require("./components/table.js");
+
 const pages = document.querySelectorAll(".page");
 
 window.user = {};
