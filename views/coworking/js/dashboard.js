@@ -72,8 +72,9 @@ const activateWebsocket = ()=>{
     socket = new WebSocket(`ws://localhost:8000`);
     socket.addEventListener("open", ()=>{
         let data = {
+            action: "status",
             token: localStorage.getItem("coworkToken"),
-            action: "status"
+            location: user.currentLocation
         };
         socket.send(JSON.stringify(data));
     });
@@ -89,8 +90,8 @@ const activateWebsocket = ()=>{
                 socket.close(3001);
                 break;
             case "participantJoined":
-                locationData.component.updateTables(data.location.tables);
-                locationData = data.location;
+                let location = document.getElementById(`location_${user.currentLocation}`);
+                location.updateTables(data.location.tables);
                 break;
             case "participantLeft":
                 homePage.updateTables(data.location.tables);

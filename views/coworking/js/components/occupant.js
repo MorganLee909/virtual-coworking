@@ -82,7 +82,7 @@ class Occupant extends HTMLElement{
         this._avatar = value;
         let avatar = this.shadow.querySelector("img");
         if(value){
-            if(!img){
+            if(!avatar){
                 avatar = document.createElement("img");
                 avatar.src = value;
                 this.shadow.appendChild(avatar);

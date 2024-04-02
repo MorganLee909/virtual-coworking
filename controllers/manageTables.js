@@ -62,13 +62,9 @@ const manageTables = (location)=>{
 }
 
 const joinTable = (user, locationIdentifier, tableId)=>{
-    console.log("joining table");
     Location.findOne({identifier: locationIdentifier})
         .then((location)=>{
             for(let i = 0; i < location.tables.length; i++){
-                console.log(location.tables[i]._id.toString());
-                console.log(tableId);
-                console.log();
                 if(location.tables[i]._id.toString() === tableId){
                     let seat = location.tables[i].occupants.find(o => !o.userId);
                     seat.userId = user._id;
@@ -87,8 +83,10 @@ const joinTable = (user, locationIdentifier, tableId)=>{
                 action: "participantJoined"
             };
             let locationString = location._id.toString();
-            console.log(data.action);
             wss.clients.forEach((client)=>{
+                console.log(client.location);
+                console.log(locationString);
+                console.log();
                 if(client.location === locationString){
                     client.send(JSON.stringify(data));
                 }

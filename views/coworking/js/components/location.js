@@ -53,15 +53,18 @@ class Location extends HTMLElement{
 
     updateTables(newTables){
         for(let i = 0; i < newTables.length; i++){
-            let table = document.getElementById(newTables[i]._id);
+            let table = this.shadow.querySelector(`#table_${newTables[i]._id}`);
             if(!table){
                 table = document.createElement("table-comp");
-                table.id = `table_${newTables[i]._id}`;
+                table.setAttribute("id", `table_${newTables[i]._id}`);
                 table.occupants = newTables[i].occupants;
                 table.type = newTables[i].type;
                 table.locationIdentifier = this.identifier;
                 this.shadow.appendChild(table);
             }
+
+            table.occupants = newTables[i].occupants;
+            table.updateOccupants();
         }
 
         for(let i = 0; i < this.tables.length; i++){
