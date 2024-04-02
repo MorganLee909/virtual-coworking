@@ -98,11 +98,6 @@ const activateWebsocket = ()=>{
                 location = document.getElementById(`location_${data.location._id}`);
                 location.updateTables(data.location.tables);
                 break;
-            case "changeLocation":
-                locationData = data.location;
-                homePage.updateTables(locationData.tables);
-                document.getElementById("locationTitle").textContent = locationData.name;
-                break;
             case "updateIcon":
                 homePage.updateIcon(data.user, data.name, data.avatar);
                 break;

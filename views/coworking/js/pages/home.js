@@ -10,20 +10,25 @@ module.exports = {
             this.populateLocations();
 
             //Add Location component
-            let location = document.createElement("location-comp");
-            location.id = `location_${user.defaultLocation}`;
-            document.getElementById("homePage").appendChild(location);
+            this.addLocation(user.defaultLocation);
         }
+    },
+
+    addLocation: function(locationId){
+        let location = document.createElement("location-comp");
+        location.id = `location_${locationId}`;
+        document.getElementById("homePage").appendChild(location);
     },
 
     changeLocation: function(){
         let locationId = document.getElementById("locationSelect").value;
-        let data = {
-            action: "changeLocation",
-            token: localStorage.getItem("coworkToken"),
-            location: locationId
-        }
-        socket.send(JSON.stringify(data));
+
+        let oldLocation = document.getElementById(`location_${user.currentLocation}`);
+        oldLocation.parentElement.removeChild(oldLocation);
+
+        user.currentLocation = locationId;
+
+        this.addLocation(locationId);
     },
 
     populateLocations: function(){

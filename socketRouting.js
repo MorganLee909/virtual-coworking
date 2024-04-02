@@ -32,7 +32,6 @@ module.exports = (wss)=>{
                         case "getLocation": location.getLocation(data.location, client, user); break;
                         case "participantLeft": leaveTable(data.location, user._id.toString()); break;
                         case "updateIcon": user.updateIcon(user, data.location, wss.clients); break;
-                        case "changeLocation": location.changeLocation(client, data.location); break;
                     }
                 })
                 .catch((err)=>{
