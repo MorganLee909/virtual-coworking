@@ -120,7 +120,7 @@ class Meeting extends HTMLElement{
             jwt: this.token,
             height: "100%",
             width: "100%",
-            parentNode: this,
+            parentNode: this.shadow,
             configOverwrite: {
                 toolbarButtons: [
                     'camera',

@@ -1,12 +1,12 @@
 const html = `
 <p class="joinTitle">Join</p>
 
-<occupant-comp seatNumber="0"></occupant-comp>
-<occupant-comp seatNumber="1"></occupant-comp>
-<occupant-comp seatNumber="2"></occupant-comp>
-<occupant-comp seatNumber="3"></occupant-comp>
-<occupant-comp seatNumber="4"></occupant-comp>
-<occupant-comp seatNumber="5"></occupant-comp>
+<occupant-comp seatnumber="0"></occupant-comp>
+<occupant-comp seatnumber="1"></occupant-comp>
+<occupant-comp seatnumber="2"></occupant-comp>
+<occupant-comp seatnumber="3"></occupant-comp>
+<occupant-comp seatnumber="4"></occupant-comp>
+<occupant-comp seatnumber="5"></occupant-comp>
 `;
 
 const css = `
@@ -78,14 +78,13 @@ class Table extends HTMLElement{
 
     updateOccupants(){
         for(let i = 0; i < this.occupants.length; i++){
-            let seat = this.querySelector(`[seatNumber="${this.occupants[i].seatNumber}"]`);
+            let seat = this.shadow.querySelector(`[seatnumber="${this.occupants[i].seatNumber}"]`);
             if(!seat) continue;
             if(this.occupants[i].userId && seat.id !== `occupant_${this.occupants[i].userId}`){
                 seat.id = `occupant_${this.occupants[i]._id}`;
                 seat.userId = this.occupants[i].userId;
                 seat.name = this.occupants[i].name;
                 seat.avatar = this.occupants[i].avatar;
-                seat.fill();
             }else if(seat.userId && !this.occupants[i].userId){
                 seat.emptySelf();
             }

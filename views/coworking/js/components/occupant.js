@@ -1,6 +1,5 @@
 const html = `
-<p class="name"</p>
-<img class="avatar">
+<p class="name"></p>
 `;
 
 const css = `
@@ -24,7 +23,7 @@ const css = `
 
 .name{
     position: absolute;
-    bottom: -50%;
+    bottom: -45px;
     left: 0;
     width: 100%;
     text-align: center;
@@ -57,14 +56,42 @@ class Occupant extends HTMLElement{
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 
+    connectedCallback(){
+        if(this.name) this.shadow.querySelector(".name").textContent = this.name;
+        if(this.avatar){
+            let avatar = document.createElement("img");
+            avatar.src = this.avatar;
+            this.shadow.appendChild(avatar);
+        }
+    }
+
+    get name(){
+        return this._name;
+    }
+
     set name(value){
-        this.name = value;
-        this.querySelector(".name").textContent = this.name;
+        this._name = value;
+        this.shadow.querySelector(".name").textContent = value;
+    }
+
+    get avatar(){
+        return this._avatar;
     }
 
     set avatar(value){
-        this.avatar = value;
-        this.querySelector("img").src = this.avatar;
+        this._avatar = value;
+        let avatar = this.shadow.querySelector("img");
+        if(value){
+            if(!img){
+                avatar = document.createElement("img");
+                avatar.src = value;
+                this.shadow.appendChild(avatar);
+            }else{
+                avatar.src = value;
+            }
+        }else{
+            this.shadow.removeChild(avatar);
+        }
     }
 
     emptySelf(){
@@ -73,8 +100,8 @@ class Occupant extends HTMLElement{
         this.name = undefined;
         this.avatar = undefined;
 
-        this.querySelector(".name").textContent = "";
-        this.querySelector("img").src = "";
+        this.shadow.querySelector(".name").textContent = "";
+        this.shadow.querySelector("img").src = "";
     }
 
     updateIcon(user, name, avatar){
