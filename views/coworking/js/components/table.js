@@ -30,7 +30,7 @@ const css = `
     border: 3px solid #718ef0;
 }
 
-.joinedTable{
+:host(.joinedTable){
     border: 3px solid #719ef0;
 }
 
@@ -121,11 +121,17 @@ class Table extends HTMLElement{
                 if(response.error){
                     requestError(response.message);
                 }else{
+                    let homePageElem = document.getElementById("homePage");
                     let meeting = document.createElement("meeting-comp");
                     meeting.table = this;
                     meeting.token = response;
                     meeting.locationIdentifier = this.locationIdentifier;
-                    document.getElementById("homePage").appendChild(meeting);
+                    homePageElem.appendChild(meeting);
+
+                    let blocker = document.createElement("div");
+                    blocker.classList.add("blocker");
+                    homePageElem.appendChild(blocker);
+
                     this.classList.add("joinedTable");
                 }
             })

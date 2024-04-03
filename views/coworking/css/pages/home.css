@@ -8,57 +8,7 @@
     position: relative;
 }
 
-#meeting{
-    position: fixed;
-    top: 25%;
-    left: 25%;
-    height: 50%;
-    width: 50%;
-    background: black;
-    z-index: 3;
-    overflow: visible;
-}
-
-#meetingTab{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 65px;
-    width: 25px;
-    position: absolute;
-    bottom: 0;
-    right: -25px;
-    background: #2f2f2f;
-    border-radius: 0 2px 2px 0;
-}
-
-#meetingTab > *{
-    cursor: pointer;
-}
-
-#meetingTab > *:hover{
-    background: #525252;
-}
-
-#meetingTab.fullscreen{
-    flex-direction: row;
-    top: 0;
-    right: 0;
-    height: 50px;
-    width: 100px;
-}
-
-#meetingTab.fullscreen > *{
-    height: 35px;
-    width: 35px;
-}
-
-#meetingTab.fullscreen #dragTag{
-    display: none;
-}
-
-#homeBlocker{
+.blocker{
     height: 100%;
     width: 100%;
     z-index: 2;
