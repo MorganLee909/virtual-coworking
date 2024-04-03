@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const LocationSchema = new mongoose.Schema({
+const OfficeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -9,7 +9,7 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tables: [{
+    tables:[{
         type: {
             type: String,
             required: true
@@ -32,7 +32,7 @@ const LocationSchema = new mongoose.Schema({
                 required: false
             }
         }]
-   }]
+    }]
 });
 
-module.exports = mongoose.model("location", LocationSchema);
+module.exports = mongoose.model("office", OfficeSchema);
