@@ -2,6 +2,8 @@ const homePage = require("./pages/home.js");
 const deskPage = require("./pages/desk.js");
 
 console.time("components");
+require("./pages/office.js");
+
 require("./components/location.js");
 require("./components/table.js");
 require("./components/occupant.js");
@@ -29,6 +31,7 @@ changePage = (page, data)=>{
     switch(page){
         case "home": homePage.render(); break;
         case "desk": deskPage.render(); break;
+        case "office": document.getElementById("officePage")._id = data; break;
     }
 }
 
