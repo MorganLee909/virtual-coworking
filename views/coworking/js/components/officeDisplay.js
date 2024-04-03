@@ -1,6 +1,28 @@
 let html = ``;
 
-let css = ``;
+let css = `
+:host{
+    display: flex;
+    flex-direction: column;
+    width: 70px;
+    height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+button{
+    background: none;
+    border: 1px solid black;
+    border-right: none;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+button:hover{
+    background: rgb(220, 220, 220);
+}
+`;
 
 class OfficeDisplay extends HTMLElement{
     constructor(){

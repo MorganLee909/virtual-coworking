@@ -6,6 +6,7 @@ const css = `
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
+    padding-right: 75px !important;
 }
 
 h1{
