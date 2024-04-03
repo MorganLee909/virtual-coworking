@@ -39,7 +39,8 @@ module.exports = (app)=>{
     app.get("/location", location.getAll);
 
     //OFFICE
-    app.get("/office/:locationId", auth, office.getOffices);
+    app.get("/office/location/:locationId", auth, office.getOffices);
+    app.get("/office/:officeId", auth, office.getOffice);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

@@ -35,7 +35,7 @@ class OfficeDisplay extends HTMLElement{
     }
 
     connectedCallback(){
-        fetch(`/office/${user.currentLocation}`, {
+        fetch(`/office/location/${user.currentLocation}`, {
             method: "get",
             headers: {
                 "Content-Type": "application/json",
