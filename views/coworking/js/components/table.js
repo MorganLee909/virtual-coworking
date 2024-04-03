@@ -125,7 +125,7 @@ class Table extends HTMLElement{
                     meeting.table = this;
                     meeting.token = response;
                     meeting.locationIdentifier = this.locationIdentifier;
-                    document.body.appendChild(meeting);
+                    document.getElementById("homePage").appendChild(meeting);
                     this.classList.add("joinedTable");
                 }
             })
