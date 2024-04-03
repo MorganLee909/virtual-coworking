@@ -2,7 +2,7 @@ const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
 const newsletter = require("./controllers/newsletter.js");
 const location = require("./controllers/location.js")
-const office = require("./conroller/office.js");
+const office = require("./controllers/office.js");
 const {auth}= require("./auth.js");
 
 module.exports = (app)=>{

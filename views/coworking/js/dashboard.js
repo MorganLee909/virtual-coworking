@@ -1,10 +1,13 @@
 const homePage = require("./pages/home.js");
 const deskPage = require("./pages/desk.js");
 
+console.time("components");
 require("./components/location.js");
 require("./components/table.js");
 require("./components/occupant.js");
 require("./components/meeting.js");
+require("./components/officeDisplay.js");
+console.timeEnd("components");
 
 const pages = document.querySelectorAll(".page");
 
@@ -16,7 +19,7 @@ const isMobile = ()=>{
     return match && match.matches;
 }
 
-changePage = (page)=>{
+changePage = (page, data)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";
     }

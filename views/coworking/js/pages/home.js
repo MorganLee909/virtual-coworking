@@ -11,6 +11,9 @@ module.exports = {
 
             //Add Location component
             this.addLocation(user.defaultLocation);
+
+            //Add OfficeDisplay component
+            this.addOfficeDisplay();
         }
     },
 
@@ -58,5 +61,10 @@ module.exports = {
             .catch((err)=>{
                 createBanner("red", "Server error");
             });
+    },
+
+    addOfficeDisplay: function(){
+        let officeDisplay = document.createElement("office-display-comp");
+        document.getElementById("homePage").appendChild(officeDisplay);
     }
 }

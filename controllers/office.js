@@ -6,8 +6,8 @@ module.exports = {
     req.params.locationId = String
     response = [Office]
      */
-    getAll: function(req, res){
-        Office.find({location: req.params.locationId})
+    getOffices: function(req, res){
+        Office.find({location: req.params.locationId}, {_id: 1, name: 1})
             .then((office)=>{
                 res.json(office);
             })
