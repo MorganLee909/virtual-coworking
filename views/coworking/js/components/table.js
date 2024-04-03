@@ -128,10 +128,7 @@ class Table extends HTMLElement{
                     meeting.locationIdentifier = this.locationIdentifier;
                     homePageElem.appendChild(meeting);
 
-                    let blocker = document.createElement("div");
-                    blocker.classList.add("blocker");
-                    homePageElem.appendChild(blocker);
-
+                    document.getElementById("homeBlocker").style.display = "flex";
                     this.classList.add("joinedTable");
                 }
             })

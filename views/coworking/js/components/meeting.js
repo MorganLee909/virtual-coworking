@@ -153,13 +153,15 @@ class Meeting extends HTMLElement{
     closeMeeting(){
         this.table.leaveTable();
 
-        this.parentElement.removeChild(this);
+        document.getElementById("homeBlocker").style.display = "none";
 
         socket.send(JSON.stringify({
             action: "participantLeft",
             location: user.currentLocation,
             token: localStorage.getItem("coworkToken")
         }));
+
+        this.parentElement.removeChild(this);
     }
 
     fullscreen(){
