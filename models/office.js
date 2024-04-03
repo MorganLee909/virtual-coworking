@@ -38,6 +38,10 @@ const OfficeSchema = new mongoose.Schema({
         required: true
     },
     users: [mongoose.Schema.Types.ObjectId],
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    }
 });
 
 module.exports = mongoose.model("office", OfficeSchema);
