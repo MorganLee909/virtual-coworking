@@ -32,7 +32,12 @@ const OfficeSchema = new mongoose.Schema({
                 required: false
             }
         }]
-    }]
+    }],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    users: [mongoose.Schema.Types.ObjectId],
 });
 
 module.exports = mongoose.model("office", OfficeSchema);
