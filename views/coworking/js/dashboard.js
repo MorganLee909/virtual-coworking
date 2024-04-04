@@ -1,18 +1,27 @@
 const homePage = require("./pages/home.js");
 const deskPage = require("./pages/desk.js");
 
+console.time("components");
+require("./pages/office.js");
+
+require("./components/location.js");
+require("./components/table.js");
+require("./components/occupant.js");
+require("./components/meeting.js");
+require("./components/officeDisplay.js");
+console.timeEnd("components");
+
 const pages = document.querySelectorAll(".page");
 
 window.user = {};
 window.socket = {};
-window.locationData = null;
 
 const isMobile = ()=>{
     const match = window.matchMedia("(pointer:coarse)");
     return match && match.matches;
 }
 
-changePage = (page)=>{
+changePage = (page, data)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";
     }
@@ -22,6 +31,7 @@ changePage = (page)=>{
     switch(page){
         case "home": homePage.render(); break;
         case "desk": deskPage.render(); break;
+        case "office": document.querySelector("office-page").currentOffice = data; break;
     }
 }
 
@@ -68,19 +78,17 @@ const activateWebsocket = ()=>{
     socket = new WebSocket(`ws://localhost:8000`);
     socket.addEventListener("open", ()=>{
         let data = {
+            action: "status",
             token: localStorage.getItem("coworkToken"),
-            action: "status"
+            location: user.currentLocation
         };
-        socket.send(JSON.stringify(data));
-
-        data.location = locationData ? locationData._id : user.defaultLocation;
-        data.action = "getLocation";
         socket.send(JSON.stringify(data));
     });
 
     socket.addEventListener("message", (event)=>{
         let data = JSON.parse(event.data);
 
+        let location = {};
         switch(data.action){
             case "status":
                 document.getElementById("extraConnection").style.display = "flex";
@@ -89,27 +97,16 @@ const activateWebsocket = ()=>{
                 socket.close(3001);
                 break;
             case "participantJoined":
-                homePage.updateTables(data.location.tables);
-                locationData = data.location;
+                location = document.getElementById(`location_${user.currentLocation}`);
+                location.updateTables(data.location.tables);
                 break;
             case "participantLeft":
-                homePage.updateTables(data.location.tables);
-                locationData = data.location;
-                break;
-            case "getLocation":
-                let tables = locationData ? locationData.tables : [];
-                homePage.updateTables(data.location.tables);
-                locationData = data.location;
-                document.getElementById("locationSelect").value = locationData._id;
-                document.getElementById("locationTitle").textContent = locationData.name;
-                break;
-            case "changeLocation":
-                locationData = data.location;
-                homePage.updateTables(locationData.tables);
-                document.getElementById("locationTitle").textContent = locationData.name;
+                location = document.getElementById(`location_${data.location._id}`);
+                location.updateTables(data.location.tables);
                 break;
             case "updateIcon":
-                homePage.updateIcon(data.user, data.name, data.avatar);
+                location = document.getElementById(`location_${data.location}`);
+                location.updateIcon(data.table, data.user, data.avatar, data.name);
                 break;
         }
     });
@@ -129,7 +126,9 @@ const getUser = ()=>{
                 requestError(user.message);
             }else{
                 window.user = user;
+                window.user.currentLocation = user.defaultLocation;
                 activateWebsocket();
+                homePage.render();
             }
         })
         .catch((err)=>{
@@ -142,6 +141,5 @@ if(isMobile()){
     document.getElementById("mobileContainer").style.display = "flex";
     document.querySelector(".headerRight").style.display = "none";
 }else{
-    homePage.render();
     getUser();
 }

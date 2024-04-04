@@ -2,6 +2,7 @@ const user = require("./controllers/user.js");
 const stripe = require("./controllers/stripe.js");
 const newsletter = require("./controllers/newsletter.js");
 const location = require("./controllers/location.js")
+const office = require("./controllers/office.js");
 const {auth}= require("./auth.js");
 
 module.exports = (app)=>{
@@ -39,7 +40,12 @@ module.exports = (app)=>{
 
     //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
+    app.get("/location/:locationId", auth, location.getOne);
     app.get("/location", location.getAll);
+
+    //OFFICE
+    app.get("/office/location/:locationId", auth, office.getOffices);
+    app.get("/office/:officeId", auth, office.getOffice);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

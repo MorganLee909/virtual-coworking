@@ -1,15 +1,22 @@
 const {wsAuth} = require("./auth.js");
 const {leaveTable} = require("./controllers/manageTables.js");
-const user = require("./controllers/user.js");
+const userController = require("./controllers/user.js");
 const location = require("./controllers/location.js");
 
-const closeExtraConnection = (clients, userId)=>{
+const closeExtraConnection = (clients, newClient, userId, location)=>{
+    let exists = false;
     clients.forEach((client)=>{
         if(client.user === userId){
-            client.send(JSON.stringify({action: "status"}));
-            client.close(3001);
+            newClient.send(JSON.stringify({action: "status"}));
+            newClient.close(3001);
+            exists = true;
         }
     });
+
+    if(!exists){
+        newClient.user = userId;
+        newClient.location = location
+    }
 }
 
 module.exports = (wss)=>{
@@ -21,11 +28,10 @@ module.exports = (wss)=>{
                     if(!user) throw "auth";
 
                     switch(data.action){
-                        case "status": closeExtraConnection(wss.clients, user._id.toString()); break;
+                        case "status": closeExtraConnection(wss.clients, client, user._id.toString(), data.location); break;
                         case "getLocation": location.getLocation(data.location, client, user); break;
                         case "participantLeft": leaveTable(data.location, user._id.toString()); break;
-                        case "updateIcon": user.updateIcon(user, data.location, wss.clients); break;
-                        case "changeLocation": location.changeLocation(client, data.location); break;
+                        case "updateIcon": userController.updateIcon(user, data.location, wss.clients); break;
                     }
                 })
                 .catch((err)=>{

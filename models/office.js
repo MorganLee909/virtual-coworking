@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const LocationSchema = new mongoose.Schema({
+const OfficeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -9,7 +9,7 @@ const LocationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    tables: [{
+    tables:[{
         type: {
             type: String,
             required: true
@@ -32,7 +32,16 @@ const LocationSchema = new mongoose.Schema({
                 required: false
             }
         }]
-   }]
+    }],
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    },
+    users: [mongoose.Schema.Types.ObjectId],
+    location: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
+    }
 });
 
-module.exports = mongoose.model("location", LocationSchema);
+module.exports = mongoose.model("office", OfficeSchema);

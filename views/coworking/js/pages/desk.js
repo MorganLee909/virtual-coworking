@@ -82,7 +82,7 @@ module.exports = {
                         let data = {
                             token: localStorage.getItem("coworkToken"),
                             action: "updateIcon",
-                            location: locationData._id
+                            location: user.currentLocation
                         };
 
                         socket.send(JSON.stringify(data));
