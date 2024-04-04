@@ -31,7 +31,7 @@ changePage = (page, data)=>{
     switch(page){
         case "home": homePage.render(); break;
         case "desk": deskPage.render(); break;
-        case "office": document.getElementById("officePage")._id = data; break;
+        case "office": document.querySelector("office-page").currentOffice = data; break;
     }
 }
 

@@ -7,6 +7,7 @@ const css = `
     height: 100%;
     width: 100%;
     padding-right: 75px !important;
+    position: relative;
 }
 
 h1{

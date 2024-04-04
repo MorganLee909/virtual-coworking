@@ -1,6 +1,10 @@
 const html = ``;
 
-const css = ``;
+const css = `
+:host{
+    min-height: 100%;
+}
+`;
 
 class Office extends HTMLElement{
     constructor(){
@@ -12,9 +16,11 @@ class Office extends HTMLElement{
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 
-    set _id(value){
-        this.id = value;
-        this.getOffice(value);
+    set currentOffice(value){
+        if(this._currentOffice !== value){
+            this.getOffice(value);
+        }
+        this._currentOffice = value;
     }
 
     getOffice(id){
@@ -30,19 +36,26 @@ class Office extends HTMLElement{
                 if(office.error){
                     requestError(err.message);
                 }else{
+                    this.addLocation(office);
                     this.data = office; 
-                    let location = document.createElement("location-comp");
-                    location.id = `office_${office._id}`;
-                    location.name = office.name;
-                    location.identifier = office.name;
-                    location.tables = office.tables;
-                    location.type = "office";
-                    this.shadow.appendChild(location);
                 }
             })
             .catch((err)=>{
                 requestError(err.message);
             });
+    }
+
+    addLocation(office){
+        let oldLocation = this.shadow.querySelector("location-comp");
+        if(oldLocation) this.shadow.removeChild(oldLocation);
+
+        let location = document.createElement("location-comp");
+        location.id = `office_${office._id}`;
+        location.name = office.name;
+        location.identifier = office.name;
+        location.tables = office.tables;
+        location.type = "office";
+        this.shadow.appendChild(location);
     }
 }
 
