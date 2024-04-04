@@ -89,7 +89,7 @@ class Meeting extends HTMLElement{
 
         const template = document.createElement("template");
         template.innerHTML = `<style>${css}</style>${html}`;
-        this.shadow = this.attachShadow({mode: "closed"});
+        this.shadow = this.attachShadow({mode: "open"});
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 
@@ -152,8 +152,6 @@ class Meeting extends HTMLElement{
 
     closeMeeting(){
         this.table.leaveTable();
-
-        document.getElementById("homeBlocker").style.display = "none";
 
         socket.send(JSON.stringify({
             action: "participantLeft",

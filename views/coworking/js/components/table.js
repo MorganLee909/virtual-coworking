@@ -121,15 +121,19 @@ class Table extends HTMLElement{
                 if(response.error){
                     requestError(response.message);
                 }else{
+                    let blocker = document.createElement("div");
+                    blocker.id = "homeBlocker";
+                    blocker.setAttribute("id", "homeBlocker");
+                    this.parentShadow.appendChild(blocker);
+
                     let homePageElem = document.getElementById("homePage");
                     let meeting = document.createElement("meeting-comp");
                     meeting.table = this;
                     meeting.token = response;
                     meeting.locationIdentifier = this.locationIdentifier;
-                    meeting.close = ()=>{this.removeMeeting(meeting)};
+                    meeting.close = ()=>{this.removeMeeting(meeting, blocker)};
                     this.parentShadow.appendChild(meeting);
 
-                    document.getElementById("homeBlocker").style.display = "flex";
                     this.classList.add("joinedTable");
                 }
             })
@@ -138,8 +142,10 @@ class Table extends HTMLElement{
             });
     }
 
-    removeMeeting(meeting){
-        this.getRootNode().host.shadow.removeChild(meeting);
+    removeMeeting(meeting, blocker){
+        let shadowParent = this.getRootNode().host.shadow;
+        shadowParent.removeChild(meeting);
+        shadowParent.removeChild(blocker);
     }
 
     leaveTable(){

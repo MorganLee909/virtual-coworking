@@ -14,6 +14,15 @@ h1{
     text-align: center;
     margin-bottom: 0;
 }
+
+#homeBlocker{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+}
 `;
 
 //id = "location_ID"

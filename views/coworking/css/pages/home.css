@@ -8,15 +8,6 @@
     position: relative;
 }
 
-#homeBlocker{
-    height: 100%;
-    width: 100%;
-    z-index: 2;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-}
-
 iframe.resize{
     resize: both;
     overflow: auto;
