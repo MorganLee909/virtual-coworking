@@ -18,7 +18,24 @@ class Office extends HTMLElement{
     }
 
     getOffice(id){
-        console.log("getting office");
+        fetch(`/office/${id}`, {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((office)=>{
+                if(office.error){
+                    requestError(err.message);
+                }else{
+                   this.data = office; 
+                }
+            })
+            .catch((err)=>{
+                requestError(err.message);
+            });
     }
 }
 

@@ -49,7 +49,7 @@ module.exports = {
                         console.error(err);
                         return res.json({
                             error: true,
-                            message: "Server error";
+                            message: "Server error"
                         });
                 }
             });
