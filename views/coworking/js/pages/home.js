@@ -1,74 +1,43 @@
-module.exports = {
-    rendered: false,
-    meetingDiv: document.getElementById("meeting"),
+const html = ``;
 
-    render: function(){
-        if(!this.rendered){
-            this.rendered = true;
+const css = `
+    :host{
+        display: flex;
+    }
 
-            //Retrieve and build user/tables
-            this.populateLocations();
+    location-comp{
+        width: 75%;
+    }
 
-            //Add Location component
-            this.addLocation(user.defaultLocation);
+    office-display-comp{
+        width: 25%;
+        min-width: 200px;
+    }
+`;
 
-            //Add OfficeDisplay component
-            this.addOfficeDisplay();
-        }
-    },
+class HomePage extends HTMLElement{
+    constructor(){
+        super();
 
-    addLocation: function(locationId){
+        const template = document.createElement("template");
+        template.innerHTML = `<style>${css}</style>${html}`;
+        this.shadow = this.attachShadow({mode: "open"});
+        this.shadow.appendChild(template.content.cloneNode(true));
+
+        this.rendered = false;
+    }
+
+    addLocation(locationId){
         let location = document.createElement("location-comp");
         location.id = `location_${locationId}`;
-        document.getElementById("homePage").appendChild(location);
-    },
-
-    changeLocation: function(){
-        let locationId = document.getElementById("locationSelect").value;
-
-        let oldLocation = document.getElementById(`location_${user.currentLocation}`);
-        oldLocation.parentElement.removeChild(oldLocation);
-
-        let offices = document.querySelector("office-display-comp");
-        if(offices) offices.parentElement.removeChild(offices);
-
-        user.currentLocation = locationId;
+        this.shadow.appendChild(location);
         this.addOfficeDisplay();
+    }
 
-        this.addLocation(locationId);
-    },
-
-    populateLocations: function(){
-        fetch("/location", {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json"
-            }
-        })
-            .then(r=>r.json())
-            .then((response)=>{
-                if(response.error){
-                    createBanner("red", response.message);
-                }else{
-                    let locations = document.getElementById("locationSelect");
-
-                    for(let i = 0; i < response.length; i++){
-                        let option = document.createElement("option");
-                        option.value = response[i]._id;
-                        option.textContent = response[i].name;
-                        locations.appendChild(option);
-                    }
-                }
-
-                document.getElementById("locationSelect").addEventListener("change", this.changeLocation.bind(this));
-            })
-            .catch((err)=>{
-                createBanner("red", "Server error");
-            });
-    },
-
-    addOfficeDisplay: function(){
+    addOfficeDisplay(){
         let officeDisplay = document.createElement("office-display-comp");
-        document.getElementById("homePage").appendChild(officeDisplay);
+        this.shadow.appendChild(officeDisplay);
     }
 }
+
+customElements.define("home-page", HomePage);

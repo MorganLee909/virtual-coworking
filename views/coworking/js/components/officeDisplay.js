@@ -4,23 +4,44 @@ let css = `
 :host{
     display: flex;
     flex-direction: column;
-    width: 70px;
-    height: 50px;
-    position: absolute;
-    top: 0;
-    right: 0;
+    align-items: center;
 }
 
 button{
     background: none;
-    border: 1px solid black;
-    border-right: none;
-    margin-bottom: 5px;
+    margin: 35px 0;
     cursor: pointer;
+    height: 175px;
+    width: 175px;
+    border: 3px solid #dadada;
+    border-radius: 20px;
+    box-shadow: 9.56px 16.39px 13.65px 0px #00000017;
+    font-size: 14px;
+    color: #888888;
+    position: relative;
 }
 
 button:hover{
-    background: rgb(220, 220, 220);
+    border: 3px solid #718ef0;
+}
+
+.enterTitle{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -23px;
+    right: calc(50% - 40px);
+    height: 20px;
+    width: 80px;
+    border-radius: 9px;
+    background: #719ef0;
+    color: white;
+    font-size: 12px;
+}
+
+button:hover .enterTitle{
+    display: flex;
 }
 `;
 
@@ -52,6 +73,11 @@ class OfficeDisplay extends HTMLElement{
                         office.addEventListener("click", ()=>{changePage("office", offices[i]._id)});
                         office.textContent = offices[i].name;
                         this.shadow.appendChild(office);
+
+                        let enterTitle = document.createElement("p");
+                        enterTitle.textContent = "Enter";
+                        enterTitle.classList.add("enterTitle");
+                        office.appendChild(enterTitle);
                     }
                 }
             })

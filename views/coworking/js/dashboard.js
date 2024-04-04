@@ -1,7 +1,7 @@
-const homePage = require("./pages/home.js");
 const deskPage = require("./pages/desk.js");
 
 console.time("components");
+require("./pages/home.js");
 require("./pages/office.js");
 
 require("./components/location.js");
@@ -29,7 +29,7 @@ changePage = (page, data)=>{
     document.getElementById(`${page}Page`).style.display = "flex";
 
     switch(page){
-        case "home": homePage.render(); break;
+        case "home": break;
         case "desk": deskPage.render(); break;
         case "office": document.querySelector("office-page").currentOffice = data; break;
     }
@@ -128,7 +128,7 @@ const getUser = ()=>{
                 window.user = user;
                 window.user.currentLocation = user.defaultLocation;
                 activateWebsocket();
-                homePage.render();
+                document.querySelector("home-page").addLocation(user.currentLocation);
             }
         })
         .catch((err)=>{

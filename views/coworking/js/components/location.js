@@ -6,14 +6,7 @@ const css = `
     flex-wrap: wrap;
     height: 100%;
     width: 100%;
-    padding-right: 75px !important;
     position: relative;
-}
-
-h1{
-    width: 100%;
-    text-align: center;
-    margin-bottom: 0;
 }
 
 #homeBlocker{
@@ -47,12 +40,6 @@ class Location extends HTMLElement{
         }else{
             this.getLocation();
         }
-    }
-
-    set name(value){
-        let h1 = document.createElement("h1");
-        h1.textContent = value;
-        this.shadow.appendChild(h1);
     }
 
     getLocation(){
