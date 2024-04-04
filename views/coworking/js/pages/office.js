@@ -17,9 +17,7 @@ class Office extends HTMLElement{
     }
 
     set currentOffice(value){
-        if(this._currentOffice !== value){
-            this.getOffice(value);
-        }
+        if(this._currentOffice !== value) this.getOffice(value);
         this._currentOffice = value;
     }
 

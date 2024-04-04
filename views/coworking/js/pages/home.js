@@ -29,7 +29,11 @@ module.exports = {
         let oldLocation = document.getElementById(`location_${user.currentLocation}`);
         oldLocation.parentElement.removeChild(oldLocation);
 
+        let offices = document.querySelector("office-display-comp");
+        if(offices) offices.parentElement.removeChild(offices);
+
         user.currentLocation = locationId;
+        this.addOfficeDisplay();
 
         this.addLocation(locationId);
     },
