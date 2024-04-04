@@ -30,7 +30,14 @@ class Office extends HTMLElement{
                 if(office.error){
                     requestError(err.message);
                 }else{
-                   this.data = office; 
+                    this.data = office; 
+                    let location = document.createElement("location-comp");
+                    location.id = `office_${office._id}`;
+                    location.name = office.name;
+                    location.identifier = office.name;
+                    location.tables = office.tables;
+                    location.type = "office";
+                    this.shadow.appendChild(location);
                 }
             })
             .catch((err)=>{

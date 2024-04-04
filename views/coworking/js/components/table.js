@@ -126,7 +126,8 @@ class Table extends HTMLElement{
                     meeting.table = this;
                     meeting.token = response;
                     meeting.locationIdentifier = this.locationIdentifier;
-                    homePageElem.appendChild(meeting);
+                    meeting.close = ()=>{this.removeMeeting(meeting)};
+                    this.parentShadow.appendChild(meeting);
 
                     document.getElementById("homeBlocker").style.display = "flex";
                     this.classList.add("joinedTable");
@@ -135,6 +136,10 @@ class Table extends HTMLElement{
             .catch((err)=>{
                 requestError(err.message);
             });
+    }
+
+    removeMeeting(meeting){
+        this.getRootNode().host.shadow.removeChild(meeting);
     }
 
     leaveTable(){

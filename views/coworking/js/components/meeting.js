@@ -147,7 +147,7 @@ class Meeting extends HTMLElement{
         };
 
         let api = new JitsiMeetExternalAPI("8x8.vc", options);
-        api.addListener("videoConferenceLeft", (data)=>{this.closeMeeting()});
+        api.addListener("videoConferenceLeft", (data)=>{this.closeMeeting().bind(this)});
     }
 
     closeMeeting(){
@@ -161,10 +161,12 @@ class Meeting extends HTMLElement{
             token: localStorage.getItem("coworkToken")
         }));
 
-        this.parentElement.removeChild(this);
+        this.close();
     }
 
     fullscreen(){
+        this.style.top = null;
+        this.style.left = null;
         this.classList.toggle("fullscreen");
     }
 

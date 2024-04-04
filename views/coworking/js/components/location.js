@@ -27,12 +27,16 @@ class Location extends HTMLElement{
 
         const template = document.createElement("template");
         template.innerHTML = `<style>${css}</style>`;
-        this.shadow = this.attachShadow({mode: "closed"});
+        this.shadow = this.attachShadow({mode: "open"});
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 
     connectedCallback(){
-        this.getLocation();
+        if(this.type === "office"){
+            this.updateTables(this.tables);
+        }else{
+            this.getLocation();
+        }
     }
 
     set name(value){
@@ -73,6 +77,7 @@ class Location extends HTMLElement{
                 table.occupants = newTables[i].occupants;
                 table.type = newTables[i].type;
                 table.locationIdentifier = this.identifier;
+                table.parentShadow = this.shadow;
                 this.shadow.appendChild(table);
             }
 

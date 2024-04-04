@@ -26,7 +26,7 @@ module.exports = {
     response = Office
      */
     getOffice: function(req, res){
-        Office.find({location: req.params.locationId})
+        Office.findOne({_id: req.params.officeId})
             .then((office)=>{
                 let isUser = false;
                 for(let i = 0; i < office.users.length; i++){
