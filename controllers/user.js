@@ -332,6 +332,7 @@ module.exports = {
     /*
      POST: Update profile information
      req.body = {
+        location: String ID
         firstName: String
         lastName: String
         email: String
@@ -344,6 +345,7 @@ module.exports = {
      */
     updateProfile: function(req, res){
         console.log(req.body);
+        if(req.body.location) res.locals.user.defaultLocation = req.body.location;
         if(req.body.firstName) res.locals.user.firstName = req.body.firstName;
         if(req.body.lastName) res.locals.user.lastName = req.body.lastName;
         if(req.body.email){

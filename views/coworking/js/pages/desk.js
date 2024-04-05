@@ -11,6 +11,10 @@ const html = `
     </div>
 </div>
 
+<label>Default Location
+    <select id="locationChange"></select>
+</label>
+
 <div class="nameContainer">
     <label>First Name
         <input id="firstNameChange" type="text" placeholder="First Name">
@@ -98,13 +102,14 @@ label{
     width: 420px;
 }
 
-input{
+input, select{
     height: 50px;
     font-size: 16px;
     border-radius: 2px;
     border: 1px solid #d4d4d4;
     box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25) inset;
     padding-left: 15px;
+    background: white;
 }
 
 .nameContainer{
@@ -150,6 +155,7 @@ class DeskPage extends HTMLElement{
     }
 
     connectedCallback(){
+        let location = this.shadow.querySelector("#locationChange");
         let firstName = this.shadow.querySelector("#firstNameChange");
         let lastName = this.shadow.querySelector("#lastNameChange");
         let email = this.shadow.querySelector("#emailChange");
@@ -158,6 +164,7 @@ class DeskPage extends HTMLElement{
 
         password.value = "**********";
 
+        location.addEventListener("change", ()=>{this.updateProfile("location", location.value, "Default Location")});
         firstName.addEventListener("change", ()=>{this.updateProfile("firstName", firstName.value, "First Name")});
         lastName.addEventListener("change", ()=>{this.updateProfile("lastName", lastName.value, "Last name")});
         email.addEventListener("change", ()=>{this.updateProfile("email", email.value, "Email")});
@@ -200,6 +207,21 @@ class DeskPage extends HTMLElement{
     set avatar(value){
         this.shadow.querySelector("#avatarIcon").src= value;
         this._avatar = value;
+    }
+
+    get locations(){
+        return this._locations;
+    }
+
+    set locations(value){
+        let select = this.shadow.querySelector("#locationChange");
+        for(let i = 0; i < value.length; i++){
+            let option = document.createElement("option");
+            option.textContent = value[i].name;
+            option.value = value[i]._id;
+            select.appendChild(option);
+        }
+        this._locations = value;
     }
 
     updateProfile(field, value, fieldName){

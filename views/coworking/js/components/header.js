@@ -107,9 +107,12 @@ class Header extends HTMLElement{
                         option.textContent = locations[i].name;
                         option.value = locations[i]._id;
                         locationSelect.appendChild(option);
+
                     }
 
                     locationSelect.addEventListener("change", this.changeLocation.bind(this));
+
+                    document.querySelector("desk-page").locations = locations;
                 }
             })
             .catch((err)=>{
