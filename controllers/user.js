@@ -343,6 +343,7 @@ module.exports = {
      }
      */
     updateProfile: function(req, res){
+        console.log(req.body);
         if(req.body.firstName) res.locals.user.firstName = req.body.firstName;
         if(req.body.lastName) res.locals.user.lastName = req.body.lastName;
         if(req.body.email){
@@ -370,6 +371,8 @@ module.exports = {
             res.locals.user.session = uuid();
             res.locals.user.password = hash;
         }
+
+        console.log(res.locals.user);
 
         res.locals.user.save()
             .then((user)=>{

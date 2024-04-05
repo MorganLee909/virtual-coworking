@@ -2,6 +2,7 @@ const deskPage = require("./pages/desk.js");
 
 console.time("components");
 require("./pages/home.js");
+require("./pages/desk.js");
 require("./pages/office.js");
 
 require("./components/header.js");
@@ -27,7 +28,7 @@ changePage = (page, data)=>{
         pages[i].style.display = "none";
     }
 
-    document.getElementById(`${page}Page`).style.display = "flex";
+    document.querySelector(`${page}-page`).style.display = "flex";
     let header = document.querySelector("header-comp");
 
     switch(page){
@@ -35,7 +36,6 @@ changePage = (page, data)=>{
             header.status = "home";
             break;
         case "desk":
-            deskPage.render();
             header.status = "desk";
             break;
         case "office":
@@ -131,9 +131,16 @@ const getUser = ()=>{
                 window.user.currentLocation = user.defaultLocation;
                 activateWebsocket();
                 document.querySelector("home-page").addLocation(user.currentLocation);
+
+                let desk = document.querySelector("desk-page")
+                desk.firstName = user.firstName;
+                desk.lastName = user.lastName;
+                desk.email = user.email;
+                desk.avatar = user.avatar;
             }
         })
         .catch((err)=>{
+            console.log(err);
             requestError(err.message);
         });
 }
