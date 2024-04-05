@@ -54,19 +54,13 @@ const css = `
 }
 `;
 
-/*
-id = id<ID>
-occupants = [Occupant]
-type = Table type
-locationIdentifier = identifier string for the location
-*/
 class Table extends HTMLElement{
     constructor(){
         super();
 
         const template = document.createElement("template");
         template.innerHTML = `<style>${css}</style>${html}`;
-        this.shadow = this.attachShadow({mode: "closed"});
+        this.shadow = this.attachShadow({mode: "open"});
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 

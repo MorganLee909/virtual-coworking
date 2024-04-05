@@ -85,6 +85,10 @@ class OfficeDisplay extends HTMLElement{
                 requestError(err.message);
             });
     }
+
+    destroy(){
+        this.getRootNode().host.shadow.removeChild(this);
+    }
 }
 
 customElements.define("office-display-comp", OfficeDisplay);

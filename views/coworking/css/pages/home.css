@@ -7,8 +7,3 @@
     width: 100%;
     position: relative;
 }
-
-iframe.resize{
-    resize: both;
-    overflow: auto;
-}

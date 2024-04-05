@@ -4,6 +4,7 @@ console.time("components");
 require("./pages/home.js");
 require("./pages/office.js");
 
+require("./components/header.js");
 require("./components/location.js");
 require("./components/table.js");
 require("./components/occupant.js");
@@ -65,14 +66,6 @@ requestError = (message)=>{
             createBanner("red", message);
     }
 }
-
-//BUTTONS
-document.getElementById("deskBtn").addEventListener("click", ()=>{changePage("desk")});
-document.getElementById("coworkingBtn").addEventListener("click", ()=>{changePage("home")});
-document.getElementById("logoutBtn").addEventListener("click", ()=>{
-    localStorage.removeItem("coworkToken");
-    window.location.href = "/";
-});
 
 const activateWebsocket = ()=>{
     socket = new WebSocket(`ws://localhost:8000`);
@@ -142,4 +135,7 @@ if(isMobile()){
     document.querySelector(".headerRight").style.display = "none";
 }else{
     getUser();
+    
+    //let header = document.createElement("header-comp");
+    //document.body.insertBefore(header, document.body.firstChild);
 }

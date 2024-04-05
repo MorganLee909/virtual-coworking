@@ -49,19 +49,6 @@ header img{
     margin-left: 35px;
 }
 
-.buttonLink{
-    background: none;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    color: #7a7a7a;
-    cursor: pointer;
-}
-
-.buttonLink:hover{
-    color: #8c8c8c;
-}
-
 #mobileContainer{
     display: flex;
     justify-content: center;

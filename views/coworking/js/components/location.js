@@ -94,6 +94,10 @@ class Location extends HTMLElement{
         let table = this.shadow.querySelector(`#table_${tableId}`);
         table.updateIcon(userId, avatar, name);
     }
+
+    destroy(){
+        this.getRootNode().host.shadow.removeChild(this);
+    }
 }
 
 customElements.define("location-comp", Location);
