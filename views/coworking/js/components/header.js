@@ -3,9 +3,9 @@ const html = `
     <img src="/image/text-logo.svg" alt="CoSphere logo with text"/>
 </a>
 
-<div class="headerRight">
-    <select id="locationSelect"></select>
+<select id="locationSelect"></select>
 
+<div class="headerRight">
     <button class="buttonLink" id="logoutBtn">Logout</button>
 
     <button class="buttonLink" id="coworkingBtn">Coworking</button>
@@ -38,6 +38,12 @@ const css = `
 
 a, img{
     height: 100%;
+}
+
+select{
+    background: white;
+    border: none;
+    font-size: 26px;
 }
 `;
 
