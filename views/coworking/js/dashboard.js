@@ -28,11 +28,20 @@ changePage = (page, data)=>{
     }
 
     document.getElementById(`${page}Page`).style.display = "flex";
+    let header = document.querySelector("header-comp");
 
     switch(page){
-        case "home": break;
-        case "desk": deskPage.render(); break;
-        case "office": document.querySelector("office-page").currentOffice = data; break;
+        case "home":
+            header.status = "home";
+            break;
+        case "desk":
+            deskPage.render();
+            header.status = "desk";
+            break;
+        case "office":
+            document.querySelector("office-page").currentOffice = data;
+            header.status = "office";
+            break;
     }
 }
 

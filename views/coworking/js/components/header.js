@@ -68,6 +68,26 @@ class Header extends HTMLElement{
         this.populateLocations();
     }
 
+    get status(){
+        return this._status;
+    }
+
+    set status(value){
+        this._status = value;
+
+        switch(value){
+            case "home":
+                this.shadow.querySelector("#locationSelect").style.display = "flex";
+                break;
+            case "desk":
+                this.shadow.querySelector("#locationSelect").style.display = "flex";
+                break;
+            case "office":
+                this.shadow.querySelector("#locationSelect").style.display = "none";
+                break;
+        }
+    }
+
     populateLocations(){
         fetch("/location", {
             method: "get",
