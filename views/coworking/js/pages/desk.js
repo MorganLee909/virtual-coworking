@@ -221,7 +221,17 @@ class DeskPage extends HTMLElement{
             option.value = value[i]._id;
             select.appendChild(option);
         }
+        select.value = this._currentLocation;
         this._locations = value;
+    }
+
+    get currentLocation(){
+        return this._currentLocation;
+    }
+
+    set currentLocation(value){
+        this.shadow.querySelector("#locationChange").value = value;
+        this._currentLocation = value;
     }
 
     updateProfile(field, value, fieldName){

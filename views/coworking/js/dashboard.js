@@ -99,12 +99,10 @@ const activateWebsocket = ()=>{
                 socket.close(3001);
                 break;
             case "participantJoined":
-                location = document.getElementById(`location_${user.currentLocation}`);
-                location.updateTables(data.location.tables);
+                document.querySelector("home-page").updateTables(data.location.tables);
                 break;
             case "participantLeft":
-                location = document.getElementById(`location_${data.location._id}`);
-                location.updateTables(data.location.tables);
+                document.querySelector("home-page").updateTables(data.location.tables);
                 break;
             case "updateIcon":
                 location = document.getElementById(`location_${data.location}`);
@@ -137,10 +135,13 @@ const getUser = ()=>{
                 desk.lastName = user.lastName;
                 desk.email = user.email;
                 desk.avatar = user.avatar;
+                desk.currentLocation = user.defaultLocation;
+
+                let header = document.querySelector("header-comp");
+                header.currentLocation = user.defaultLocation;
             }
         })
         .catch((err)=>{
-            console.log(err);
             requestError(err.message);
         });
 }
@@ -151,7 +152,4 @@ if(isMobile()){
     document.querySelector(".headerRight").style.display = "none";
 }else{
     getUser();
-    
-    //let header = document.createElement("header-comp");
-    //document.body.insertBefore(header, document.body.firstChild);
 }

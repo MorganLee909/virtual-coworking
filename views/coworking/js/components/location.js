@@ -4,6 +4,7 @@ const css = `
     justify-content: space-around;
     align-items: center;
     flex-wrap: wrap;
+    flex-grow: 3;
     height: 100%;
     width: 100%;
     position: relative;

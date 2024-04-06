@@ -1,18 +1,13 @@
 const html = ``;
 
 const css = `
-    :host{
-        display: flex;
-    }
+:host{
+    display: flex;
+}
 
-    location-comp{
-        width: 75%;
-    }
-
-    office-display-comp{
-        width: 25%;
-        min-width: 200px;
-    }
+location-comp{
+    width: 75%;
+}
 `;
 
 class HomePage extends HTMLElement{
@@ -43,6 +38,10 @@ class HomePage extends HTMLElement{
     addOfficeDisplay(){
         let officeDisplay = document.createElement("office-display-comp");
         this.shadow.appendChild(officeDisplay);
+    }
+
+    updateTables(tables){
+        this.shadow.querySelector("location-comp").updateTables(tables);
     }
 }
 
