@@ -3,7 +3,9 @@ const html = `
     <img src="/image/text-logo.svg" alt="CoSphere logo with text"/>
 </a>
 
-<select id="locationSelect"></select>
+<select id="locationSelect" class="center home"></select>
+
+<h1 id="officeTitle" class="center office"></h1>
 
 <div class="headerRight">
     <button class="buttonLink" id="logoutBtn">Logout</button>
@@ -45,6 +47,11 @@ select{
     border: none;
     font-size: 26px;
 }
+
+h1{
+    font-size: 27px;
+    font-weight: bold;
+}
 `;
 
 class Header extends HTMLElement{
@@ -68,6 +75,15 @@ class Header extends HTMLElement{
         this.populateLocations();
     }
 
+    get officeTitle(){
+        return this._officeTitle;
+    }
+
+    set officeTitle(value){
+        this._officeTitle = value;
+        this.shadow.querySelector("#officeTitle").textContent = value;
+    }
+
     get status(){
         return this._status;
     }
@@ -75,16 +91,14 @@ class Header extends HTMLElement{
     set status(value){
         this._status = value;
 
-        switch(value){
-            case "home":
-                this.shadow.querySelector("#locationSelect").style.display = "flex";
-                break;
-            case "desk":
-                this.shadow.querySelector("#locationSelect").style.display = "flex";
-                break;
-            case "office":
-                this.shadow.querySelector("#locationSelect").style.display = "none";
-                break;
+        let center = this.shadow.querySelectorAll(".center");
+        for(let i = 0; i < center.length; i++){
+            center[i].style.display = "none";
+        }
+
+        let pageElements = this.shadow.querySelectorAll(`.${value}`);
+        for(let i = 0; i < pageElements.length; i++){
+            pageElements[i].style.display = "flex";
         }
     }
 

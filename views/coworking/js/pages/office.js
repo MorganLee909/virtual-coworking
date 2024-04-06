@@ -61,6 +61,7 @@ class Office extends HTMLElement{
     set data(value){
         this.setLocation(value);
         this._data = value;
+        document.querySelector("header-comp").officeTitle = value.name;
     }
 
     set currentOffice(value){
