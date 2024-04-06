@@ -16,34 +16,21 @@ class Office extends HTMLElement{
         this.shadow.appendChild(template.content.cloneNode(true));
     }
 
+    get data(){
+        return this._data;
+    }
+
+    set data(value){
+        this.setLocation(value);
+        this._data = value;
+    }
+
     set currentOffice(value){
         if(this._currentOffice !== value) this.getOffice(value);
         this._currentOffice = value;
     }
 
-    getOffice(id){
-        fetch(`/office/${id}`, {
-            method: "get",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
-            }
-        })
-            .then(r=>r.json())
-            .then((office)=>{
-                if(office.error){
-                    requestError(err.message);
-                }else{
-                    this.addLocation(office);
-                    this.data = office; 
-                }
-            })
-            .catch((err)=>{
-                requestError(err.message);
-            });
-    }
-
-    addLocation(office){
+    setLocation(office){
         let oldLocation = this.shadow.querySelector("location-comp");
         if(oldLocation) this.shadow.removeChild(oldLocation);
 

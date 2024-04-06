@@ -71,7 +71,8 @@ class OfficeDisplay extends HTMLElement{
                 }else{
                     for(let i = 0; i < offices.length; i++){
                         let office = document.createElement("button");
-                        office.addEventListener("click", ()=>{changePage("office", offices[i]._id)});
+                        //office.addEventListener("click", ()=>{changePage("office", offices[i]._id)});
+                        office.addEventListener("click", ()=>{this.getOffice(offices[i]._id)})
                         office.textContent = offices[i].name;
                         this.shadow.appendChild(office);
 
@@ -80,6 +81,29 @@ class OfficeDisplay extends HTMLElement{
                         enterTitle.classList.add("enterTitle");
                         office.appendChild(enterTitle);
                     }
+                }
+            })
+            .catch((err)=>{
+                requestError(err.message);
+            });
+    }
+
+    getOffice(officeId){
+        fetch(`/office/${officeId}`, {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((office)=>{
+                if(office.error){
+                    createBanner("red", "This office is private");
+                }else{
+                    let officePage = document.querySelector("office-page");
+                    officePage.data = office;
+                    changePage("office");
                 }
             })
             .catch((err)=>{

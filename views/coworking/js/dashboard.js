@@ -1,6 +1,5 @@
 const deskPage = require("./pages/desk.js");
 
-console.time("components");
 require("./pages/home.js");
 require("./pages/desk.js");
 require("./pages/office.js");
@@ -11,7 +10,6 @@ require("./components/table.js");
 require("./components/occupant.js");
 require("./components/meeting.js");
 require("./components/officeDisplay.js");
-console.timeEnd("components");
 
 const pages = document.querySelectorAll(".page");
 
@@ -23,26 +21,14 @@ const isMobile = ()=>{
     return match && match.matches;
 }
 
-changePage = (page, data)=>{
+changePage = (page)=>{
     for(let i = 0; i < pages.length; i++){
         pages[i].style.display = "none";
     }
 
     document.querySelector(`${page}-page`).style.display = "flex";
     let header = document.querySelector("header-comp");
-
-    switch(page){
-        case "home":
-            header.status = "home";
-            break;
-        case "desk":
-            header.status = "desk";
-            break;
-        case "office":
-            document.querySelector("office-page").currentOffice = data;
-            header.status = "office";
-            break;
-    }
+    header.status = page;
 }
 
 createBanner = (color, message)=>{
