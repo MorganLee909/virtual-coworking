@@ -79,7 +79,11 @@ class Office extends HTMLElement{
         location.identifier = office.name;
         location.tables = office.tables;
         location.type = "office";
+        if(user._id === office.owner) location.officeOwner = true;
         this.shadow.appendChild(location);
+    }
+
+    showOwner(){
     }
 }
 

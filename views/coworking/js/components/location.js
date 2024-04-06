@@ -1,3 +1,10 @@
+const html = `
+<button id="addTable" style="display: none">
+    <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" color="#000000"><path d="M6 12H12M18 12H12M12 12V6M12 12V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+    <p>Add New Table</p>
+</button>`;
+
 const css = `
 :host{
     display: flex;
@@ -18,6 +25,24 @@ const css = `
     width: 100%;
     z-index: 2;
 }
+
+#addTable{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border: 2px solid #dadada;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4F4F50;
+    height: 120px;
+    width: 190px;
+}
+
+#addTable:hover{
+    border: 3px solid #718ef0;
+}
 `;
 
 //id = "location_ID"
@@ -30,7 +55,7 @@ class Location extends HTMLElement{
         this.tables = [];
 
         const template = document.createElement("template");
-        template.innerHTML = `<style>${css}</style>`;
+        template.innerHTML = `<style>${css}</style>${html}`;
         this.shadow = this.attachShadow({mode: "open"});
         this.shadow.appendChild(template.content.cloneNode(true));
     }
@@ -40,6 +65,14 @@ class Location extends HTMLElement{
             this.updateTables(this.tables);
         }else{
             this.getLocation();
+        }
+
+        this.shadow.querySelector("#addTable").addEventListener("click", this.addOfficeTable.bind(this));
+    }
+
+    set officeOwner(value){
+        if(value){
+            this.shadow.querySelector("#addTable").style.display = "flex";
         }
     }
 
@@ -76,7 +109,7 @@ class Location extends HTMLElement{
                 table.type = newTables[i].type;
                 table.locationIdentifier = this.identifier;
                 table.parentShadow = this.shadow;
-                this.shadow.appendChild(table);
+                this.shadow.insertBefore(table, this.shadow.lastChild);
             }
 
             table.occupants = newTables[i].occupants;
@@ -94,6 +127,30 @@ class Location extends HTMLElement{
     updateIcon(tableId, userId, avatar, name){
         let table = this.shadow.querySelector(`#table_${tableId}`);
         table.updateIcon(userId, avatar, name);
+    }
+
+    addOfficeTable(){
+        let id = this.id.split("_")[1];
+        fetch(`/office/${id}/table`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((office)=>{
+                console.log(office);
+                if(office.error){
+                    requestError(office.message);
+                }else{
+                    this.tables = office.tables;
+                    this.updateTables(office.tables);
+                }
+            })
+            .catch((err)=>{
+                requestError(err);
+            });
     }
 
     destroy(){
