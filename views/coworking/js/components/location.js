@@ -140,7 +140,6 @@ class Location extends HTMLElement{
         })
             .then(r=>r.json())
             .then((office)=>{
-                console.log(office);
                 if(office.error){
                     requestError(office.message);
                 }else{

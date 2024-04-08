@@ -1,4 +1,5 @@
 const Office = require("../models/office.js");
+const User = require("../models/user.js");
 
 module.exports = {
     /*
@@ -58,10 +59,9 @@ module.exports = {
     /*
     POST: create new table for an office
     req.params.officeId = String ID
-    response = {}
+    response = Office
      */
     createTable: function(req, res){
-        console.log(req.params);
         Office.findOne({_id: req.params.officeId})
             .then((office)=>{
                 if(office.owner.toString() !== res.locals.user._id.toString()) throw "owner";
@@ -77,7 +77,6 @@ module.exports = {
 
                 office.tables.push(newTable);
 
-                console.log(office);
                 return office.save();
             })
             .then((office)=>{
@@ -97,5 +96,42 @@ module.exports = {
                         });
                 }
             });
+    },
+
+    /*
+    GET: get information for all members of an office
+    re.params.officeId = String Id
+    response = [User]
+     */
+    getMembers: function(req, res){
+        Office.findOne({_id: req.params.officeId})
+            .then((office)=>{
+                if(office.owner.toString() !== res.locals.user._id.toString()) throw "owner";
+
+                return User.find({_id: office.users}, {
+                    email: 1,
+                    firstName: 1,
+                    lastName: 1,
+                    avatar: 1,
+                    status: 1
+                });
+            })
+            .then((users)=>{
+                res.json(users);
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "owner": return res.json({
+                        error: true,
+                        message: "Invalid permissions"
+                    });
+                    default:
+                        console.error(err);
+                        res.json({
+                            error: true,
+                            message: "Server error"
+                        });
+                }
+            })
     }
 }

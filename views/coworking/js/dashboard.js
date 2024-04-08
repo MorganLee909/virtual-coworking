@@ -10,6 +10,7 @@ require("./components/table.js");
 require("./components/occupant.js");
 require("./components/meeting.js");
 require("./components/officeDisplay.js");
+require("./components/officeMembers.js");
 
 const pages = document.querySelectorAll(".page");
 

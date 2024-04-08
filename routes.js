@@ -47,6 +47,7 @@ module.exports = (app)=>{
     app.get("/office/location/:locationId", auth, office.getOffices);
     app.get("/office/:officeId", auth, office.getOffice);
     app.post("/office/:officeId/table", auth, office.createTable);
+    app.get("/office/:officeId/members", auth, office.getMembers);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

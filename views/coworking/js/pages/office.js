@@ -5,10 +5,10 @@ const html = `
         <p>Back to Coworking</p>
     </button>
 
-    <button id="addMemeberBtn">
+    <button id="manageMembersBtn">
         <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" color="#000000"><path d="M6 12H12M18 12H12M12 12V6M12 12V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 
-        <p>Add Member</p>
+        <p>Manage Members</p>
     </button>
 </header>
 `;
@@ -20,6 +20,7 @@ const css = `
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    position: relative;
 }
 
 header{
@@ -52,6 +53,7 @@ class Office extends HTMLElement{
 
     connectedCallback(){
         this.shadow.querySelector("#backBtn").addEventListener("click", ()=>{changePage("home")});
+        this.shadow.querySelector("#manageMembersBtn").addEventListener("click", this.showMembers.bind(this));
     }
 
     get data(){
@@ -83,7 +85,10 @@ class Office extends HTMLElement{
         this.shadow.appendChild(location);
     }
 
-    showOwner(){
+    showMembers(){
+        let omComp = document.createElement("office-members-comp");
+        omComp._id = this.data._id;
+        this.shadow.appendChild(omComp);
     }
 }
 
