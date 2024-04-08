@@ -11,6 +11,7 @@ require("./components/occupant.js");
 require("./components/meeting.js");
 require("./components/officeDisplay.js");
 require("./components/officeMembers.js");
+require("./components/member.js");
 
 const pages = document.querySelectorAll(".page");
 

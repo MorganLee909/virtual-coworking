@@ -22,7 +22,7 @@ const css = `
     position: absolute;
     top: 0;
     left: 0;
-    height: 100%;
+    height: calc(100vh - 110px);
     width: 100%;
     background: #fafafa;
 }
@@ -41,6 +41,17 @@ header button{
     background: none;
     border: none;
     cursor: pointer;
+}
+
+#members{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 815px;
+    margin: 0 auto;
+    width: 75%;
+    height: 100%;
 }
 `;
 
@@ -81,8 +92,10 @@ class OfficeMembers extends HTMLElement{
     }
 
     displayMembers(members){
+        console.log(members);
         let membersDiv = this.shadow.querySelector("#members");
         for(let i = 0; i < members.length; i++){
+            console.log(i);
             let member = document.createElement("member-comp");
             member.data = members[i];
             membersDiv.appendChild(member);
