@@ -95,7 +95,6 @@ class OfficeMembers extends HTMLElement{
     displayMembers(members){
         let membersDiv = this.shadow.querySelector("#members");
         for(let i = 0; i < members.length; i++){
-            console.log(i);
             let member = document.createElement("member-comp");
             member.data = members[i];
             membersDiv.appendChild(member);

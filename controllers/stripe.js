@@ -59,7 +59,7 @@ module.exports = {
         }
 
         let provisionOffice = (user, customer)=>{
-            user.status = "createOffice";
+            user.status = "active";
             user.type = "office";
             return user;
         }
@@ -74,7 +74,7 @@ module.exports = {
             })
             .then((response)=>{
                 let user = response[1];
-                user.stripe.customerId(response[0].id);
+                user.stripe.customerId = response[0]._id;
                 user.stripe.productId = "";
                 user.stripe.subscriptionId = session.subscription;
 

@@ -158,7 +158,9 @@
             })
             .catch((err)=>{});
 
-        document.querySelector("form").addEventListener("click", ()=>{
+        document.querySelector("form").addEventListener("submit", ()=>{
+            event.preventDefault();
+
             fetch("/office", {
                 method: "post",
                 headers: {
@@ -167,7 +169,7 @@
                 },
                 body: JSON.stringify({
                     name: document.getElementById("officeName").value,
-                    location: document.getElementById("officeLocation").value;
+                    location: document.getElementById("officeLocation").value
                 })
             })
                 .then(r=>r.json())
