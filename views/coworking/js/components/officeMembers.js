@@ -8,7 +8,7 @@ const html = `
     <button id="addMemberBtn">
         <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" color="#000000"><path d="M6 12H12M18 12H12M12 12V6M12 12V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 
-        <p>Add member</p>
+        <p id="addMemberBtn">Add member</p>
     </button>
 </header>
 
@@ -67,6 +67,7 @@ class OfficeMembers extends HTMLElement{
     }
 
     connectedCallback(){
+        this.shadow.querySelector("#addMemberBtn").addEventListener("click", this.addMember.bind(this));
         this.shadow.querySelector("#backBtn").addEventListener("click", this.destroy.bind(this));
         this.getMembers();
     }
@@ -99,6 +100,11 @@ class OfficeMembers extends HTMLElement{
             member.data = members[i];
             membersDiv.appendChild(member);
         }
+    }
+
+    addMember(){
+        let addMemberComp = document.createElement("add-member-comp");
+        this.shadow.appendChild(addMemberComp);
     }
 
     destroy(){

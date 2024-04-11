@@ -311,7 +311,6 @@ class DeskPage extends HTMLElement{
 
         socket.send(JSON.stringify(data));
     }
-
 }
 
 customElements.define("desk-page", DeskPage);
