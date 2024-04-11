@@ -133,5 +133,39 @@ module.exports = {
                         });
                 }
             })
+    },
+
+    /*
+    POST: Create new office
+    req.body = {
+        name: String
+        location: String Id
+    }
+    response = {url: String}
+     */
+    create: function(req, res){
+        let newOffice = new Office({
+            name: req.body.name,
+            identifier: req.body.name.replaceAll(" ", "-"),
+            tables: [{
+                type: "general",
+                occupants: []
+            }],
+            owner: res.locals.user._id,
+            users: [res.locals.user._id],
+            location: req.body.location
+        });
+
+        newOffice.save()
+            .then((office)=>{
+                res.json({url: "/dashboard"});
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error"
+                });
+            });
     }
 }

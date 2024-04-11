@@ -25,25 +25,33 @@
                 padding: 26px;
             }
 
-            #background{
+            .container{
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: #fafafa;
-                height: calc(100vh - 127px);
-                width: calc(100vw - 52px);
+                width: 100%;
+                height: calc(100vh - 75px);
             }
 
-            #standard{
+            .card{
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
                 align-items: center;
-                height: 500px;
                 width: 350px;
-                border-radius: 10px;
-                border: 1px solid black;
+                margin: 0 35px;
+                border-radius: 6px;
                 background: white;
+                box-shadow: -17px 4px 34px 0px #00000014;
+                box-shadow: 0px -2px 18px 0px #0000000F;
+            }
+
+            #standard{
+                height: 435px;
+            }
+
+            #office{
+                height: 510px;
             }
 
             ul{
@@ -72,8 +80,8 @@
             <img id="topLogo" src="/image/text-logo.svg" alt="CoSphere Logo">
         </header>
 
-        <div id="background">
-            <div id="standard">
+        <div class="container">
+            <div id="standard" class="card">
                 <h1>Standard</h1>
 
                 <h2>$50 / month</h2>
@@ -87,28 +95,68 @@
 
                 <button id="standardSubscribe">Subscribe</button>
             </div>
+
+            <div id="office" class="card">
+                <h1>Office</h1>
+
+                <h2>$75 / month</h2>
+
+                <ul>
+                    <li>Join others virtually for inspiration, collaboration and motivation</li>
+                    <li>Travel virtually to other cities to work with a diverse range of people</li>
+                    <li>Collaborate 24/7, no opening/closing time</li>
+                    <li>Add users for just $35 per month per user</li>
+                    <li>Private room</li>
+                    <li>Unlimited tables</li>
+                </ul>
+
+                <button id="officeSubscribe">Subscribe</button>
+            </div>
         </div>
 
         <script>
-            document.getElementById("standardSubscribe").addEventListener("click", ()=>{
+            const sendData = (data)=>{
                 fetch("/stripe/checkout-session", {
                     method: "post",
-                    redirect: "follow",
                     headers: {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
                     },
-                    body: JSON.stringify({
-                        price: "price_1On7CgI8NTnuAPIlq2ATM9Xl",
-                        payment: true
-                    })
+                    body: JSON.stringify(data)
                 })
                     .then(r=>r.json())
                     .then((response)=>{
                         window.location.href = response.url;
                     })
                     .catch((err)=>{});
-            })
+            }
+
+            document.getElementById("standardSubscribe").addEventListener("click", ()=>{
+                sendData({
+                    payment: true,
+                    prices: [{
+                        price: "price_1On7CgI8NTnuAPIlq2ATM9Xl",
+                        quantity: 1
+                    }]
+                });
+            });
+
+            document.getElementById("officeSubscribe").addEventListener("click", ()=>{
+                let data = {
+                    payment: true,
+                    prices: [
+                        {
+                            price: "price_1P3jrmI8NTnuAPIlHYRcF22Z",
+                            quantity: 1
+                        },
+                        {
+                            price: "price_1P3jsnI8NTnuAPIl4P6eZoip",
+                            quantity: 1
+                        }
+                    ]
+                };
+                sendData(data);
+            });
         </script>
     </body>
 </html>

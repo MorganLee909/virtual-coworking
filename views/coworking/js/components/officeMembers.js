@@ -25,6 +25,7 @@ const css = `
     height: calc(100vh - 110px);
     width: 100%;
     background: #fafafa;
+    z-index: 2;
 }
 
 header{
@@ -92,7 +93,6 @@ class OfficeMembers extends HTMLElement{
     }
 
     displayMembers(members){
-        console.log(members);
         let membersDiv = this.shadow.querySelector("#members");
         for(let i = 0; i < members.length; i++){
             console.log(i);

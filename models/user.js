@@ -34,7 +34,8 @@ const UserSchema = new mongoose.Schema({
         customerId: String,
         productId: String,
         subscriptionId: String,
-        subscriptionStatus: String
+        subscriptionStatus: String,
+        type: String
     },
     resetCode: {
         type: String,

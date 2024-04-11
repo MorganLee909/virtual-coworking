@@ -21,6 +21,7 @@ module.exports = (app)=>{
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
     app.get("/js/dashboard.js", (req, res)=>{res.sendFile(`${views}/build/coworking/js/dashboard.js`)});
     app.get("/css/dashboard.css", (req, res)=>{res.sendFile(`${views}/build/coworking/css/dashboard.css`)});
+    app.get("/office/setup", (req, res)=>{res.sendFile(`${views}/officeSetup.html`)});
 
     //USERS
     app.post("/user", user.create);
@@ -48,6 +49,7 @@ module.exports = (app)=>{
     app.get("/office/:officeId", auth, office.getOffice);
     app.post("/office/:officeId/table", auth, office.createTable);
     app.get("/office/:officeId/members", auth, office.getMembers);
+    app.post("/office", auth, office.create);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

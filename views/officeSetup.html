@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device.width, initial-scale=1.0">
+    <link rel="icon" type="img/ico" href="/image/favicon.ico" media="(prefers-color-scheme: light)">
+    <link rel="icon" type="img/ico" href="/image/darkFavicon.ico" media="(prefers-color-scheme: dark)">
+    <title>CoSphere</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+
+        body{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            background: #eef2f4;
+        }
+
+        header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+            width: 100%;
+            margin: 13px 0;
+            padding: 26px;
+        }
+
+        .logo{
+            margin-top: 6px;
+            height: 80px;
+        }
+
+        #container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px);
+            width: 100%;
+        }
+
+        form{
+            display: flex;
+            flex-direction: column;
+        }
+
+        form h1{
+            color: #2f2f33;
+            font-size: 23px;
+            font-weight: 700;
+            margin-bottom: 35px;
+        }
+
+        label{
+            display: flex;
+            width: 100%;
+            flex-direction: column;
+            font-size: 14px;
+            color: #7a7a7a;
+            margin: 13px 0;
+            font-family: "Open Sans";
+            font-style: normal;
+            font-weight: 400;
+        }
+
+        label input{
+            height: 50px;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 2px;
+            border: 1px solid #D4D4D4;
+            background: #FFF;
+            box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25) inset;
+            margin-top: 15px;
+        }
+
+        label select{
+            height: 50px;
+            font-size: 16px;
+            border-radius: 2px;
+            border: 1px solid #d4d4d4;
+            box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.25) inset;
+            background: white;
+            padding-left: 15px;
+        }
+
+        #submitBtn{
+            box-sizing: content-box;
+            display: block;
+            border-radius: 3px;
+            background: linear-gradient(300deg, #3581C1 33.58%, #50A2E7 54.2%, #3581C1 75.24%);
+            box-shadow: 0px 20px 18px 0px rgba(25, 115, 197, 0.15);
+            padding: 13px 0;
+            margin-bottom: 50px;
+            width: 100%;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            margin-top: 40px
+        }
+
+        #submitBtn:hover{
+            background: linear-gradient(300deg, #3581C1 16.77%, #50A2E7 62.02%, #3581C1 82.83%);
+            box-shadow: 0px 0px 18px 0px rgba(25, 115, 197, 0.21);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div>
+            <a href="/" alt="Home Page">
+                <img src="/image/text-logo.svg" class="logo" alt="CoSphere Logo"/>
+            </a>
+        </div>
+    </header>
+
+    <div id="container">
+        <form>
+            <h1>Finish Setting Up Your Office</h1>
+
+            <label>Office Name
+                <input id="officeName" type="text">
+            </label>
+
+            <label>Office Location
+                <select id="officeLocation"></select>
+            </label>
+
+            <input type="submit" value="Create Office" id="submitBtn">
+        </form>
+    </div>
+
+    <script>
+        fetch("/location", {
+            method: "get",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((locations)=>{
+                let select = document.getElementById("officeLocation");
+                for(let i = 0; i < locations.length; i++){
+                    let option = document.createElement("option");
+                    option.value = locations[i]._id;
+                    option.textContent = locations[i].name;
+                    select.appendChild(option);
+                }
+                select.value = locations[0]._id;
+            })
+            .catch((err)=>{});
+
+        document.querySelector("form").addEventListener("click", ()=>{
+            fetch("/office", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+                },
+                body: JSON.stringify({
+                    name: document.getElementById("officeName").value,
+                    location: document.getElementById("officeLocation").value;
+                })
+            })
+                .then(r=>r.json())
+                .then((response)=>{
+                    window.location.href = response.url;
+                })
+                .catch((err)=>{});
+        });
+    </script>
+</body>
+</html>
