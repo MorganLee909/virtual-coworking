@@ -17,6 +17,7 @@ global.appRoot = __dirname;
 
 let esbuildOptions = {
     entryPoints: [
+        `${__dirname}/views/index.js`,
         `${__dirname}/views/coworking/js/dashboard.js`,
         `${__dirname}/views/coworking/css/dashboard.css`,
         `${__dirname}/views/landing/js/index.js`,

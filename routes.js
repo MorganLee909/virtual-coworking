@@ -13,6 +13,10 @@ module.exports = (app)=>{
     app.get("/landing/landing.js", (req, res)=>{res.sendFile(`${views}/build/landing/js/index.js`)});
     app.get("/landing/landing.css", (req, res)=>{res.sendFile(`${views}/build/landing/css/index.css`)});
 
+    //one page app
+    app.get("/index", (req, res)=>{res.sendFile(`${views}/index.html`)});
+    app.get("/js/index.js", (req, res)=>{res.sendFile(`${views}/build/index.js`)});
+
     app.get("/", (req, res)=>res.sendFile(`${views}/landing.html`));
     app.get("/user/signup", (req, res)=>{res.sendFile(`${views}/signup.html`)});
     app.get("/user/login", (req, res)=>{res.sendFile(`${views}/login.html`)});
