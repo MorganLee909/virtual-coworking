@@ -16,7 +16,7 @@ module.exports = {
     checkoutSession: function(req, res){
         let trial = {trial_period_days: 7};
         let subType = "basic";
-        if(req.body.prices.length >= 1){
+        if(req.body.prices.length > 1){
             trial = {};
             subType="office";
         }

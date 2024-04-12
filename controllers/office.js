@@ -4,6 +4,8 @@ const User = require("../models/user.js");
 const sendEmail = require("./sendEmail.js");
 const inviteExistingMember = require("../email/inviteExistingMember.js");
 
+const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
+
 module.exports = {
     /*
     GET: get all offices for a specific location
@@ -34,7 +36,7 @@ module.exports = {
             .then((office)=>{
                 let isUser = false;
                 for(let i = 0; i < office.users.length; i++){
-                    if(office.users[i].toString() === res.locals.user._id.toString()){
+                    if(office.users[i].userId.toString() === res.locals.user._id.toString()){
                         isUser = true;
                         break;
                     }
@@ -111,7 +113,12 @@ module.exports = {
             .then((office)=>{
                 if(office.owner.toString() !== res.locals.user._id.toString()) throw "owner";
 
-                return User.find({_id: office.users}, {
+                let users = [];
+                for(let i = 0; i < office.users.length; i++){
+                    users.push(office.users[i].userId);
+                }
+
+                return User.find({_id: users}, {
                     email: 1,
                     firstName: 1,
                     lastName: 1,
@@ -155,7 +162,10 @@ module.exports = {
                 occupants: []
             }],
             owner: res.locals.user._id,
-            users: [res.locals.user._id],
+            users: [{
+                status: "active",
+                userId: res.locals.user._id
+            }],
             location: req.body.location
         });
 
@@ -177,10 +187,10 @@ module.exports = {
     req.body.email= String
      */
     addMember: function(req, res){
-        let userProm = User.find({email: req.body.email.toLowerCase()});
-        let officeProm = Office.find({owner: res.locals.user._id});
+        let userProm = User.findOne({email: req.body.email.toLowerCase()});
+        let officeProm = Office.findOne({owner: res.locals.user._id});
 
-        Promise.all([userProm, officeProm]);
+        Promise.all([userProm, officeProm])
             .then((response)=>{
                 if(response[0]){
                     response[1].users.push({
@@ -200,6 +210,8 @@ module.exports = {
                         error: false,
                         message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
                     });
+
+                    response[1].save().catch((err)=>{console.error(err)});
                 }else{
                     console.log("non-user inviation");
                 }
@@ -208,8 +220,67 @@ module.exports = {
                 console.error(err);
                 res.json({
                     error: true,
-                    message: "Server error";
+                    message: "Server error"
                 });
+            });
+    },
+
+    /*
+    GET: accept office member invitation
+    req.params = {
+        officeId: String ID
+        invitedId: String ID
+    }
+    redirect: /dashboard
+     */
+    acceptInvitation: function(req, res){
+        let userProm = User.findOne({_id: req.params.invitedId});
+        let officeProm = Office.findOne({_id: req.params.officeId});
+
+        let activeUsers = 0;
+
+        Promise.all([userProm, officeProm])
+            .then((response)=>{
+                if(!response[0] || !response[1]) throw "auth";
+
+                //let officeUser = response[1].users.find(u => u.userId.toString === response[0]._id.toString());
+                //if(officeUser.status === "active") throw "active";
+                let officeUser = {};
+                for(let i = 0; i < response[1].users.length; i++){
+                    if(response[1].users[i].userId.toString() === response[0]._id.toString()){
+                        if(response[1].users[i].status === "active") throw "active";
+                        response[1].users[i].status = "active";
+                    }
+                    if(response[1].users[i].status === "active") activeUsers++;
+                }
+
+                //Update user
+                stripe.subscriptions.cancel(response[0].stripe.subscriptionId).catch((err)=>{console.error(err)});
+
+
+                //Update office
+                response[1].save().catch((err)=>{console.error(err)});
+                return User.findOne({_id: response[1].owner});
+            })
+            .then((owner)=>{
+                let items = {
+                    price: process.env.OFFICE_MEMBER_PRICE,
+                    quantity: activeUsers
+                };
+                
+                stripe.subscriptions.update(owner.stripe.subscriptionId, {items: items})
+                    .catch((err)=>{console.error(err)});
+
+                res.redirect("/dashboard");
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "auth": return res.redirect("/user/login");
+                    case "active": return res.redirect("/dashboard");
+                    default:
+                        console.error(err);
+                        return res.redirect("/");
+                }
             });
     }
 }
