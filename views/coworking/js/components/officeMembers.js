@@ -95,6 +95,11 @@ class OfficeMembers extends HTMLElement{
 
     displayMembers(members){
         let membersDiv = this.shadow.querySelector("#members");
+
+        while(membersDiv.children.length > 0){
+            membersDiv.removeChild(membersDiv.firstChild);
+        }
+
         for(let i = 0; i < members.length; i++){
             let member = document.createElement("member-comp");
             member.data = members[i];
@@ -104,6 +109,7 @@ class OfficeMembers extends HTMLElement{
 
     addMember(){
         let addMemberComp = document.createElement("add-member-comp");
+        addMemberComp.office = this._id;
         this.shadow.appendChild(addMemberComp);
     }
 

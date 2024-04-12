@@ -1,6 +1,6 @@
 const html = `
 <h1>Add member to office</h1>
-<p>*Each member will add $35 to your bill</p>
+<p>*Each member will add $35 to your bill once they accept the invitation</p>
 
 <label>New User Email
     <input id="newMemberEmail" type="email" placeholder="Email">
@@ -77,9 +77,34 @@ class AddMember extends HTMLElement{
 
     connectedCallback(){
         this.shadow.querySelector("#cancelBtn").addEventListener("click", this.destroy.bind(this));
-        this.shadow.querySelector("#addMemberBtn").addEventListener("click", ()=>{
-            //fetch
-        });
+        this.shadow.querySelector("#addMemberBtn").addEventListener("click", this.addMember.bind(this));
+    }
+
+    addMember(){
+        let email = this.shadow.querySelector("#newMemberEmail").value;
+        console.log("fetching");
+        fetch(`/office/${this.office}/member`, {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            },
+            body: JSON.stringify({email: email})
+        })
+            .then(r=>r.json())
+            .then((response)=>{
+                console.log(response);
+                if(response.error){
+                    requestError(response.message);
+                }else{
+                    createBanner("green", `Invitation email sent to ${email}`);
+                    this.getRootNode().host.getMembers();
+                    this.destroy();
+                }
+            })
+            .catch((err)=>{
+                requestError(err.message);
+            });
     }
 
     destroy(){

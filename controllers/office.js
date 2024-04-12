@@ -37,6 +37,7 @@ module.exports = {
                 let isUser = false;
                 for(let i = 0; i < office.users.length; i++){
                     if(office.users[i].userId.toString() === res.locals.user._id.toString()){
+                        if(office.users[i].status !== "active") throw "auth";
                         isUser = true;
                         break;
                     }
@@ -203,7 +204,7 @@ module.exports = {
                     sendEmail(
                         response[0].email,
                         "You have been invited to join a CoSphere office!",
-                        inviteExistingMember(link,res.locals.user.name, response[0].name)
+                        inviteExistingMember(link, res.locals.user.firstName, response[1].name)
                     );
 
                     res.json({
