@@ -37,7 +37,16 @@ const OfficeSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    users: [mongoose.Schema.Types.ObjectId],
+    users: [{
+        status: {
+            type: String,
+            required: true
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true
+        }
+    }],
     location: {
         type: mongoose.Schema.Types.ObjectId,
         required: true

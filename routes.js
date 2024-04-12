@@ -50,6 +50,7 @@ module.exports = (app)=>{
     app.post("/office/:officeId/table", auth, office.createTable);
     app.get("/office/:officeId/members", auth, office.getMembers);
     app.post("/office", auth, office.create);
+    app.post("/office/:officeId/member", auth, office.addMember);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

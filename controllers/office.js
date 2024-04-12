@@ -1,6 +1,9 @@
 const Office = require("../models/office.js");
 const User = require("../models/user.js");
 
+const sendEmail = require("./sendEmail.js");
+const inviteExistingMember = require("../email/inviteExistingMember.js");
+
 module.exports = {
     /*
     GET: get all offices for a specific location
@@ -165,6 +168,47 @@ module.exports = {
                 res.json({
                     error: true,
                     message: "Server error"
+                });
+            });
+    },
+
+    /*
+    POST: add a new office member
+    req.body.email= String
+     */
+    addMember: function(req, res){
+        let userProm = User.find({email: req.body.email.toLowerCase()});
+        let officeProm = Office.find({owner: res.locals.user._id});
+
+        Promise.all([userProm, officeProm]);
+            .then((response)=>{
+                if(response[0]){
+                    response[1].users.push({
+                        status: "awaiting",
+                        userId: response[0]._id
+                    });
+
+                    let link = `${req.protocol}://${req.get("host")}/office/invite/${response[1]._id}/${response[0]._id}`;
+
+                    sendEmail(
+                        response[0].email,
+                        "You have been invited to join a CoSphere office!",
+                        inviteExistingMember(link,res.locals.user.name, response[0].name)
+                    );
+
+                    res.json({
+                        error: false,
+                        message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
+                    });
+                }else{
+                    console.log("non-user inviation");
+                }
+            })
+            .catch((err)=>{
+                console.error(err);
+                res.json({
+                    error: true,
+                    message: "Server error";
                 });
             });
     }
