@@ -5,7 +5,7 @@ const html = `
         <p>Back to Coworking</p>
     </button>
 
-    <button id="manageMembersBtn">
+    <button id="manageMembersBtn" style="display:none">
         <svg width="24px" height="24px" stroke-width="1.5" viewBox="0 0 24 24" fill="none" color="#000000"><path d="M6 12H12M18 12H12M12 12V6M12 12V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
 
         <p>Manage Members</p>
@@ -81,7 +81,10 @@ class Office extends HTMLElement{
         location.identifier = office.name;
         location.tables = office.tables;
         location.type = "office";
-        if(user._id === office.owner) location.officeOwner = true;
+        if(user._id === office.owner){
+            location.officeOwner = true;
+            this.shadow.querySelector("#manageMembersBtn").style.display = "flex";
+        }
         this.shadow.appendChild(location);
     }
 

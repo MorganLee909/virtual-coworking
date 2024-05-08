@@ -71,7 +71,6 @@ class OfficeDisplay extends HTMLElement{
                 }else{
                     for(let i = 0; i < offices.length; i++){
                         let office = document.createElement("button");
-                        //office.addEventListener("click", ()=>{changePage("office", offices[i]._id)});
                         office.addEventListener("click", ()=>{this.getOffice(offices[i]._id)})
                         office.textContent = offices[i].name;
                         this.shadow.appendChild(office);
