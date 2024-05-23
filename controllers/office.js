@@ -5,6 +5,7 @@ const sendEmail = require("./sendEmail.js");
 const inviteExistingMember = require("../email/inviteExistingMember.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
+const uuid = require("crypto").randomUUID;
 
 module.exports = {
     /*
@@ -214,7 +215,46 @@ module.exports = {
 
                     response[1].save().catch((err)=>{console.error(err)});
                 }else{
-                    console.log("non-user inviation");
+                    stripe.customers.create({email: req.body.email.toLowerCase()})
+                        .then((customer)=>{
+                            let newUser = new User({
+                                email: req.body.email.toLowerCase(),
+                                password: "undefined",
+                                firstName: "temp",
+                                lastName: "temp",
+                                status: "awaiting",
+                                stripe: {
+                                    customerId: customer.id,
+                                    subscriptionStatus: "active",
+                                    type: "office"
+                                },
+                                defaultLocation: response[1]._id,
+                                session: uuid()
+                            });
+
+                            return newUser.save();
+                        })
+                        .then((user)=>{
+                            let link = `${req.protocol}://${req.get("host")}/office/invite/new/${response[1]._id/${user._id}}`;
+                            
+                            sendEmail(
+                                user.email,
+                                "You have been invited to join a CoSphere office!",
+                                inviteNewMember(link, res.locals.user.firstName, response[1].name)
+                            );
+
+                            res.json({
+                                error: false,
+                                message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
+                            });
+                        })
+                        .catch((err)=>{
+                            console.error(err);
+                            res.json({
+                                error: true,
+                                message: "Unable to invite new member"
+                            });
+                        });
                 }
             })
             .catch((err)=>{
@@ -242,10 +282,9 @@ module.exports = {
 
         Promise.all([userProm, officeProm])
             .then((response)=>{
-                if(!response[0] || !response[1]) throw "auth";
+                if(!response[0])throw "noUser";
+                if(!response[1]) throw "auth";
 
-                //let officeUser = response[1].users.find(u => u.userId.toString === response[0]._id.toString());
-                //if(officeUser.status === "active") throw "active";
                 let officeUser = {};
                 for(let i = 0; i < response[1].users.length; i++){
                     if(response[1].users[i].userId.toString() === response[0]._id.toString()){
@@ -276,6 +315,7 @@ module.exports = {
             })
             .catch((err)=>{
                 switch(err){
+                    case "noUser": return res.redirect("/user/office/register");
                     case "auth": return res.redirect("/user/login");
                     case "active": return res.redirect("/dashboard");
                     default:

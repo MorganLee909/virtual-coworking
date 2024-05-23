@@ -461,4 +461,8 @@ module.exports = {
                 console.error(err);
             });
     },
+
+    createForOffice: function(req, res){
+
+    }
 }
