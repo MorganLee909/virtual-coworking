@@ -3,6 +3,7 @@ const User = require("../models/user.js");
 
 const sendEmail = require("./sendEmail.js");
 const inviteExistingMember = require("../email/inviteExistingMember.js");
+const inviteNewMember = require("../email/inviteNewMember.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const uuid = require("crypto").randomUUID;
@@ -194,7 +195,9 @@ module.exports = {
 
         Promise.all([userProm, officeProm])
             .then((response)=>{
+                console.log(response[0]);
                 if(response[0]){
+                    console.log("if");
                     response[1].users.push({
                         status: "awaiting",
                         userId: response[0]._id
@@ -215,6 +218,7 @@ module.exports = {
 
                     response[1].save().catch((err)=>{console.error(err)});
                 }else{
+                    console.log("else");
                     stripe.customers.create({email: req.body.email.toLowerCase()})
                         .then((customer)=>{
                             let newUser = new User({
@@ -235,7 +239,8 @@ module.exports = {
                             return newUser.save();
                         })
                         .then((user)=>{
-                            let link = `${req.protocol}://${req.get("host")}/office/invite/new/${response[1]._id/${user._id}}`;
+                            let link = `${req.protocol}://${req.get("host")}/office/invite/new/${response[1]._id}/${user._id}}`;
+                            console.log(inviteNewMember(link, res.locals.user.firstName, response[1].name));
                             
                             sendEmail(
                                 user.email,

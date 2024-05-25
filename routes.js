@@ -35,8 +35,6 @@ module.exports = (app)=>{
     app.post("/user/password/reset", user.passwordReset);
     app.post("/user/profile", auth, user.updateProfile);
     app.post("/user/profile/image", auth, user.updateProfilePhoto);
-    app.get("/user/office/register", (req, res)=>{res.sendFile(`${views}/officeRegister.html`)});
-    app.post("/user/office", user.createForOffice);
 
     //NEWSLETTER
     app.post("/newsletter/join", newsletter.join);

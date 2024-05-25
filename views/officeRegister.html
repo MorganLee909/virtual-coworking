@@ -328,10 +328,6 @@
                     </label>
                 </div>
 
-                <label>Email
-                    <input type="email" id="email" placeholder="Email" required/>
-                </label>
-
                 <label>Password
                     <input type="password" id="password" placeholder="Password" minlength="10" required/>
                 </label>
@@ -354,6 +350,14 @@
         </div>
 
         <script>
+            let data = window.location.href;
+            data = data.split("/");
+            let officeId = data[data.indexOf("new")+1];
+            let invitedId = data[data.indexOf("new")+2];
+
+            console.log(officeId);
+            console.log(invitedId);
+
             const notify = (color, message)=>{
                 let notifier = document.getElementById("notifier");
                 notifier.textContent = message;
@@ -376,7 +380,7 @@
                     lastName: document.getElementById("lastName").value
                 };
 
-                fetch("/user/office", {
+                fetch(`/office/user/new/`, {
                     method: "post",
                     headers: {
                         "Content-Type": "application/json"
