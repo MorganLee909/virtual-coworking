@@ -82,7 +82,6 @@ class AddMember extends HTMLElement{
 
     addMember(){
         let email = this.shadow.querySelector("#newMemberEmail").value;
-        console.log("fetching");
         fetch(`/office/${this.office}/member`, {
             method: "post",
             headers: {
@@ -93,7 +92,6 @@ class AddMember extends HTMLElement{
         })
             .then(r=>r.json())
             .then((response)=>{
-                console.log(response);
                 if(response.error){
                     requestError(response.message);
                 }else{

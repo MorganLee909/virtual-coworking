@@ -117,19 +117,27 @@ module.exports = {
                 if(office.owner.toString() !== res.locals.user._id.toString()) throw "owner";
 
                 let users = [];
+                let unconfirmedUsers = [];
                 for(let i = 0; i < office.users.length; i++){
-                    users.push(office.users[i].userId);
+                    if(office.users[i].userId){
+                        users.push(office.users[i].userId);
+                    }else{
+                        unconfirmedUsers.push(office.users[i]);
+                    }
                 }
 
-                return User.find({_id: users}, {
+                let userProm = User.find({_id: users}, {
                     email: 1,
                     firstName: 1,
                     lastName: 1,
                     avatar: 1,
                     status: 1
                 });
+
+                return Promise.all([userProm, unconfirmedUsers]);
             })
-            .then((users)=>{
+            .then((response)=>{
+                let users = response[0].concat(response[1]);
                 res.json(users);
             })
             .catch((err)=>{
@@ -195,9 +203,7 @@ module.exports = {
 
         Promise.all([userProm, officeProm])
             .then((response)=>{
-                console.log(response[0]);
                 if(response[0]){
-                    console.log("if");
                     response[1].users.push({
                         status: "awaiting",
                         userId: response[0]._id
@@ -218,49 +224,26 @@ module.exports = {
 
                     response[1].save().catch((err)=>{console.error(err)});
                 }else{
-                    console.log("else");
-                    stripe.customers.create({email: req.body.email.toLowerCase()})
-                        .then((customer)=>{
-                            let newUser = new User({
-                                email: req.body.email.toLowerCase(),
-                                password: "undefined",
-                                firstName: "temp",
-                                lastName: "temp",
-                                status: "awaiting",
-                                stripe: {
-                                    customerId: customer.id,
-                                    subscriptionStatus: "active",
-                                    type: "office"
-                                },
-                                defaultLocation: response[1]._id,
-                                session: uuid()
-                            });
+                    response[1].users.push({
+                        status: "awaiting",
+                        email: req.body.email.toLowerCase()
+                    });
 
-                            return newUser.save();
-                        })
-                        .then((user)=>{
-                            let link = `${req.protocol}://${req.get("host")}/office/invite/new/${response[1]._id}/${user._id}}`;
-                            console.log(inviteNewMember(link, res.locals.user.firstName, response[1].name));
-                            
-                            sendEmail(
-                                user.email,
-                                "You have been invited to join a CoSphere office!",
-                                inviteNewMember(link, res.locals.user.firstName, response[1].name)
-                            );
+                    let link = `${req.protocol}://${req.get("host")}/user/signup`;
 
-                            res.json({
-                                error: false,
-                                message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
-                            });
-                        })
-                        .catch((err)=>{
-                            console.error(err);
-                            res.json({
-                                error: true,
-                                message: "Unable to invite new member"
-                            });
-                        });
+                    sendEmail(
+                        req.body.email.toLowerCase(),
+                        "You have been invited to join a CoSphere office!",
+                        inviteNewMember(link, res.locals.user.firstName, response[1].name)
+                    );
+
+                    res.json({
+                        error: false,
+                        message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
+                    });
                 }
+
+                response[1].save().catch((err)=>{console.error(err)});
             })
             .catch((err)=>{
                 console.error(err);

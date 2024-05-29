@@ -1,8 +1,14 @@
 const User = require("../models/user.js");
 const Location = require("../models/location.js");
+const Office = require("../models/office.js");
 
 const sendEmail = require("./sendEmail.js");
 const passwordResetEmail = require("../email/passwordResetEmail.js");
+
+const {
+    createOfficeUser,
+    activateOfficeUser
+} = require("../controllers2/user.js");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -48,13 +54,25 @@ module.exports = {
 
         let userPromise = User.findOne({email: email});
         let locationPromise = Location.findOne({}, {_id: 1});
+        let officePromise = Office.find({users: {$elemMatch: {email: email}}});
 
         let location = {};
-        Promise.all([userPromise, locationPromise])
-            .then((response)=>{
+        Promise.all([userPromise, locationPromise, officePromise])
+            .then(async (response)=>{
                 let user = response[0];
                 if(user) throw "email";
                 location = response[1];
+
+                if(response[2].length > 0){
+                    let newUser = await createOfficeUser({
+                        ...req.body,
+                        email: email
+                    }, response[1]._id);
+
+                    activateOfficeUser(newUser.email, newUser._id, response[2]);
+
+                    throw "officeUser";
+                }
 
                 return stripe.customers.create({email: email});
             })
@@ -73,7 +91,7 @@ module.exports = {
                     status: `email-${confirmationCode}`,
                     stripe: {customerId: response.id},
                     defaultLocation: location._id,
-                    session: uuid(),
+                    session: uuid()
                 });
 
                 let html = confirmationEmail(newUser.firstName, `${req.protocol}://${req.get("host")}/email/code/${email}/${confirmationCode}`);
@@ -103,6 +121,11 @@ module.exports = {
                         error: true,
                         message: "User with this email already exists"
                     });
+                    case "officeUser":
+                        return res.json({
+                            error: false,
+                            message: "officeUser"
+                        });
                     default:
                         console.error(err);
                         res.json({

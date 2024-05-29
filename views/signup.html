@@ -387,6 +387,8 @@
                     .then((response)=>{
                         if(response.error){
                             notify("red", response.message);
+                        }else if(response.message === "officeUser"){
+                            window.location.href = "/user/login";
                         }else{
                             localStorage.setItem("coworkToken", response.token);
                             notify("green", response.message);

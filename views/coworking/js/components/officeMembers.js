@@ -73,6 +73,7 @@ class OfficeMembers extends HTMLElement{
     }
 
     getMembers(){
+        console.log("getting members");
         fetch(`office/${this._id}/members`, {
             method: "get",
             headers: {
@@ -82,6 +83,7 @@ class OfficeMembers extends HTMLElement{
         })
             .then(r=>r.json())
             .then((members)=>{
+                console.log(members);
                 if(members.error){
                     requestError(members.message);
                 }else{
