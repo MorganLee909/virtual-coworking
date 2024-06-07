@@ -19,7 +19,9 @@ const css = `
     background: white;
     box-shadow: 2px 4px 12px 0px #00000030;
     height: 58px;
-    width: 100%;
+    width: 98%;
+    margin: 8px 0;
+    box-sizing: border-box;
 }
 
 img{

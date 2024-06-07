@@ -47,12 +47,13 @@ header button{
 #members{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     max-width: 815px;
     margin: 0 auto;
     width: 75%;
-    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+    padding: 5px;
 }
 `;
 
