@@ -58,8 +58,8 @@ class Member extends HTMLElement{
     }
 
     connectedCallback(){
-        this.shadow.querySelector("img").src = this.data.avatar;
-        this.shadow.querySelector(".name").textContent = this.data.firstName;
+        this.shadow.querySelector("img").src = this.data.avatar ? this.data.avatar : "/image/profileIcon.png";
+        this.shadow.querySelector(".name").textContent = this.data.firstName ? this.data.firstName : "";
         this.shadow.querySelector(".email").textContent = this.data.email;
         this.shadow.querySelector(".status").textContent = this.data.status;
     }

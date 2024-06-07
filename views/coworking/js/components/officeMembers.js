@@ -83,7 +83,6 @@ class OfficeMembers extends HTMLElement{
         })
             .then(r=>r.json())
             .then((members)=>{
-                console.log(members);
                 if(members.error){
                     requestError(members.message);
                 }else{
@@ -96,6 +95,7 @@ class OfficeMembers extends HTMLElement{
     }
 
     displayMembers(members){
+        console.log(members);
         let membersDiv = this.shadow.querySelector("#members");
 
         while(membersDiv.children.length > 0){

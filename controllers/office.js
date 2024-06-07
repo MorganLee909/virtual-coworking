@@ -38,6 +38,7 @@ module.exports = {
             .then((office)=>{
                 let isUser = false;
                 for(let i = 0; i < office.users.length; i++){
+                    if(!office.users[i].userId) continue;
                     if(office.users[i].userId.toString() === res.locals.user._id.toString()){
                         if(office.users[i].status !== "active") throw "auth";
                         isUser = true;
@@ -275,6 +276,7 @@ module.exports = {
 
                 let officeUser = {};
                 for(let i = 0; i < response[1].users.length; i++){
+                    if(!response[1].users[i].userId) continue;
                     if(response[1].users[i].userId.toString() === response[0]._id.toString()){
                         if(response[1].users[i].status === "active") throw "active";
                         response[1].users[i].status = "active";
@@ -290,11 +292,14 @@ module.exports = {
                 response[1].save().catch((err)=>{console.error(err)});
                 return User.findOne({_id: response[1].owner});
             })
-            .then((owner)=>{
-                let items = {
+            .then(async (owner)=>{
+                let subscription = await stripe.subscriptions.retrieve(owner.stripe.subscriptionId);
+                let item = subscription.items.data.find(i => i.price.id === process.env.OFFICE_MEMBER_PRICE);
+                let items = [{
+                    id: item.id,
                     price: process.env.OFFICE_MEMBER_PRICE,
                     quantity: activeUsers
-                };
+                }];
                 
                 stripe.subscriptions.update(owner.stripe.subscriptionId, {items: items})
                     .catch((err)=>{console.error(err)});
