@@ -126,7 +126,11 @@
                 })
                     .then(r=>r.json())
                     .then((response)=>{
-                        window.location.href = response.url;
+                        if(response.error){
+                            window.location.href = "/user/login";
+                        }else{
+                            window.location.href = response.url;
+                        }
                     })
                     .catch((err)=>{});
             }

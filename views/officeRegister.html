@@ -355,9 +355,6 @@
             let officeId = data[data.indexOf("new")+1];
             let invitedId = data[data.indexOf("new")+2];
 
-            console.log(officeId);
-            console.log(invitedId);
-
             const notify = (color, message)=>{
                 let notifier = document.getElementById("notifier");
                 notifier.textContent = message;

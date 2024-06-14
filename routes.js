@@ -53,6 +53,7 @@ module.exports = (app)=>{
     app.post("/office/:officeId/member", auth, office.addMember);
     app.get("/office/invite/new/:officeId/:invitedId", (req, res)=>{res.sendFile(`${views}/officeRegister.html`)});
     app.get("/office/invite/:officeId/:invitedId", office.acceptInvitation);
+    app.delete("/office/:office/member/:member", auth, office.removeMember);
 
     //STRIPE
     app.post("/stripe/checkout-session", auth, stripe.checkoutSession);

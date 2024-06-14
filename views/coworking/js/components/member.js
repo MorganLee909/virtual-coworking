@@ -64,6 +64,39 @@ class Member extends HTMLElement{
         this.shadow.querySelector(".name").textContent = this.data.firstName ? this.data.firstName : "";
         this.shadow.querySelector(".email").textContent = this.data.email;
         this.shadow.querySelector(".status").textContent = this.data.status;
+        this.shadow.querySelector(".remove").addEventListener("click", this.removeMember.bind(this));
+    }
+
+    removeMember(){
+        let remove = document.createElement("modal-comp");
+        remove.message = "Are you sure that you want to remove this user from your office?";
+        this.shadow.appendChild(remove);
+    }
+
+    confirmRemove(){
+        fetch(`/office/${this.office}/member/${this.data._id}`, {
+            method: "delete",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("coworkToken")}`
+            }
+        })
+            .then(r=>r.json())
+            .then((response)=>{
+                if(response.error){
+                    createBanner("red", response.message);
+                }else{
+                    createBanner("green", `${this.data.firstName} has been removed from your office`);
+                    this.destroy();
+                }
+            })
+            .catch((err)=>{
+                createBanner("red", err.message);
+            });
+    }
+
+    destroy(){
+        this.parentElement.removeChild(this);
     }
 }
 

@@ -74,7 +74,6 @@ class OfficeMembers extends HTMLElement{
     }
 
     getMembers(){
-        console.log("getting members");
         fetch(`office/${this._id}/members`, {
             method: "get",
             headers: {
@@ -96,7 +95,6 @@ class OfficeMembers extends HTMLElement{
     }
 
     displayMembers(members){
-        console.log(members);
         let membersDiv = this.shadow.querySelector("#members");
 
         while(membersDiv.children.length > 0){
@@ -106,6 +104,7 @@ class OfficeMembers extends HTMLElement{
         for(let i = 0; i < members.length; i++){
             let member = document.createElement("member-comp");
             member.data = members[i];
+            member.office = this._id;
             membersDiv.appendChild(member);
         }
     }

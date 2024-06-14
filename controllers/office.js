@@ -4,6 +4,7 @@ const User = require("../models/user.js");
 const sendEmail = require("./sendEmail.js");
 const inviteExistingMember = require("../email/inviteExistingMember.js");
 const inviteNewMember = require("../email/inviteNewMember.js");
+const memberRemoved = require("../email/memberRemoved.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const uuid = require("crypto").randomUUID;
@@ -316,5 +317,72 @@ module.exports = {
                         return res.redirect("/");
                 }
             });
+    },
+
+    /*
+    DELETE: remove a member from an office
+    req.params = {
+        office: String ID
+        member: String ID
+    }
+     */
+    removeMember: function(req, res){
+        let officeName = "";
+
+        let officeProm = Office.findOne({_id: req.params.office});
+        let subProm = stripe.subscriptions.retrieve(res.locals.user.stripe.subscriptionId);
+
+        Promise.all([officeProm, subProm])
+            .then((response)=>{
+                if(response[0].owner.toString() !== res.locals.user._id.toString()) throw "auth";
+
+                officeName = response[0].name;
+
+                for(let i = 0; i < response[0].users.length; i++){
+                    if(response[0].users[i].userId.toString() === req.params.member){
+                        response[0].users.splice(i, 1);
+                    }
+                }
+
+                let item = response[1].items.data.find(i => i.price.id === process.env.OFFICE_MEMBER_PRICE);
+                let items =[{
+                    id: item.id,
+                    price: process.env.OFFICE_MEMBER_PRICE,
+                    quantity: response[0].users.length
+                }];
+
+                stripe.subscriptions.update(res.locals.user.stripe.subscriptionId, {items: items})
+                    .catch((err)=>{console.error(err)});
+
+                let userProm = User.findOne({_id: req.params.member});
+                let officeProm = response[0].save();
+                return Promise.all([userProm, officeProm]);
+            })
+            .then((response)=>{
+                sendEmail(
+                    response[0].email,
+                    `You have been removed from ${officeName} office`,
+                    memberRemoved(response[0].firstName, officeName)
+                );
+
+                res.json({
+                    error: false
+                });
+            })
+            .catch((err)=>{
+                switch(err){
+                    case "auth":
+                        return res.json({
+                            error: true,
+                            message: "Authorization"
+                        });
+                    default:
+                        console.error(err);
+                        res.json({
+                            error: true,
+                            message: "Server error"
+                        });
+                }
+            })
     }
 }
