@@ -344,6 +344,7 @@
             })
                 .then(r=>r.json())
                 .then((response)=>{
+                    return;
                     if(response.error){
                         notify("red", response.message);
                     }else{
