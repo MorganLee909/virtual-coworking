@@ -46,7 +46,6 @@ module.exports = {
 
     finished: function(req, res){
         let session = {};
-        let custommer = {};
 
         let provisionBasic = (user, customer)=>{
             let expiration = new Date();
