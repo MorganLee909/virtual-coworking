@@ -3,6 +3,7 @@ const html = ``;
 const css = `
 :host{
     display: flex;
+    height: 100%;
 }
 
 location-comp{
