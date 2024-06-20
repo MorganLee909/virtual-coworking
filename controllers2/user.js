@@ -142,6 +142,17 @@ const validEmailCode = (paramsCode, userCode)=>{
     return paramsCode === code[1];
 }
 
+/**
+ * Check if password matches user password
+ *
+ * @param {string} enteredPass - Password entered by user
+ * @param {string} dbPass - User password from the database
+ * @return {boolean} - True if password matches, otherwise false
+ */
+const passwordIsValid = (enteredPass, dbPass)=>{
+    return bcrypt.compareSync(enteredPass, dbPass);
+}
+
 const handleError = (error)=>{
     let response = {
         error: true,
@@ -172,5 +183,6 @@ module.exports = {
     createOfficeUser,
     activateOfficeUser,
     validEmailCode,
+    passwordIsValid,
     handleError
 };

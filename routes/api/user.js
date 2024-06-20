@@ -106,9 +106,9 @@ module.exports = (app)=>{
         //Retrieve user
         //Resend email verification
         try{
-            let data = controller.readToken(req.headers.authorization);
-            let user = await User.findOne({_id: data._id});
-            let html = confirmationEmail(
+            const data = controller.readToken(req.headers.authorization);
+            const user = await User.findOne({_id: data._id});
+            const html = confirmationEmail(
                 user.firstName,
                 `${req.protocol}://${req.get("host")}/email/code/${user.email}/${user.status}`
             );
@@ -116,6 +116,29 @@ module.exports = (app)=>{
             res.json({
                 error: false
             });
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.post("/user/login", async (req, res)=>{
+        try{
+            const email = req.body.email.toLowerCase();
+            const user = await User.findOne({email: email});
+            const isValid = controller.passwordIsValid(req.body.password, user.password);
+            if(isValid){
+                const token = jwt.sign({
+                    _id: user._id,
+                    email: user.email,
+                    session: user.session
+                }, process.env.JWT_SECRET);
+                res.json(token);
+            }else{
+                return res.json({
+                    error: true,
+                    message: "Email and password do not match"
+                });
+            }
         }catch(e){
             res.json(controller.handleError(e));
         }
