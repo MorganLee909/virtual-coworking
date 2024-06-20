@@ -100,4 +100,24 @@ module.exports = (app)=>{
             res.json(controller.handleError(e));
         }
     });
+
+    app.get("/email/resend", async ()=>{
+        //Read token
+        //Retrieve user
+        //Resend email verification
+        try{
+            let data = controller.readToken(req.headers.authorization);
+            let user = await User.findOne({_id: data._id});
+            let html = confirmationEmail(
+                user.firstName,
+                `${req.protocol}://${req.get("host")}/email/code/${user.email}/${user.status}`
+            );
+            sendEmail(user.email, "CoSphere Email Verification", html);
+            res.json({
+                error: false
+            });
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
 }

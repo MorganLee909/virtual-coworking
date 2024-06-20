@@ -12,6 +12,17 @@ const hashPass = (password)=>{
 
 //PUBLIC
 /**
+ * Reads the token from the header
+ *
+ * @param {string} headerToken - Authorization header including token
+ * @return {object} - Object containing data from JWT
+ */
+const readToken = (headerToken)=>{
+    let token = headerToken.split(" ")[1];
+    return jwt.verify(token, process.env.JWT_SECRET);
+}
+
+/**
  * Decides if given string is a valid email address
  *
  * @param {string} email - Email address to verify
@@ -152,6 +163,7 @@ const handleError = (error)=>{
 }
 
 module.exports = {
+    readToken,
     isValidEmail,
     passwordsMatch,
     passwordValidLength,
