@@ -63,6 +63,7 @@ app.use(fileUpload({
     limits: {fileSize: 15 * 1024 * 1024}
 }));
 
+require("./routes/api/user.js")(app);
 require("./routes.js")(app);
 require("./socketRouting.js")(wss);
 
