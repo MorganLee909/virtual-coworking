@@ -119,6 +119,18 @@ const activateOfficeUser = (userEmail, userId, offices)=>{
     return offices;
 }
 
+/**
+ * Compare entered code to user code for email validation
+ *
+ * @param {string} paramsCode - Email code from the URL parameters
+ * @param {string} userCode - Email code saved to the user object
+ * @return {boolean} - True if valid, false if invalid
+ */
+const validEmailCode = (paramsCode, userCode)=>{
+    const code = userCode.split("-");
+    return paramsCode === code[1];
+}
+
 const handleError = (error)=>{
     let response = {
         error: true,
@@ -130,6 +142,7 @@ const handleError = (error)=>{
         case "passwordMatch": response.message = "Passwords do not match"; break;
         case "shortPassword": response.message = "Password must contain at least 10 characers"; break;
         case "userExists": response.message = "User with this email already exists"; break;
+        case "invalidEmailCode": response.message = "Invalid verification"; break;
         default:
             console.error(error);
             response.message = "Server error";
@@ -146,5 +159,6 @@ module.exports = {
     createUser,
     createOfficeUser,
     activateOfficeUser,
+    validEmailCode,
     handleError
 };

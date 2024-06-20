@@ -1,7 +1,8 @@
 const User = require("../../models/user.js");
 const Office = require("../../models/office.js");
 const Location = require("../../models/location.js");
-const user = require("../../controllers2/user.js");
+const controller = require("../../controllers2/user.js");
+const {auth} = require("../../auth.js");
 
 const sendEmail = require("../../controllers/sendEmail.js");
 const confirmationEmail = require("../../email/confirmationEmail.js");
@@ -36,23 +37,22 @@ module.exports = (app)=>{
                 locationProm
             ]);
 
-            //Data Validation
-            if(!user.isValidEmail(email)) throw "badEmail";
-            if(!user.passwordsMatch(req.body.password, req.body.confirmPassword)) throw "passwordMatch";
-            if(!user.passwordValidLength(req.body.password)) throw "shortPassword";
+            if(!controller.isValidEmail(email)) throw "badEmail";
+            if(!controller.passwordsMatch(req.body.password, req.body.confirmPassword)) throw "passwordMatch";
+            if(!controller.passwordValidLength(req.body.password)) throw "shortPassword";
             if(matchingUser) throw "userExists";
 
             let newUser = {};
             if(userOffices.length > 0){
-                newUser = user.createOfficeUser({
+                newUser = controller.createOfficeUser({
                     ...req.body,
                     email: email
                 }, location, stripeCustomer);
-                let offices = user.activateOfficeUser(email, newUser._id, userOffices);
+                let offices = controller.activateOfficeUser(email, newUser._id, userOffices);
                 Promise.all(offices.map(o => o.save()));
             }else{
-                let confirmationCode = user.confirmationCode();
-                newUser = user.createUser({
+                let confirmationCode = controller.confirmationCode();
+                newUser = controller.createUser({
                     ...req.body,
                     email: email
                 }, location, stripeCustomer, confirmationCode);
@@ -76,14 +76,28 @@ module.exports = (app)=>{
                 token: token
             });
         }catch(e){
-            res.json(user.handleError(e));
+            res.json(controller.handleError(e));
         }
     });
 
-    app.get("/user", auth, ()=>{
+    app.get("/user", auth, (req, res)=>{
         res.locals.user.password = undefined;
         res.locals.user.stripe = undefined;
 
         res.json(res.locals.user);
+    });
+
+    app.get("/email/code/:email/:code", async (req, res)=>{
+        try{
+            let user = await User.findOne({email: req.params.email});
+            if(user.status === "payment") return res.redirect("/dashboard");
+            if(user.status === "active") throw "confirmedActive";
+            if(!controller.validEmailCode(req.params.code, user.status)) throw "invalidEmailCode";
+            user.status = "payment";
+            user.save();
+            res.redirect("/stripe/checkout");
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
     });
 }

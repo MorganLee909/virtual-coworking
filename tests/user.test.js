@@ -152,3 +152,15 @@ describe("createUser", ()=>{
         assert.equal(statusData[1].length === 6, true);
     });
 });
+
+describe("validEmailCode", ()=>{
+    it("returns true if code matches", ()=>{
+        const code = user.validEmailCode("123456", "email-123456");
+        assert.equal(code, true);
+    });
+
+    it("returns false if code does not match", ()=>{
+        const code = user.validEmailCode("123456", "email-654321");
+        assert.equal(code, false);
+    });
+});
