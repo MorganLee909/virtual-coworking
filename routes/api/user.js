@@ -6,9 +6,11 @@ const {auth} = require("../../auth.js");
 
 const sendEmail = require("../../controllers/sendEmail.js");
 const confirmationEmail = require("../../email/confirmationEmail.js");
+const passwordResetEmail = require("../../email/passwordResetEmail.js");
 
 const jwt = require("jsonwebtoken");
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
+const uuid = require("crypto").randomUUID;
 
 module.exports = (app)=>{
     /*
@@ -140,6 +142,22 @@ module.exports = (app)=>{
                 });
             }
         }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.post("/user/password/email", async(req, res)=>{
+        try{
+            const email = req.body.email.toLowerCase();
+            const user = await User.findOne({email: email});
+            if(!user) throw "noUser";
+            user.resetCode = uuid();
+            let html = passwordResetEmail(email, user.resetCode);
+            sendEmail(email, "CoSphere Password Reset", html);
+            await user.save();
+            res.json("If the account exists, then an email has been sent to reset your password");
+        }catch(e){
+            if(e === "noUser") return;
             res.json(controller.handleError(e));
         }
     });
