@@ -79,4 +79,11 @@ module.exports = (app)=>{
             res.json(user.handleError(e));
         }
     });
+
+    app.get("/user", auth, ()=>{
+        res.locals.user.password = undefined;
+        res.locals.user.stripe = undefined;
+
+        res.json(res.locals.user);
+    });
 }
