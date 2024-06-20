@@ -29,10 +29,10 @@ module.exports = (app)=>{
     //app.get("/email/code/:email/:code", user.confirmEmail);
     //app.get("/email/resend", user.resendEmail);
     //app.post("/user/login", user.login);
-    app.get("/user/password/email", (req, res)=>{res.sendFile(`${views}/passwordEmail.html`)});
+    //app.get("/user/password/email", (req, res)=>{res.sendFile(`${views}/passwordEmail.html`)});
     //app.post("/user/password/email", user.passwordEmail);
-    app.get("/user/password/reset*", (req, res)=>{res.sendFile(`${views}/passwordReset.html`)});
-    app.post("/user/password/reset", user.passwordReset);
+    //app.get("/user/password/reset*", (req, res)=>{res.sendFile(`${views}/passwordReset.html`)});
+    //app.post("/user/password/reset", user.passwordReset);
     app.post("/user/profile", auth, user.updateProfile);
     app.post("/user/profile/image", auth, user.updateProfilePhoto);
 
