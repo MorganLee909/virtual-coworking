@@ -17,8 +17,20 @@ module.exports = (app)=>{
         try{
             const office = await Office.findOne({_id: req.params.officeId});
             const isAuthorized = controller.userIsAuthorized(office.users, res.locals.user._id.toString());
-            if(!isAuthorized) throw "unathorizedUser";
+            if(!isAuthorized) throw "unauthorizedUser";
 
+            res.json(office);
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.post("/office/:officeId/table", auth, async (req, res)=>{
+        try{
+            let office = await Office.findOne({_id: req.params.officeId});
+            if(!controller.isOfficeOwner(office, res.locals.user)) throw "notOwner";
+            office = controller.createNewTable(office);
+            await office.save();
             res.json(office);
         }catch(e){
             res.json(controller.handleError(e));

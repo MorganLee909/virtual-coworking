@@ -18,6 +18,37 @@ const userIsAuthorized = (members, userId)=>{
     return false;
 }
 
+/**
+ * Determines if user is the owner of the office
+ *
+ * @params {Office} office - Office to check for ownership
+ * @params {User} user - User to check for ownership
+ * @return {boolean} - True if user is owner, false otherwise;
+ */
+const isOfficeOwner = (office, user)=>{
+    return office.owner.toString() === user._id.toString();
+}
+
+/**
+ * Creates a new table for an office
+ *
+ * @params {Office} office - Office in which to add a table
+ * @return {Office} - Updated office
+ */
+const createNewTable = (office)=>{
+    const newTable = {
+        type: "general",
+        occupants: []
+    };
+
+    for(let i = 0; i < 6; i++){
+        newTable.occupants.push({seatNumber: 1});
+    }
+
+    office.tables.push(newTable);
+    return office;
+}
+
 const handleError = (error)=>{
     const response = {
         error: true,
@@ -27,6 +58,9 @@ const handleError = (error)=>{
     switch(error){
         case "unauthorizedUser":
             response.message = "This office is private";
+            break;
+        case "notOwner":
+            response.message = "You do not own this office";
             break;
         default:
             console.error(error);
@@ -38,5 +72,7 @@ const handleError = (error)=>{
 
 module.exports = {
     userIsAuthorized,
+    isOfficeOwner,
+    createNewTable,
     handleError
 };
