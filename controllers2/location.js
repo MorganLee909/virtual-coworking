@@ -1,5 +1,3 @@
-const Location = require("../models/location.js");
-
 const jwt = require("jsonwebtoken");
 
 //PRIVATE
@@ -142,9 +140,7 @@ const createToken = (user, location, table)=>{
     }, privateKey, options);
 }
 
-const joinTable = async(user, locationIdentifier, tableId)=>{
-    const location = await Location.findOne({identifier: locationIdentifier});
-
+const joinTable = (user, location, tableId)=>{
     for(let i = 0; i < location.tables.length; i++){
         if(location.tables[i]._id.toString() === tableId){
             const seat = location.tables[i].occupants.find(o => !o.userId);
@@ -156,7 +152,6 @@ const joinTable = async(user, locationIdentifier, tableId)=>{
     }
 
     manageTables(location);
-    await location.save();
 
     const data = {
         location: location,
@@ -168,9 +163,20 @@ const joinTable = async(user, locationIdentifier, tableId)=>{
             client.send(JSON.stringify(data));
         }
     });
+
+    return location;
+}
+
+const handleError = (error)=>{
+    console.error(error);
+    return res.json({
+        error: true,
+        message: "Server error"
+    });
 }
 
 module.exports = {
     createToken,
-    joinTable
+    joinTable,
+    handleError
 };

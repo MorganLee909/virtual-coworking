@@ -95,7 +95,6 @@ module.exports = {
     response = Location
      */
     getOne: function(req, res){
-        console.log("getOne");
         Location.findOne({_id: req.params.locationId})
             .then((location)=>{
                 res.json(location);
@@ -113,7 +112,6 @@ module.exports = {
      GET, retrieve list of all locations
      */
     getAll: function(req, res){
-        console.log("getAll");
         Location.find({}, {_id: 1, name: 1})
             .then((locations)=>{
                 res.json(locations);
