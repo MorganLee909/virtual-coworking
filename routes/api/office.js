@@ -12,4 +12,16 @@ module.exports = (app)=>{
             res.json(controller.handleError(e));
         }
     });
+
+    app.get("/office/:officeId", auth, async (req, res)=>{
+        try{
+            const office = await Office.findOne({_id: req.params.officeId});
+            const isAuthorized = controller.userIsAuthorized(office.users, res.locals.user._id.toString());
+            if(!isAuthorized) throw "unathorizedUser";
+
+            res.json(office);
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
 }
