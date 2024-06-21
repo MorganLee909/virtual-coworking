@@ -11,7 +11,7 @@ module.exports = (app)=>{
     //LOCATION
     //app.post("/location/table/join", auth, location.joinTable);
     //app.get("/location/:locationId", auth, location.getOne);
-    app.get("/location", auth, location.getAll);
+    //app.get("/location", auth, location.getAll);
 
     //OFFICE
     app.get("/office/location/:locationId", auth, office.getOffices);

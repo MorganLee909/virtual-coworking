@@ -31,4 +31,13 @@ module.exports = (app)=>{
             res.json(controller.handleError(e));
         }
     });
+
+    app.get("/location", auth, async (req, res)=>{
+        try{
+            const locations = await Location.find({}, {_id: 1, name: 1});
+            res.json(locations);
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
 }
