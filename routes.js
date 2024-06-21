@@ -8,9 +8,6 @@ const {auth}= require("./auth.js");
 module.exports = (app)=>{
     const views = `${__dirname}/views`;
 
-    //NEWSLETTER
-    app.post("/newsletter/join", newsletter.join);
-
     //LOCATION
     app.post("/location/table/join", auth, location.joinTable);
     app.get("/location/:locationId", auth, location.getOne);

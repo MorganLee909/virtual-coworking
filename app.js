@@ -64,6 +64,7 @@ app.use(fileUpload({
 }));
 
 require("./routes/api/user.js")(app);
+require("./routes/api/emailing.js")(app);
 require("./routes/static.js")(app);
 
 require("./routes.js")(app);
