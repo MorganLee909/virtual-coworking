@@ -83,7 +83,7 @@ module.exports = (app)=>{
     });
 
     app.get("/user", auth, (req, res)=>{
-        const user = controllers.sanitizeUserData(res.locals.user);
+        const user = controller.sanitizeUserData(res.locals.user);
         res.json(user);
     });
 
@@ -168,6 +168,19 @@ module.exports = (app)=>{
             const sanitaryUser = controller.sanitizeUserData(user);
             res.json(sanitaryUser);
         }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.post("/user/profile/image", auth, async (req, res)=>{
+        try{
+            const oldImage = res.locals.user.avatar;
+            res.locals.user.avatar = await controller.handleImage(req.files.image.data);
+            await controller.removeFile(`profilePhoto/${oldImage.split("/")[3]}`);
+            res.locals.user.save();
+            res.json(res.locals.user.avatar);
+        }catch(e){
+            console.error(e);
             res.json(controller.handleError(e));
         }
     });

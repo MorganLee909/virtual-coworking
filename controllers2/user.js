@@ -3,6 +3,8 @@ const User = require("../models/user.js");
 const uuid = require("crypto").randomUUID;
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const bcrypt = require("bcryptjs");
+const sharp = require("sharp");
+const fs = require("fs");
 
 //PRIVATE
 /**
@@ -211,6 +213,32 @@ const sanitizeUserData = (user)=>{
     return user;
 }
 
+/**
+ * Shrink image size and save file
+ *
+ * @param {File} file - File to manipulate
+ * @return {string} - Location of updated photo file
+ */
+const handleImage = async (file)=>{
+    const id = uuid();
+
+    await sharp(file)
+        .resize({width: 500})
+        .webp()
+        .toFile(`${appRoot}/profilePhoto/${id}.webp`);
+
+    return `/image/profile/${id}.webp`;
+}
+
+/**
+ * Remove a file
+ *
+ * @param {File} file - File to be removed
+ */
+const removeFile = (file)=>{
+    fs.unlink(`${appRoot}/${file}`, (err)=>{});
+}
+
 const handleError = (error)=>{
     let response = {
         error: true,
@@ -245,5 +273,7 @@ module.exports = {
     updateUser,
     updatePassword,
     sanitizeUserData,
+    handleImage,
+    removeFile,
     handleError
 };
