@@ -164,3 +164,63 @@ describe("validEmailCode", ()=>{
         assert.equal(code, false);
     });
 });
+
+describe("updateUser", ()=>{
+    const newUser = {
+        email: "john@mail.com",
+        firstName: "John",
+        lastName: "Smith"
+    };
+
+    it("updates firstName", async ()=>{
+        const updatedUser = await user.updateUser({firstName: "Jake"}, user);
+        assert.equal(updatedUser.firstName, "Jake");
+    });
+
+    it("updates lastName", async ()=>{
+        const updatedUser = await user.updateUser({lastName: "Johnson"}, user);
+        assert.equal(updatedUser.lastName, "Johnson");
+    });
+});
+
+describe("sanitizeUserData", ()=>{
+    const newUser = {
+        email: "john@mail.com",
+        firstName: "John",
+        lastName: "Smith",
+        password: "password123",
+        createdDate: new Date(),
+        stripe: {
+            customerId: "12345",
+            somethingElse: "Bob"
+        },
+        resetCode: "123"
+    };
+    
+    it("removes password", ()=>{
+        const data = user.sanitizeUserData({...newUser});
+        assert.equal(data.password, undefined);
+    });
+
+    it("removes createdDate", ()=>{
+        const data = user.sanitizeUserData({...newUser});
+        assert.equal(data.createdDate, undefined);
+    });
+
+    it("removes stripe data", ()=>{
+        const data = user.sanitizeUserData({...newUser});
+        assert.equal(data.stripe, undefined);
+    });
+
+    it("removes reset code", ()=>{
+        const data = user.sanitizeUserData({...newUser});
+        assert.equal(data.resetCode, undefined);
+    });
+
+    it("retains necessary data", ()=>{
+        const data = user.sanitizeUserData({...newUser});
+        assert.equal(data.email, "john@mail.com");
+        assert.equal(data.firstName, "John");
+        assert.equal(data.lastName, "Smith");
+    });
+});

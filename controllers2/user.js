@@ -5,6 +5,12 @@ const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const bcrypt = require("bcryptjs");
 
 //PRIVATE
+/**
+ * Hash a password
+ *
+ * @param {string} password - Raw password
+ * @return {string} - Hash of the password
+ */
 const hashPass = (password)=>{
     let salt = bcrypt.genSaltSync(10);
     return bcrypt.hashSync(password, salt);
@@ -153,6 +159,58 @@ const passwordIsValid = (enteredPass, dbPass)=>{
     return bcrypt.compareSync(enteredPass, dbPass);
 }
 
+/*
+ * Update basic user data
+ *
+ * @param {object} data - New user data. Optionally: location, first/last name, email
+ * @param {User} user - User to be updated
+ * @return {User} - User with updated data
+ */
+const updateUser = async (data, user)=>{
+    if(data.location) user.defaultLocation = data.location;
+    if(data.firstName) user.firstName = data.firstName;
+    if(data.lastName) user.lastName = data.lastName;
+
+    if(data.email){
+        const email = data.email.toLowerCase();
+        if(!isValidEmail(email)) throw "badEmail";
+        const existingUser = await User.findOne({email: email});
+        if(existingUser) throw "userExists";
+        user.email = email;
+    }
+
+    return user;
+}
+
+/**
+ * Verify and update user password
+ *
+ * @param {string} password - Raw password
+ * @param {User} user - User to be updated
+ * @return {User} - Updated user
+ */
+const updatePassword = (password, user)=>{
+    if(!passwordValidLength(password)) throw "shortPassword";
+    user.password = hashPass(password);
+    user.session = uuid();
+    return user;
+}
+
+/**
+ * Remove data from user that is not pertinent to the front-end
+ *
+ * @param {User} user - User to sanitize
+ * @return {User} - User with unecessary data removed
+ */
+const sanitizeUserData = (user)=>{
+    user.password = undefined;
+    user.createdDate = undefined;
+    user.stripe = undefined;
+    user.resetCode = undefined;
+
+    return user;
+}
+
 const handleError = (error)=>{
     let response = {
         error: true,
@@ -184,5 +242,8 @@ module.exports = {
     activateOfficeUser,
     validEmailCode,
     passwordIsValid,
+    updateUser,
+    updatePassword,
+    sanitizeUserData,
     handleError
 };

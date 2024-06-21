@@ -83,10 +83,8 @@ module.exports = (app)=>{
     });
 
     app.get("/user", auth, (req, res)=>{
-        res.locals.user.password = undefined;
-        res.locals.user.stripe = undefined;
-
-        res.json(res.locals.user);
+        const user = controllers.sanitizeUserData(res.locals.user);
+        res.json(user);
     });
 
     app.get("/email/code/:email/:code", async (req, res)=>{
@@ -158,6 +156,18 @@ module.exports = (app)=>{
             res.json("If the account exists, then an email has been sent to reset your password");
         }catch(e){
             if(e === "noUser") return;
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.post("/user/profile", auth, async (req, res)=>{
+        try{
+            const user = await controller.updateuser(req.body, res.locals.user);
+            user = req.body.password ? controller.updatePassword(req.body.password, res.locals.user) : user;
+            user.save();
+            const sanitaryUser = controller.sanitizeUserData(user);
+            res.json(sanitaryUser);
+        }catch(e){
             res.json(controller.handleError(e));
         }
     });
