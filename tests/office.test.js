@@ -94,4 +94,32 @@ describe("office.js", ()=>{
             assert.equal(members.unverified.length, 2);
         });
     });
+
+    describe("createOffice", ()=>{
+        const name = "Place";
+        const userId = "1234";
+        const location = "Some location";
+
+        it("returns an object", ()=>{
+            const office = controller.createOffice(name, userId, location);
+            assert.equal(typeof(office), "object");
+        });
+
+        it("has one table with 6 seats", ()=>{
+            const office = controller.createOffice(name, userId, location);
+            assert.equal(office.tables.length, 1);
+            assert.equal(office.tables[0].occupants.length, 6);
+        });
+
+        it("contains one user", ()=>{
+            const office = controller.createOffice(name, userId, location);
+            assert.equal(office.users.length, 1);
+        });
+
+        it("has a name", ()=>{
+            const office = controller.createOffice(name, userId, location);
+            assert.ok(office.name);
+            assert.ok(office.identifier);
+        });
+    })
 });

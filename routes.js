@@ -10,7 +10,7 @@ module.exports = (app)=>{
     //app.get("/office/:officeId", auth, office.getOffice);
     //app.post("/office/:officeId/table", auth, office.createTable);
     //app.get("/office/:officeId/members", auth, office.getMembers);
-    app.post("/office", auth, office.create);
+    //app.post("/office", auth, office.create);
     app.post("/office/:officeId/member", auth, office.addMember);
     app.get("/office/invite/new/:officeId/:invitedId", (req, res)=>{res.sendFile(`${views}/officeRegister.html`)});
     app.get("/office/invite/:officeId/:invitedId", office.acceptInvitation);

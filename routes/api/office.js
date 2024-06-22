@@ -55,4 +55,22 @@ module.exports = (app)=>{
             res.json(controller.handleError(e));
         }
     });
+
+
+    app.post("/office", auth, async (req, res)=>{
+        try{
+            const office = controller.createOffice(
+                req.body.name,
+                res.locals.user._id,
+                req.body.location
+            );
+            await office.save();
+            res.json({
+                error: false,
+                url: "/dashboard"
+            });
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
 }

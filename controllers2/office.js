@@ -1,3 +1,5 @@
+const Office = require("../models/office.js");
+
 /**
  * Determines whether the user is a member of the office
  *
@@ -72,6 +74,37 @@ const splitMembersByVerification = (office)=>{
     return members;
 }
 
+/**
+ * Create a new office
+ * 
+ * @param {string} name - Name of the office
+ * @param {ObjectId} userId - ID for owner of the office
+ * @param {string} location - String ID for location of the office
+ * @return {Office} - Newly created office object
+ */
+const createOffice = (name, userId, location)=>{
+    const office = new Office({
+        name: name,
+        identifier: name.replaceAll(" ", "-"),
+        tables: [{
+            type: "general",
+            occupants: []
+        }],
+        owner: userId,
+        users: [{
+            status: "active",
+            userId: userId
+        }],
+        location: location
+    });
+
+    for(let i = 0; i < 6; i++){
+        office.tables[0].occupants.push({seatNumber: i});
+    }
+
+    return office;
+}
+
 const handleError = (error)=>{
     const response = {
         error: true,
@@ -98,5 +131,6 @@ module.exports = {
     isOfficeOwner,
     createNewTable,
     splitMembersByVerification,
+    createOffice,
     handleError
 };
