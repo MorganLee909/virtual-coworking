@@ -17,6 +17,7 @@ module.exports = (app)=>{
 
     //OFFICE
     app.get("/office/invite/new/:officeId/:invitedId", (req, res)=>{res.sendFile(`${views}/officeRegister.html`)});
+    app.get("/office/setup", (req, res)=>{res.sendFile(`${views}/officeSetup.html`)});
 
     //HOME PAGES
     app.get("/", (req, res)=>{res.sendFile(`${views}/landing.html`)});
@@ -24,12 +25,11 @@ module.exports = (app)=>{
     app.get("/user/login", (req, res)=>{res.sendFile(`${views}/login.html`)});
     app.get("/email/unconfirmed", (req, res)=>{res.sendFile(`${views}/unconfirmedEmail.html`)});
     app.get("/stripe/checkout", (req, res)=>{res.sendFile(`${views}/stripeCheckout.html`)});
-    app.get("/office/setup", (req, res)=>{res.sendFile(`${views}/officeSetup.html`)});
 
     //IMAGES
     app.get("/image/:image", (req, res)=>{res.sendFile(`${views}/image/${req.params.image}`)});
     app.get("/image/profile/:image", (req, res)=>{res.sendFile(`${appRoot}/profilePhoto/${req.params.image}`)});
 
     //404
-    app.get("*", (req, res)=>{res.sendFile(`${views}/404.html`)});
+    //app.get("*", (req, res)=>{res.sendFile(`${views}/404.html`)});
 }

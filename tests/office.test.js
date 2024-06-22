@@ -139,4 +139,32 @@ describe("office.js", ()=>{
             assert.ok(updatedOffice.users[0].email);
         });
     });
+
+    describe("activateUser", ()=>{
+        const office = {users: [
+            {userId: "1", status: "active"},
+            {userId: "2", status: "awaiting"},
+            {userId: "3", status: "active"}
+        ]};
+
+        it("changes the specific member to active", ()=>{
+            const updatedOffice = controller.activateUser(office, "2");
+            assert.equal(office.users[1].status, "active");
+        });
+    });
+
+    describe("countActiveUsers", ()=>{
+        let office = {users: [
+            {userId: "1", status: "active"},
+            {userId: "2", status: "awaiting"},
+            {userId: "3", status: "activ"},
+            {userId: "4", status: "awaiting"},
+            {userId: "5", status: "active"}
+        ]};
+
+        it("returns accurate count of active users", ()=>{
+            const count = controller.countActiveUsers(office);
+            assert.equal(count, 2);
+        });
+    });
 });

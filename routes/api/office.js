@@ -7,6 +7,8 @@ const inviteExistingMember = require("../../email/inviteExistingMember.js");
 const inviteNewMember = require("../../email/inviteNewMember.js");
 const {auth} = require("../../auth.js");
 
+const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
+
 module.exports = (app)=>{
     app.get("/office/location/:locationId", auth, async (req, res)=>{
         try{
@@ -103,6 +105,36 @@ module.exports = (app)=>{
                 error: false,
                 message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
             });
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.get("/office/invite/:officeId/:invitedId", async (req, res)=>{
+        try{
+            const [user, office] = await Promise.all([
+                User.findOne({_id: req.params.invitedId}),
+                Office.findOne({_id: req.params.officeId})
+            ]);
+            const owner = await User.findOne({_id: office.owner});
+            const officeSub = await stripe.subscriptions.retrieve(owner.stripe.subscriptionId);
+
+            if(!user || !office) throw "badInvitation";
+            const updatedOffice = controller.activateUser(office, user._id.toString());
+
+            const [userSub, ownerSub] = await Promise.all([
+                stripe.subscriptions.cancel(user.stripe.subscriptionId),
+                stripe.subscriptions.retrieve(owner.stripe.subscriptionId)
+            ]);
+            const activeUsers = controller.countActiveUsers(updatedOffice);
+            const items = controller.getSubscriptionItems(ownerSub, activeUsers);
+            
+            await Promise.all([
+                stripe.subscriptions.update(owner.stripe.subscriptionId, items),
+                office.save()
+            ]);
+
+            res.redirect("/dashboard");
         }catch(e){
             res.json(controller.handleError(e));
         }

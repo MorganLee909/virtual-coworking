@@ -63,11 +63,11 @@ app.use(fileUpload({
     limits: {fileSize: 15 * 1024 * 1024}
 }));
 
+require("./routes/static.js")(app);
 require("./routes/api/user.js")(app);
 require("./routes/api/emailing.js")(app);
 require("./routes/api/location.js")(app);
 require("./routes/api/office.js")(app);
-require("./routes/static.js")(app);
 
 require("./routes.js")(app);
 require("./socketRouting.js")(wss);

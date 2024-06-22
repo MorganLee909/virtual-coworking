@@ -2,7 +2,6 @@ const User = require("../models/user.js");
 const Office = require("../models/office.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
-const jwt = require("jsonwebtoken");
 
 module.exports = {
     /*

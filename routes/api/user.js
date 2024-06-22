@@ -13,16 +13,6 @@ const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
 const uuid = require("crypto").randomUUID;
 
 module.exports = (app)=>{
-    /*
-    POST: create new user
-    req.body = {
-        email: String
-        password: String
-        confirmPassword: String
-        firstName: String
-        lastName: String
-    }
-    */
     app.post("/user", async (req, res)=>{
         try{
             const email = req.body.email.toLowerCase();
@@ -72,6 +62,13 @@ module.exports = (app)=>{
                 email: newUser.email,
                 session: newUser.session
             }, process.env.JWT_SECRET);
+            if(userOffices.length > 0){
+                res.json({
+                    error: false,
+                    message: "officeUser",
+                });
+                return;
+            }
             res.json({
                 error: false,
                 message: "Please check your inbox to verify your email",
@@ -101,10 +98,7 @@ module.exports = (app)=>{
         }
     });
 
-    app.get("/email/resend", async ()=>{
-        //Read token
-        //Retrieve user
-        //Resend email verification
+    app.get("/email/resend", async (req, res)=>{
         try{
             const data = controller.readToken(req.headers.authorization);
             const user = await User.findOne({_id: data._id});
