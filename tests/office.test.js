@@ -121,5 +121,22 @@ describe("office.js", ()=>{
             assert.ok(office.name);
             assert.ok(office.identifier);
         });
-    })
+    });
+
+    describe("createMember", ()=>{
+        it("creates user with userId if user not null", ()=>{
+            const office = {users: []};
+            const updatedOffice = controller.createMember({...office}, {_id: "12345"}, "john@mail.com");
+            assert.equal(updatedOffice.users[0].status, "awaiting");
+            assert.ok(updatedOffice.users[0].userId);
+        });
+
+
+        it("creates user with email if user is null", ()=>{
+            const office = {users: []};
+            const updatedOffice = controller.createMember({...office}, null, "john@mail.com");
+            assert.equal(updatedOffice.users[0].status, "awaiting");
+            assert.ok(updatedOffice.users[0].email);
+        });
+    });
 });

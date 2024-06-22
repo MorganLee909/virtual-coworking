@@ -56,7 +56,6 @@ module.exports = (app)=>{
         }
     });
 
-
     app.post("/office", auth, async (req, res)=>{
         try{
             const office = controller.createOffice(
@@ -72,5 +71,12 @@ module.exports = (app)=>{
         }catch(e){
             res.json(controller.handleError(e));
         }
+    });
+
+    app.post("/office/:officeId/member", auth, async (req, res)=>{
+        const userProm = User.findOne({email: req.body.email.toLowerCase()});
+        const officeProm = Office.findOne({owner: res.locals.user._id});
+        const data = await Promise.all([userProm, officeProm]);
+        const office = controller.createMember(data[1], data[0], req.body.email);
     });
 }

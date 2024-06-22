@@ -105,6 +105,30 @@ const createOffice = (name, userId, location)=>{
     return office;
 }
 
+/**
+ * Create an office member from an already signed-up user
+ *
+ * @param {Office} office - Office to add member to
+ * @param {User} user - User to add to office
+ * @param {string} email - Email address of new user
+ * @return {Office} - Updated office
+ */
+const createMember = (office, user, email)=>{
+    if(user){
+        office.users.push({
+            status: "awaiting",
+            userId: user._id
+        });
+    }else{
+        office.users.push({
+            status: "awaiting",
+            email: email.toLowerCase()
+        });
+    }
+
+    return office;
+}
+
 const handleError = (error)=>{
     const response = {
         error: true,
@@ -132,5 +156,6 @@ module.exports = {
     createNewTable,
     splitMembersByVerification,
     createOffice,
+    createMember,
     handleError
 };
