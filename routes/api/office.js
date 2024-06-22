@@ -1,4 +1,5 @@
 const Office = require("../../models/office.js");
+const User = require("../../models/user.js");
 
 const controller = require("../../controllers2/office.js");
 const {auth} = require("../../auth.js");
@@ -32,6 +33,24 @@ module.exports = (app)=>{
             office = controller.createNewTable(office);
             await office.save();
             res.json(office);
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.get("/office/:officeId/members", auth, async (req, res)=>{
+        try{
+            const office = await Office.findOne({_id: req.params.officeId});
+            if(!controller.isOfficeOwner(office, res.locals.user)) throw "notOwner";
+            const members = controller.splitMembersByVerification(office);
+            members.verified = await User.find({_id: members.verified}, {
+                email: 1,
+                firstName: 1,
+                lastName: 1,
+                avatar: 1,
+                status: 1
+            });
+            res.json(members.verified.concat(members.unverified));
         }catch(e){
             res.json(controller.handleError(e));
         }

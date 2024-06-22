@@ -49,6 +49,29 @@ const createNewTable = (office)=>{
     return office;
 }
 
+/**
+ * Split members into verified/unverified. Allows fetching verified users
+ *
+ * @param {Office} office - Office containing the members
+ * @return {{verified: [Member], unverified: [Member]}} - Members organized by verification
+ */
+const splitMembersByVerification = (office)=>{
+    const members = {
+        verified: [],
+        unverified: []
+    };
+
+    for(let i = 0; i < office.users.length; i++){
+        if(office.users[i].userId){
+            members.verified.push(office.users[i].userId);
+        }else{
+            members.unverified.push(office.users[i]);
+        }
+    }
+
+    return members;
+}
+
 const handleError = (error)=>{
     const response = {
         error: true,
@@ -74,5 +97,6 @@ module.exports = {
     userIsAuthorized,
     isOfficeOwner,
     createNewTable,
+    splitMembersByVerification,
     handleError
 };

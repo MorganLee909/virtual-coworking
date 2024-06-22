@@ -72,4 +72,26 @@ describe("office.js", ()=>{
             assert.notEqual(updatedOffice.tables[0].occupants[4].seatNumber, "");
         });
     });
+
+    describe("splitMembersByVerification", ()=>{
+        const office = {
+            users: [
+                {userId: 1},
+                {userId: 2},
+                {status: "unverified"},
+                {userId: 3},
+                {status: "unverified"}
+            ]
+        };
+
+        it("returns correct number of verified users", ()=>{
+            const members = controller.splitMembersByVerification(office);
+            assert.equal(members.verified.length, 3);
+        });
+
+        it("returns correct number of unverified users", ()=>{
+            const members = controller.splitMembersByVerification(office);
+            assert.equal(members.unverified.length, 2);
+        });
+    });
 });
