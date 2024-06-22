@@ -2,6 +2,9 @@ const Office = require("../../models/office.js");
 const User = require("../../models/user.js");
 
 const controller = require("../../controllers2/office.js");
+const sendEmail = require("../../controllers/sendEmail.js");
+const inviteExistingMember = require("../../email/inviteExistingMember.js");
+const inviteNewMember = require("../../email/inviteNewMember.js");
 const {auth} = require("../../auth.js");
 
 module.exports = (app)=>{
@@ -74,9 +77,34 @@ module.exports = (app)=>{
     });
 
     app.post("/office/:officeId/member", auth, async (req, res)=>{
-        const userProm = User.findOne({email: req.body.email.toLowerCase()});
-        const officeProm = Office.findOne({owner: res.locals.user._id});
-        const data = await Promise.all([userProm, officeProm]);
-        const office = controller.createMember(data[1], data[0], req.body.email);
+        try{
+            const userProm = User.findOne({email: req.body.email.toLowerCase()});
+            const officeProm = Office.findOne({owner: res.locals.user._id});
+            const data = await Promise.all([userProm, officeProm]);
+            const office = controller.createMember(data[1], data[0], req.body.email);
+            await office.save();
+            
+            let link = "";
+            let html = "";
+            if(data[0]){
+                link = `${req.protocol}://${req.get("host")}/office/invite/${office._id}/${data[0]._id}`;
+                html = inviteExistingMember(link, res.locals.user.firstName, office.name);
+            }else{
+                link = `${req.protocol}://${req.get("host")}/user/signup`;
+                html = inviteNewMember(link, res.locals.user.firstName, office.name);
+            }
+            sendEmail(
+                req.body.email.toLowerCase(),
+                "You have been invited to a CoSphere office!",
+                html
+            );
+            
+            res.json({
+                error: false,
+                message: `An invitation has been sent to ${req.body.email.toLowerCase()}`
+            });
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
     });
 }
