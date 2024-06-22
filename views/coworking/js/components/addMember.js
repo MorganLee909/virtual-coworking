@@ -1,6 +1,6 @@
 const html = `
 <h1>Add member to office</h1>
-<p>*Each member will add $35 to your bill once they accept the invitation</p>
+<p>*Each member will add $7.50 to your bill once they accept the invitation</p>
 
 <label>New User Email
     <input id="newMemberEmail" type="email" placeholder="Email">
