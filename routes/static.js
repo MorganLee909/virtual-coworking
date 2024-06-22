@@ -15,6 +15,9 @@ module.exports = (app)=>{
     app.get("/user/password/email", (req, res)=>{res.sendFile(`${views}/passwordEmail.html`)});
     app.get("/user/password/reset*", (req, res)=>{res.sendFile(`${views}/passwordReset.html`)});
 
+    //OFFICE
+    app.get("/office/invite/new/:officeId/:invitedId", (req, res)=>{res.sendFile(`${views}/officeRegister.html`)});
+
     //HOME PAGES
     app.get("/", (req, res)=>{res.sendFile(`${views}/landing.html`)});
     app.get("/user/signup", (req, res)=>{res.sendFile(`${views}/signup.html`)});
