@@ -165,7 +165,7 @@ const countActiveUsers = (office)=>{
  * Uses a stripe subscription object to create items for update
  *
  * @param {Subscription} sub - Stripe subscription from which to get items
- * @param {number} activeUsers - Acount of the current number of active users
+ * @param {number} activeUsers - Current number of active users
  * @return {object} - Object containing the proper data for updating a subscription
  */
 const getSubscriptionItems = (sub, activeUsers)=>{
@@ -178,6 +178,25 @@ const getSubscriptionItems = (sub, activeUsers)=>{
     }];
 
     return {items};
+}
+
+/**
+ * Remove a member from an office
+ *
+ * @param {Office} office - Office to remove member from
+ * @param {string} member - Member ID
+ * @return {{Office, email}} - Updated office
+ */
+const removeMember = (office, member)=>{
+    let email = "";
+    for(let i = 0; i < office.users.length; i++){
+        if(office.users[i]._id.toString === member){
+            office.users.splice(i, 1);
+            email = office.users[i].email;
+            break;
+        }
+    }
+    return {office, email};
 }
 
 const handleError = (error)=>{
