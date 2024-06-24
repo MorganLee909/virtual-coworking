@@ -5,6 +5,7 @@ const controller = require("../../controllers2/office.js");
 const sendEmail = require("../../controllers/sendEmail.js");
 const inviteExistingMember = require("../../email/inviteExistingMember.js");
 const inviteNewMember = require("../../email/inviteNewMember.js");
+const memberRemoved = require("../../email/memberRemoved.js");
 const {auth} = require("../../auth.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
@@ -135,6 +136,38 @@ module.exports = (app)=>{
             ]);
 
             res.redirect("/dashboard");
+        }catch(e){
+            res.json(controller.handleError(e));
+        }
+    });
+
+    app.delete("/office/:office/member/:member", auth, async (req, res)=>{
+        try{
+            const [office, ownerSub] = Promise.all([
+                Office.findOne({_id: req.params.office}),
+                stripe.subscriptions.retrieve(res.locals.user.stripe.subscriptionId),
+            ]);
+            if(!controller.isOfficeOwner(office, res.locals.user)) throw "notOwner";
+
+            const {updatedOffice, userEmail} = controller.removeMember();
+            const activeUsers = controller.countActiveUsers();
+            const items = controller.getSubscriptionItems(ownerSub, activeUsers);
+            stripe.subscriptions.update(res.locals.user.stripe.subscriptionId, items);
+            const member = await User.findOne({email: userEmail});
+            sendEmail(
+                member.email,
+                `You have been removed from ${updatedOffice.name} office`,
+                memberRemoved(member.firstName, updatedOffice.name)
+            );
+            const otherOffices = await Office.find({users: {$elemMatch: {email: member.email}}});
+            if(otherOffices.length === 0) member.status = "inactive";
+
+            await Promise.all([updatedOffice.save(), member.save()]);
+
+            res.json({error: false});
+            //Update frontend to send memberId instead of userId for req.params.member
+            //Update backend to always add and keep email as part of member object
+            
         }catch(e){
             res.json(controller.handleError(e));
         }
