@@ -27,8 +27,8 @@ const userIsAuthorized = (members, userId)=>{
  * @params {User} user - User to check for ownership
  * @return {boolean} - True if user is owner, false otherwise;
  */
-const isOfficeOwner = (office, user)=>{
-    return office.owner.toString() === user._id.toString();
+const isOfficeOwner = (office, owner)=>{
+    return office.owner.toString() === owner._id.toString();
 }
 
 /**
@@ -114,17 +114,11 @@ const createOffice = (name, userId, location)=>{
  * @return {Office} - Updated office
  */
 const createMember = (office, user, email)=>{
-    if(user){
-        office.users.push({
-            status: "awaiting",
-            userId: user._id
-        });
-    }else{
-        office.users.push({
-            status: "awaiting",
-            email: email.toLowerCase()
-        });
-    }
+    office.users.push({
+        status: "awaiting",
+        userId: user ? user._id : null,
+        email: email.toLowerCase()
+    });
 
     return office;
 }
@@ -138,9 +132,10 @@ const createMember = (office, user, email)=>{
  */
 const activateUser = (office, userId)=>{
     for(let i = 0; i < office.users.length; i++){
-        if(!office.users[i].userId) continue;
         if(office.users[i].userId.toString() === userId){
+            office.users[i].userId = userId;
             office.users[i].status = "active";
+            break;
         }
     }
     return office;
@@ -190,13 +185,14 @@ const getSubscriptionItems = (sub, activeUsers)=>{
 const removeMember = (office, member)=>{
     let email = "";
     for(let i = 0; i < office.users.length; i++){
-        if(office.users[i]._id.toString === member){
-            office.users.splice(i, 1);
+        if(office.users[i]._id.toString() === member){
             email = office.users[i].email;
+            office.users.splice(i, 1);
             break;
         }
     }
-    return {office, email};
+    const stuff = {office, email};
+    return stuff;
 }
 
 const handleError = (error)=>{
@@ -233,5 +229,6 @@ module.exports = {
     activateUser,
     countActiveUsers,
     getSubscriptionItems,
+    removeMember,
     handleError
 };

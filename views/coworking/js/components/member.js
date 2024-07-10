@@ -60,10 +60,10 @@ class Member extends HTMLElement{
     }
 
     connectedCallback(){
-        this.shadow.querySelector("img").src = this.data.avatar ? this.data.avatar : "/image/profileIcon.png";
-        this.shadow.querySelector(".name").textContent = this.data.firstName ? this.data.firstName : "";
-        this.shadow.querySelector(".email").textContent = this.data.email;
-        this.shadow.querySelector(".status").textContent = this.data.status;
+        this.shadow.querySelector("img").src = this.data.member ? this.data.member.avatar : "/image/profileIcon.png";
+        this.shadow.querySelector(".name").textContent = this.data.member ? this.data.member.firstName : "";
+        this.shadow.querySelector(".email").textContent = this.data.email ? this.data.email : this.data.member.email;
+        this.shadow.querySelector(".status").textContent = this.getStatus();
         this.shadow.querySelector(".remove").addEventListener("click", this.removeMember.bind(this));
     }
 
@@ -71,6 +71,10 @@ class Member extends HTMLElement{
         let remove = document.createElement("modal-comp");
         remove.message = "Are you sure that you want to remove this user from your office?";
         this.shadow.appendChild(remove);
+    }
+
+    getStatus(){
+        return this.data.status;
     }
 
     confirmRemove(){

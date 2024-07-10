@@ -9,6 +9,7 @@ const memberRemoved = require("../../email/memberRemoved.js");
 const {auth} = require("../../auth.js");
 
 const stripe = require("stripe")(process.env.COSPHERE_STRIPE_KEY);
+const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports = (app)=>{
     app.get("/office/location/:locationId", auth, async (req, res)=>{
@@ -46,17 +47,24 @@ module.exports = (app)=>{
 
     app.get("/office/:officeId/members", auth, async (req, res)=>{
         try{
-            const office = await Office.findOne({_id: req.params.officeId});
-            if(!controller.isOfficeOwner(office, res.locals.user)) throw "notOwner";
-            const members = controller.splitMembersByVerification(office);
-            members.verified = await User.find({_id: members.verified}, {
-                email: 1,
-                firstName: 1,
-                lastName: 1,
-                avatar: 1,
-                status: 1
-            });
-            res.json(members.verified.concat(members.unverified));
+            let office = await Office.aggregate([
+                {$match: {_id: new ObjectId(req.params.officeId)}},
+                {$lookup: {
+                    from: "users",
+                    localField: "users.userId",
+                    foreignField: "_id",
+                    as: "members",
+                    pipeline: [{$project: {
+                        email: 1,
+                        firstName: 1,
+                        lastName: 1,
+                        avatar: 1,
+                        status: 1
+                    }}]
+                }}
+            ]);
+            if(!controller.isOfficeOwner(office[0], res.locals.user)) throw "notOwner";
+            res.json(office[0]);
         }catch(e){
             res.json(controller.handleError(e));
         }
@@ -143,26 +151,31 @@ module.exports = (app)=>{
 
     app.delete("/office/:office/member/:member", auth, async (req, res)=>{
         try{
-            const [office, ownerSub] = Promise.all([
+            const [office, ownerSub] = await Promise.all([
                 Office.findOne({_id: req.params.office}),
-                stripe.subscriptions.retrieve(res.locals.user.stripe.subscriptionId),
+                stripe.subscriptions.retrieve(res.locals.user.stripe.subscriptionId)
             ]);
             if(!controller.isOfficeOwner(office, res.locals.user)) throw "notOwner";
 
-            const {updatedOffice, userEmail} = controller.removeMember();
-            const activeUsers = controller.countActiveUsers();
+            const data = controller.removeMember(office, req.params.member);
+            const updatedOffice = data.office;
+            const userEmail = data.email;
+            const activeUsers = controller.countActiveUsers(office);
             const items = controller.getSubscriptionItems(ownerSub, activeUsers);
             stripe.subscriptions.update(res.locals.user.stripe.subscriptionId, items);
             const member = await User.findOne({email: userEmail});
-            sendEmail(
-                member.email,
-                `You have been removed from ${updatedOffice.name} office`,
-                memberRemoved(member.firstName, updatedOffice.name)
-            );
-            const otherOffices = await Office.find({users: {$elemMatch: {email: member.email}}});
-            if(otherOffices.length === 0) member.status = "inactive";
-
-            await Promise.all([updatedOffice.save(), member.save()]);
+            let saves = [updatedOffice.save()];
+            if(member){
+                sendEmail(
+                    userEmail,
+                    `You have been removed from ${updatedOffice.name} office`,
+                    memberRemoved(member.firstName, updatedOffice.name)
+                );
+                const otherOffices = await Office.find({users: {$elemMatch: {email: member.email}}});
+                if(otherOffices.length === 0) member.status = "inactive";
+                saves.push(member.save());
+            }
+            await Promise.all(saves);
 
             res.json({error: false});
             //Update frontend to send memberId instead of userId for req.params.member

@@ -82,19 +82,20 @@ class OfficeMembers extends HTMLElement{
             }
         })
             .then(r=>r.json())
-            .then((members)=>{
-                if(members.error){
-                    requestError(members.message);
+            .then((office)=>{
+                if(office.error){
+                    requestError(office.message);
                 }else{
-                    this.displayMembers(members);
+                    this.displayMembers(office.users, office.members);
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 requestError(err.message);
             });
     }
 
-    displayMembers(members){
+    displayMembers(members, memberData){
         let membersDiv = this.shadow.querySelector("#members");
 
         while(membersDiv.children.length > 0){
@@ -102,6 +103,15 @@ class OfficeMembers extends HTMLElement{
         }
 
         for(let i = 0; i < members.length; i++){
+            if(members[i].userId){
+                for(let j = 0; j < memberData.length; j++){
+                    if(members[i].userId === memberData[j]._id){
+                        members[i].member = memberData[j];
+                        break;
+                    }
+                }
+            }
+
             let member = document.createElement("member-comp");
             member.data = members[i];
             member.office = this._id;
