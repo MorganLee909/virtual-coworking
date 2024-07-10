@@ -90,7 +90,8 @@ class Member extends HTMLElement{
                 if(response.error){
                     createBanner("red", response.message);
                 }else{
-                    createBanner("green", `${this.data.firstName} has been removed from your office`);
+                    const name = this.data.member.firstName ? this.data.member.firstName : this.data.email;
+                    createBanner("green", `${name} has been removed from your office`);
                     this.destroy();
                 }
             })

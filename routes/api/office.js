@@ -131,10 +131,11 @@ module.exports = (app)=>{
             if(!user || !office) throw "badInvitation";
             const updatedOffice = controller.activateUser(office, user._id.toString());
 
-            const [userSub, ownerSub] = await Promise.all([
-                stripe.subscriptions.cancel(user.stripe.subscriptionId),
-                stripe.subscriptions.retrieve(owner.stripe.subscriptionId)
-            ]);
+            let promises = [stripe.subscriptions.retrieve(owner.stripe.subscriptionId), null];
+            if(user.stripe.subscriptionId){
+                promises[1] = stripe.subscriptions.cancel(user.stripe.subscriptionId);
+            }
+            const [ownerSub, userSub] = await Promise.all(promises);
             const activeUsers = controller.countActiveUsers(updatedOffice);
             const items = controller.getSubscriptionItems(ownerSub, activeUsers);
             
