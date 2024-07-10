@@ -67,9 +67,10 @@ require("./routes/api/user.js")(app);
 require("./routes/api/emailing.js")(app);
 require("./routes/api/location.js")(app);
 require("./routes/api/office.js")(app);
+require("./routes/api/stripe.js")(app);
 require("./routes/static.js")(app);
 
-require("./routes.js")(app);
+//require("./routes.js")(app);
 require("./socketRouting.js")(wss);
 
 if(process.env.NODE_ENV === "production"){

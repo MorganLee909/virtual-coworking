@@ -30,7 +30,7 @@ module.exports = {
                 }
                 if(userData.session !== user.session) throw "token";
                 if(user.status === "payment" && !req.body.payment) throw "payment";
-                if(user.status !== "inactive") throw "payment";
+                if(user.status !== "active") throw "payment";
                 if(user.expiration <= new Date()) return checkStripeAccount(user);
 
                 next();

@@ -18,5 +18,5 @@ module.exports = (app)=>{
 
     //STRIPE
     //app.post("/stripe/checkout-session", auth, stripe.checkoutSession);
-    app.get("/stripe/finished*", stripe.finished);
+    //app.get("/stripe/finished*", stripe.finished);
 }
