@@ -167,6 +167,38 @@ const joinTable = (user, location, tableId)=>{
     return location;
 }
 
+const leaveTable = async (location, userId)=>{
+    location = await Location.findOne({_id: location});
+    
+    let found = false;
+    for(let i = 0; i < location.tables.length; i++){
+        for(let j = 0; j < locatin.tables[i].occupants.length; j++){
+            if(location.tables[i].occupants[j].userId?.toString() === userId){
+                let seat = location.tables[i].occupants[j];
+                seat.userId = undefined;
+                seat.name = undefined;
+                seat.avatar = undefined;
+                found = true;
+                break;
+            }
+        }
+        if(found) break;
+    }
+
+    manageTables(location);
+
+    location = await location.save();
+    const data = {
+        location: location,
+        action: "participantLeft"
+    };
+    wss.clients.forEach((client)=>{
+        if(client.location === location._id.toString()){
+            client.send(JSON.stringify(data));
+        }
+    });
+}
+
 const handleError = (error)=>{
     console.error(error);
     return res.json({
@@ -178,5 +210,6 @@ const handleError = (error)=>{
 module.exports = {
     createToken,
     joinTable,
+    leaveTable,
     handleError
 };

@@ -1,5 +1,5 @@
 const {wsAuth} = require("./auth.js");
-const {leaveTable} = require("./controllers/manageTables.js");
+const {leaveTable} = require("./controllers/location.js");
 const userController = require("./controllers/user.js");
 const location = require("./controllers/location.js");
 
