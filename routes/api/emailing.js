@@ -1,4 +1,4 @@
-const controller = require("../../controllers2/emailing.js");
+const controller = require("../../controllers/emailing.js");
 
 module.exports = (app)=>{
     app.post("/newsletter/join", async (req, res)=>{

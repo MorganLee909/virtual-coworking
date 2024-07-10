@@ -1,8 +1,8 @@
 const Office = require("../../models/office.js");
 const User = require("../../models/user.js");
 
-const controller = require("../../controllers2/office.js");
-const sendEmail = require("../../controllers/sendEmail.js");
+const controller = require("../../controllers/office.js");
+const {sendEmail} = require("../../controllers/emailing.js");
 const inviteExistingMember = require("../../email/inviteExistingMember.js");
 const inviteNewMember = require("../../email/inviteNewMember.js");
 const memberRemoved = require("../../email/memberRemoved.js");

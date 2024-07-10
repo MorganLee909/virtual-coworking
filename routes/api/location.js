@@ -1,6 +1,6 @@
 const Location = require("../../models/location.js");
 
-const controller = require("../../controllers2/location.js");
+const controller = require("../../controllers/location.js");
 const {auth} = require("../../auth.js");
 
 module.exports = (app)=>{

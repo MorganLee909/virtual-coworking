@@ -1,4 +1,4 @@
-const controller = require("../../controllers2/stripe.js");
+const controller = require("../../controllers/stripe.js");
 
 const User = require("../../models/user.js");
 

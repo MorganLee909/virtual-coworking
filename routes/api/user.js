@@ -1,10 +1,10 @@
 const User = require("../../models/user.js");
 const Office = require("../../models/office.js");
 const Location = require("../../models/location.js");
-const controller = require("../../controllers2/user.js");
+const controller = require("../../controllers/user.js");
 const {auth} = require("../../auth.js");
 
-const sendEmail = require("../../controllers/sendEmail.js");
+const {sendEmail} = require("../../controllers/emailing.js");
 const confirmationEmail = require("../../email/confirmationEmail.js");
 const passwordResetEmail = require("../../email/passwordResetEmail.js");
 

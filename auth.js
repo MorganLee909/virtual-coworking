@@ -1,7 +1,7 @@
 const User = require("./models/user.js");
 
-const checkStripeAccount = require("./controllers/checkStripeAccount.js");
-const sendEmail = require("./controllers/sendEmail.js");
+const {checkStripeAccount} = require("./controllers/stripe.js");
+const {sendEmail} = require("./controllers/emailing.js");
 const confirmationEmail = require("./email/confirmationEmail.js");
 
 const jwt = require("jsonwebtoken");
