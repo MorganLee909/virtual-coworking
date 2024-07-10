@@ -37,6 +37,7 @@ module.exports = (app)=>{
             const locations = await Location.find({}, {_id: 1, name: 1});
             res.json(locations);
         }catch(e){
+            console.log(e);
             res.json(controller.handleError(e));
         }
     });

@@ -139,6 +139,7 @@ class Header extends HTMLElement{
                 }
             })
             .catch((err)=>{
+                console.log(err);
                 requestError(err.message);
             });
     }

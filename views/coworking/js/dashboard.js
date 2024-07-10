@@ -114,6 +114,8 @@ const getUser = ()=>{
         .then((user)=>{
             if(user.error){
                 requestError(user.message);
+            }else if(user.status !== "active" || new Date() > new Date(user.expiration)){
+                window.location.href = "/stripe/checkout";
             }else{
                 window.user = user;
                 window.user.currentLocation = user.defaultLocation;

@@ -31,5 +31,5 @@ module.exports = (app)=>{
     app.get("/image/profile/:image", (req, res)=>{res.sendFile(`${appRoot}/profilePhoto/${req.params.image}`)});
 
     //404
-    //app.get("*", (req, res)=>{res.sendFile(`${views}/404.html`)});
+    app.get("*", (req, res)=>{res.sendFile(`${views}/404.html`)});
 }

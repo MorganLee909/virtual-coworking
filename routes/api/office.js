@@ -134,6 +134,7 @@ module.exports = (app)=>{
             let promises = [stripe.subscriptions.retrieve(owner.stripe.subscriptionId), null];
             if(user.stripe.subscriptionId){
                 promises[1] = stripe.subscriptions.cancel(user.stripe.subscriptionId);
+                user.stripe.subscriptionId = undefined;
             }
             const [ownerSub, userSub] = await Promise.all(promises);
             const activeUsers = controller.countActiveUsers(updatedOffice);
