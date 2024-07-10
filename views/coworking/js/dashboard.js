@@ -1,5 +1,3 @@
-const deskPage = require("./pages/desk.js");
-
 require("./pages/home.js");
 require("./pages/desk.js");
 require("./pages/office.js");

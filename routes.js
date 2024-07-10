@@ -17,6 +17,6 @@ module.exports = (app)=>{
     //app.delete("/office/:office/member/:member", auth, office.removeMember);
 
     //STRIPE
-    app.post("/stripe/checkout-session", auth, stripe.checkoutSession);
+    //app.post("/stripe/checkout-session", auth, stripe.checkoutSession);
     app.get("/stripe/finished*", stripe.finished);
 }
